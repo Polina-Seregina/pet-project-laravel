@@ -1,61 +1,43 @@
-services:
-    laravel-app:
-        build:
-            context: .
-            dockerfile: Dockerfile
-        container_name: laravel-app-cont
-        ports:
-            - "8000:8000"
-        volumes:
-            - '.:/app'
-        networks:
-            - sail
-        environment:
-            DB_CONNECTION: pgsql
-            DB_HOST: pgsql
-            DB_PORT: 5432
-            DB_DATABASE: laravel-pet-db
-            DB_USERNAME: postgres
-            DB_PASSWORD: postgres
-        depends_on:
-            pgsql:
-                condition: service_healthy
-        command:
-            - /bin/sh
-            - -lc
-            - >
-                git config --global --add safe.directory /app &&
-                composer install &&
-                php artisan migrate --force &&
-                php artisan serve --host=0.0.0.0 --port=8000
+version: "3.8"
 
-    pgsql:
-        image: 'postgres:18-alpine'
-        container_name: postgresdb
-        ports:
-            - '5432:5432'
-        environment:
-            POSTGRES_DB: laravel-pet-db
-            POSTGRES_USER: postgres
-            POSTGRES_PASSWORD: postgres
-        volumes:
-            - 'sail-pgsql:/var/lib/postgresql/data'
-        networks:
-            - sail
-        healthcheck:
-            test:
-                - CMD
-                - pg_isready
-                - '-q'
-                - '-d'
-                - 'laravel-pet-db'
-                - '-U'
-                - 'postgres'
-            retries: 3
-            timeout: 5s
-networks:
-    sail:
-        driver: bridge
+services:
+  laravel-app:
+    build:
+      context: dockerfiles
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    container_name: app_container
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "5432:5432"
+    environment:
+      MYSQL_DATABASE: laravel-pet-db
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - db_data:/var/lib/mysql
+    container_name: mysql_container
+    depends_on:
+      - laravel-app
+
+  composer:
+    build:
+      context: dockerfiles
+      dockerfile: Dockerfile_composer
+    volumes:
+      - db_data:/var/www/laravel
+  artisan:
+    build:
+      context: dockerfiles
+      dockerfile: Dockerfile
+    volumes:
+      - .:/var/www/laravel
+    entrypoint: ["php", "/var/www/laravel/artisan"]
+
 volumes:
-    sail-pgsql:
-        driver: local
+  db_data:
