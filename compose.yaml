@@ -10,7 +10,7 @@ services:
       - mysql
       - php
   php:
-    build:
+    build: 
       context: dockerfiles
       dockerfile: Dockerfile
     volumes:
@@ -19,7 +19,7 @@ services:
   mysql:
     image: mysql:8.0
     ports:
-      - "5432:5432"
+      - "3306:3306"
     environment:
       MYSQL_DATABASE: laravel-pet-db
       MYSQL_USER: laravel
