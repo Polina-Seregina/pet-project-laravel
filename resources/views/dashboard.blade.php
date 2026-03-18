@@ -1,17 +1,44 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    {{ __("You're logged in!") }}
+@section('content')
+
+@include('partials.header')
+
+
+<section class="theme-banner-one">
+    <div class="title-one text-xxl-start text-center mb-70">
+        <h1 class="main-title z-2">
+            DASHBOARD
+        </h1>
+    </div>
+</section>
+
+<section class="ht-project-section pt-140 pb-140 pt-lg-60 pb-lg-60"
+	data-background="assets/img/bg/bg-1.png">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-lg-10">
+					<div class="title-one text-center mb-50">
+                            <p>You are logged in! </p>
+                    </div>
                 </div>
             </div>
         </div>
+</section>
+
+<div class="container-fluid">
+	<div class="row align-items-center">
+	    <div class="col-xl-7">
+            <div class="d-md-flex align-items-center ">
+                <form action="logout" method="post">
+                    @csrf
+                    <button class="ht-btn bs-style" type="submit">Logout</button>
+                </form>
+		    </div>
+        </div>
     </div>
-</x-app-layout>
+</div>
+
+@include('partials.footer')
+
+@endsection
