@@ -4,8 +4,7 @@
 
 @include('partials.header')
 
-
-
+@guest
 <div class="row align-items-center">
 	<div class="col-lg-6">
 		<div class="chose-wrap-1">
@@ -20,6 +19,7 @@
 		</div>
 	</div>
 </div>
+@endguest
 
 
 @include('partials.footer')

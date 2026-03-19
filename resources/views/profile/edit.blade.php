@@ -1,4 +1,17 @@
-<x-app-layout>
+@extends('layouts.app')
+
+@section('content')
+
+@include('partials.header')
+
+<section class="theme-banner-one">
+    <div class="title-one text-xxl-start text-center mb-70">
+        <h3 class="main-title z-2">
+            EDIT PROFILE
+        </h3>
+    </div>
+</section>
+
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Profile') }}
@@ -26,4 +39,8 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+
+
+@include('partials.footer')
+
+@endsection
