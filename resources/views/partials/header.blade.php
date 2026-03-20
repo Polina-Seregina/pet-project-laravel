@@ -18,10 +18,17 @@
 					<div class="main-menu d-none d-lg-block">
 						<nav id="mobile-menu">
 							<ul class="menu-list">
-								<li> <a href=""> Пу-ру </a> </li>
-								<li> <a href=""> ПУ </a> </li>
-								<li> <a href="">ПУ</a> </li>
-								<li> <a href="">ПУ</a> </li>
+								<li> <a href="/"> HOME </a> </li>
+								@auth
+								<li> <a href="">MARKET</a> </li>
+								<li> <a href="">MY ARTWORKS</a> </li>
+								<li> <a href="">WALLET</a> </li>
+								<li> <a href="/dashboard">PROFILE</a> </li>		
+								@endauth
+								@guest
+								<li> <a href="/login">LOGIN</a> </li>
+								<li> <a href="/register">REGISTER</a> </li>
+								@endguest
 							</ul>
 						</nav>
 					</div>

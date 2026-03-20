@@ -7,9 +7,9 @@
 
 <section class="theme-banner-one">
     <div class="title-one text-xxl-start text-center mb-70">
-        <h1 class="main-title z-2">
-            DASHBOARD
-        </h1>
+        <h3 class="main-title z-2">
+            PROFILE
+        </h3>
     </div>
 </section>
 
