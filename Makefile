@@ -11,7 +11,8 @@ setup: ## Complete initial configuration of the Laravel project
 	@docker compose build
 	@docker compose up -d
 	@cp -n .env.example .env
-	@sleep 5
+	@echo "Waiting for MySQL..."
+	@until docker compose exec php php -r "try { new PDO('mysql:host=mysql;dbname=laravel-pet-db', 'root', 'password'); echo 'OK'; } catch (Exception $$e) { exit(1); }"; do sleep 2; done
 	@docker compose exec php php artisan migrate
 	@npm run build
 
