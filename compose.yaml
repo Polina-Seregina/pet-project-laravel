@@ -34,7 +34,8 @@ services:
       context: dockerfiles
       dockerfile: Dockerfile_composer
     volumes:
-      - db_data:/var/www/laravel
+      - .:/var/www/laravel
+    command: install
   artisan:
     build:
       context: dockerfiles
