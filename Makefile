@@ -11,6 +11,7 @@ setup: ## Complete initial configuration of the Laravel project
 	@docker compose build
 	@docker compose up -d
 	@cp -n .env.example .env
+	@sleep 5
 	@docker compose exec php php artisan migrate
 	@npm run build
 
