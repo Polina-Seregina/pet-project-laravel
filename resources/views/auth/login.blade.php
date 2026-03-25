@@ -51,6 +51,9 @@
                 </div>
             </x-primary-button>
         </div>
+        <div class="flex items-center justify-end mt-4">
+            <a class="text-heding" href="{{ route('google.login') }}">Войти через Google</a>
+        </div>
     </form>
 </x-guest-layout>
 
