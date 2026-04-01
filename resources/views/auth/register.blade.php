@@ -14,6 +14,12 @@
             <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
         </div>
+        <!-- Nickname -->
+        <div class="input-wrapper mb-20">
+            <x-input-label for="nickname" :value="__('Nickname')" />
+            <x-text-input id="nickname" class="block mt-1 w-full" type="text" name="nickname" :value="old('nickname')" required />
+            <x-input-error :messages="$errors->get('nickname')" class="mt-2" />
+        </div>
 
         <!-- Email Address -->
         <div class="input-wrapper mb-20">
