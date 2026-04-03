@@ -23,7 +23,7 @@
 								<li> <a href="">MARKET</a> </li>
 								<li> <a href="">MY ARTWORKS</a> </li>
 								<li> <a href="">WALLET</a> </li>
-								<li> <a href="/dashboard">PROFILE</a> </li>		
+								<li> <a href="{{ route('profile.show') }}">PROFILE</a> </li>		
 								@endauth
 								@guest
 								<li> <a href="/login">LOGIN</a> </li>

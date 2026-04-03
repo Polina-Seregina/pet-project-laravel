@@ -8,7 +8,7 @@
 <section class="theme-banner-one">
     <div class="title-one text-center mb-70">
         <h3 class="main-title z-2">
-            PROFILE
+            DASHBOARD
         </h3>
     </div>
 </section>
