@@ -19,17 +19,19 @@
                 <div class='col'>
                     <section class="ht-project-section pt-140 pb-140 pt-lg-60 pb-lg-60">
                         <blockquote class="blockquote mt-10 mb-30 ml-10">
+                            <p style="font-weight: normal; font-size: 20px;" class="name"> Nickname </p> 
                             <p class="name"> {{ $user->profile->nickname ?? 'Your nickname' }} </p> 
                         </blockquote>
                 
                         <blockquote class="blockquote mb-10 ml-10">
-                            <p class="blockquote-footer"> {{ $user->profile->birthday ?? 'add information about your birthday' }} </p>
+                            <p style="font-weight: normal; font-size: 20px;" class="name"> Birthday </p> 
+                            <p style="font-size: 22px;" class="name"> {{ $user->profile->birthday ?? 'add information about your birthday' }} </p>
                         </blockquote>
                     </section>
                 </div>
                 <div class='col'>
                     <section class="ht-project-section pt-140 pb-140 pt-lg-60 pb-lg-60">
-                            <img class="ml-10" width="275" src="{{ $user->profile->avatar ? asset($user->profile->avatar) : asset('/images/avatar/default-2.png') }}">
+                        <img class="ml-10" width="275" src="{{ $user->profile->avatar ? asset($user->profile->avatar) : asset('/images/avatar/default-2.png') }}">
                     </section>
                 </div>
             </div>
