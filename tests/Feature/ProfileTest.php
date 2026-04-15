@@ -11,47 +11,63 @@ class ProfileTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_users_profile_showed() //метод show
-    {
-        $user = User::factory()->create(); 
-        $profile = Profile::factory()->for($user)->create();
+    /**
+     * Проверяет успешный показ профиля пользователя.
+     * @return void
+     */
 
-        $response = $this->actingAs($user)->get('/profile');
+    public function test_users_profile_showed(): void 
+    {
+        $profile = Profile::factory()->create();
+
+        $response = $this->actingAs($profile->user)->get('/profile');
 
         $response->assertStatus(200);
     
     }
 
-    public function test_users_profile_name_changable() // дописать на метод update
-    {
-        $user = User::factory()->create();
-        $profile = Profile::factory()->for($user)->create();
+    /**
+     * Проверяет возможность корректировать данные профиля пользователя.
+     * @return void
+     */
 
-        $response = $this->actingAs($user)->patch('/profile', [
-            'name' => 'Test User',
-            'nickname' => 'tester',
-            'birthday' => '11.11.1111',
-            'email' => 'test@mail.ru',
+    public function test_users_profile_data_changable(): void
+    {
+        $profile = Profile::factory()->create();
+
+        $response = $this->actingAs($profile->user)->patch('/profile', [
+            'name' => fake()->name(),
+            'nickname' => fake()->firstName(),
+            'birthday' => fake()->date(),
+            'email' => fake()->email(),
         ]);
         
         $response->assertStatus(302);
 
     }
 
-    public function test_user_profile_editing_page_chowed() // 
-    {
-        $user = User::factory()->create();
-        $profile = Profile::factory()->for($user)->create();
+    /**
+     * Проверает отображение формы редактирования профиля пользователя.
+     * @return void
+     */
 
-        $response = $this->actingAs($user)->get('/profile/edit');
+    public function test_user_profile_editing_page_showed(): void
+    {
+        $profile = Profile::factory()->create();
+
+        $response = $this->actingAs($profile->user)->get('/profile/edit');
 
         $response->assertStatus(200);
     }
 
-    public function test_deleting_user()
+    /**
+     * Проверяет результат удаления профиля пользователя.
+     * @return void
+     */
+
+    public function test_deleting_user(): void
     {
         $user = User::factory()->create();
-        $profile = Profile::factory()->for($user)->create();
 
         $response = $this->actingAs($user)->delete('/profile');
         $response->assertRedirect();
