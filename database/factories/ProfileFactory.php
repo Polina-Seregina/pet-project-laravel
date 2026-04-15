@@ -17,10 +17,10 @@ class ProfileFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory()->create(),
-            'nickname' => fake()->name(),
-            'avatar' => fake()->image(),
-            'birthday' => fake()->date(),
+            'user_id' => User::factory(),
+            'nickname' => fake()->unique()->name(),
+            'avatar' => fake()->unique()->filePath(),
+            'birthday' => fake()->unique()->date(),
 
         ];
     }

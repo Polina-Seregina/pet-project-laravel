@@ -20,12 +20,11 @@ class RegistrationTest extends TestCase
 
     public function test_new_users_can_register(): void
     {
-        $profile = Profile::factory()->create();
 
-        $response = $this->actingAs($profile->user)->post('/register', [
-            'name' => $profile->user->name,
-            'email' => $profile->user->email,
-            'nickname' => $profile->nickname,
+        $response = $this->post('/register', [
+            'name' => fake()->unique()->name(),
+            'email' => fake()->unique()->email(),
+            'nickname' => fake()->unique()->firstName(),
             'password' => 'password',
             'password_confirmation' => 'password',
         ]);

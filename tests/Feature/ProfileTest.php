@@ -36,10 +36,10 @@ class ProfileTest extends TestCase
         $profile = Profile::factory()->create();
 
         $response = $this->actingAs($profile->user)->patch('/profile', [
-            'name' => fake()->name(),
-            'nickname' => fake()->firstName(),
-            'birthday' => fake()->date(),
-            'email' => fake()->email(),
+            'name' => fake()->unique()->name(),
+            'nickname' => fake()->unique()->firstName(),
+            'birthday' => fake()->unique()->date(),
+            'email' => fake()->unique()->email(),
         ]);
         
         $response->assertStatus(302);
