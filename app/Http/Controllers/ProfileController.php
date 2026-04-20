@@ -12,7 +12,7 @@ use Illuminate\View\View;
 class ProfileController extends Controller
 {
     public function show(Request $request): View
-    {
+    {       
         return view('profile.show', [
             'user' => $request->user(),
         ]);
@@ -33,12 +33,20 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
+
+        if ($request->hasFile('avatar')) {
+            $path = $request->file('avatar')->store(
+                'avatars/'.$request->user()->id, 's3');
+        }
+
         $request->user()->fill($request->validated());
         $request->user()->profile->fill($request->validated());
 
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
         }
+
+        $request->user()->profile->avatar = $path;
 
         $request->user()->save();
         $request->user()->profile->save();

@@ -58,6 +58,17 @@ services:
     entrypoint: ["php", "/var/www/laravel/artisan"]
     depends_on:
       - mysql_testing
-
+  minio:
+    image: minio/minio
+    command: server /data --console-address ":9001"
+    ports: 
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: laravel
+      MINIO_ROOT_PASSWORD: password
+    volumes:
+      - minio_data:/data
 volumes:
   db_data:
+  minio_data:
