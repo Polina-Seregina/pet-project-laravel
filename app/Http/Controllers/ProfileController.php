@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -35,8 +36,9 @@ class ProfileController extends Controller
     {
 
         if ($request->hasFile('avatar')) {
-            $path = $request->file('avatar')->store(
-                'avatars/'.$request->user()->id, 's3');
+            $file = $request->file('avatar');
+            $name = $file->getClientOriginalName();
+            $path = Storage::disk('s3')->putFile("avatars/{$request->user()->id}/{$name}", $file);
         }
 
         $request->user()->fill($request->validated());
