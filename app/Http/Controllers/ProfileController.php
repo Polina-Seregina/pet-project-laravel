@@ -8,13 +8,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
     public function show(Request $request): View
     {
+        $avatar = $request->user()->profile->avatar 
+            ? Storage::disk('s3')->url($request->user()->profile->avatar) 
+            : asset(config('filesystems.default_avatar'));
+        
         return view('profile.show', [
             'user' => $request->user(),
+            'avatar' => $avatar,
         ]);
     }
     
@@ -38,6 +44,13 @@ class ProfileController extends Controller
 
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
+        }
+
+        if ($request->hasFile('avatar')) { 
+            $file = $request->file('avatar');
+            $name = $file->getClientOriginalName();
+            $path = Storage::disk('s3')->putFile("avatars/{$request->user()->id}/{$name}", $file);
+            $request->user()->profile->avatar = $path;
         }
 
         $request->user()->save();
