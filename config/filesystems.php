@@ -58,6 +58,8 @@ return [
 
     ],
 
+    'default_avatar' => env('DEFAULT_AVATAR', 'images/avatar/default-2.png'),
+
     /*
     |--------------------------------------------------------------------------
     | Symbolic Links

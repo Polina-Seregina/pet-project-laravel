@@ -31,7 +31,7 @@
                 </div>
                 <div class='col'>
                     <section class="ht-project-section pt-140 pb-140 pt-lg-60 pb-lg-60">
-                        <img class="ml-10" width="275" src="{{ asset($avatar) }}">
+                        <img class="ml-10" width="275" src="{{ $avatar }}">
                     </section>
                 </div>
             </div>
