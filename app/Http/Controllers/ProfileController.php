@@ -13,9 +13,15 @@ use Illuminate\Support\Facades\Storage;
 class ProfileController extends Controller
 {
     public function show(Request $request): View
-    {       
+    {
+        if ($request->user()->profile->avatar) {
+            $avatar = Storage::disk('s3')->url($request->user()->profile->avatar);
+        } else {
+            $avatar = '/images/avatar/default-2.png';
+        }
         return view('profile.show', [
             'user' => $request->user(),
+            'avatar' => $avatar,
         ]);
     }
     
@@ -34,13 +40,6 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-
-        if ($request->hasFile('avatar')) {
-            $file = $request->file('avatar');
-            $name = $file->getClientOriginalName();
-            $path = Storage::disk('s3')->putFile("avatars/{$request->user()->id}/{$name}", $file);
-        }
-
         $request->user()->fill($request->validated());
         $request->user()->profile->fill($request->validated());
 
@@ -48,7 +47,12 @@ class ProfileController extends Controller
             $request->user()->email_verified_at = null;
         }
 
-        $request->user()->profile->avatar = $path;
+        if ($request->hasFile('avatar')) { 
+            $file = $request->file('avatar');
+            $name = $file->getClientOriginalName();
+            $path = Storage::disk('s3')->putFile("avatars/{$request->user()->id}/{$name}", $file);
+            $request->user()->profile->avatar = $path;
+        }
 
         $request->user()->save();
         $request->user()->profile->save();
