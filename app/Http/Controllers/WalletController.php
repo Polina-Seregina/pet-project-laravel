@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\WalletTopUpRequest;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Http\RedirectResponse;
 
 class WalletController extends Controller
 {
@@ -22,7 +26,7 @@ class WalletController extends Controller
      * Просмотр формы пополнения кошелька.
      */
 
-    public function show_top_up_balance(Request $request): View
+    public function show_top_up_balance_form(Request $request): View
     {
         return view('wallet.top-up-balance-form', [
             'user' => $request->user(),
@@ -36,7 +40,15 @@ class WalletController extends Controller
 
     public function top_up_balance(WalletTopUpRequest $request): RedirectResponse
     {
-        $amount = $request->validated();
+        $validData = $request->validated();
+        $amount = $validData['amount'];
 
+        $wallet = $request->user()->wallet;
+        $wallet->balance += $amount;
+
+        $wallet->save();
+        $request->session()->flash('status', 'Wallet top-up completed');
+
+        return Redirect::route('wallet.show');
     }
 }

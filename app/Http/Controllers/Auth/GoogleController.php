@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\{User, Profile};
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 
 class GoogleController extends Controller
@@ -32,6 +33,8 @@ class GoogleController extends Controller
                     'email' => $googleUser->getEmail(),
                     'google_id' => $googleUser->getId(),
                 ]);
+                
+                event(new Registered($user)); 
             }
         }
         
