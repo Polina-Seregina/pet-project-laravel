@@ -14,11 +14,13 @@ class TransactionController extends Controller
      * Просмотр истории транзакций.
      */
 
-    public function show(Request $request): View
+    public function showHistory(Request $request): View
     {
+        $transactions = $request->user()->wallet->transactions->sortByDesc('created_at');
+        
         return view('transaction.history', [
             'user' => $request->user(),
-            'transactions' => $request->user()->wallet->transactions,
+            'transactions' => $transactions,
         ]);
     }
 }
