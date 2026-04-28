@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\User; 
+use App\Models\Wallet;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -9,13 +11,35 @@ use Tests\TestCase;
 class TransactionTest extends TestCase
 {
     /**
-     * A basic feature test example.
+     * Проверяет, что страница с историей операций отображается.
      * @return void
      */
-    public function test_(): void
+    public function test_transaction_history_showed(): void
     {
-        $response = $this->get('/');
+        $wallet = Wallet::factory()->create();
+        
+        $response = $this->actingAs($wallet->user)->get('/wallet/history');
 
         $response->assertStatus(200);
+    }
+
+    /**
+     * Что транзакция создается при пополнении.
+     * @return void
+     */
+    public function test_transaction_created(): void
+    {
+        $wallet = Wallet::factory()->create();
+        
+        $response = $this->actingAs($wallet->user)->patch('/wallet', [
+            'amount' => 100,
+        ]);
+
+        $response->assertStatus(302);
+
+        $this->assertDatabaseHas('transactions', [
+            'wallet_id' => $wallet->id,
+            'amount' => 100,
+        ]);
     }
 }
