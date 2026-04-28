@@ -16,8 +16,9 @@
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
         <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
             <section class="ht-project-section pt-140 pb-140 pt-lg-60 pb-lg-60">
-                <blockquote class="blockquote mt-10 mb-30 ml-10">
-                    <table style="width: 100%; border-collapse: collapse; rgb(0, 0, 0);">
+                <blockquote style="text-align: center;" class="mt-10 mb-30 ml-10">
+                    @if (count($transactions) !== 0)
+                    <table class="mb-6" style="width: 100%; border-collapse: collapse; rgb(0, 0, 0);">
                         <thead>
                             <tr>
                                 <th style="text-align: center; border: 1px solid"> <p style="font-size: 30px"> Transaction type </p> </th>
@@ -35,6 +36,17 @@
                             @endforeach
                         </tbody>
                     </table>
+                    {{ $transactions->links() }}
+                    @else
+                    <div style="text-align: center;" class="footer-widget mb-10">
+						<p class="show-product-count text-heding fw-medium" style="text-align: center; font-size: 20px;"> Транзакций пока не было</p>
+                    </div>
+                    <div style="text-align: center;" class="footer-widget mb-30">
+                        <button class="ht-btn bs-style mb-2" type="submit">
+                            <a href="{{ route('wallet.replenishment.form') }}"> Top up your balance </a>
+                        </button>
+					</div>
+                    @endif
                 </blockquote>
             </section>
         </div>    

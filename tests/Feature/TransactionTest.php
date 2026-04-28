@@ -2,10 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\User; 
 use App\Models\Wallet;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class TransactionTest extends TestCase
@@ -24,7 +21,7 @@ class TransactionTest extends TestCase
     }
 
     /**
-     * Что транзакция создается при пополнении.
+     * Проверяет, что транзакция создается при пополнении кошелька.
      * @return void
      */
     public function test_transaction_created(): void

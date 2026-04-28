@@ -16,7 +16,7 @@ class TransactionController extends Controller
 
     public function showHistory(Request $request): View
     {
-        $transactions = $request->user()->wallet->transactions->sortByDesc('created_at');
+        $transactions = $request->user()->wallet->transactions()->orderByDesc('created_at')->paginate(10);
         
         return view('transaction.history', [
             'user' => $request->user(),
