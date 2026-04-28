@@ -37,6 +37,10 @@
         <button class="ht-btn bs-style mb-2 ml-10" type="submit">
             <a href="{{ route('wallet.replenishment.form') }}"> Top up your balance </a>
         </button>
+
+        <button class="ht-btn bs-style mb-2 ml-10" type="submit">
+            <a href="{{ route('transaction.history') }}"> Transaction history </a>
+        </button>
     </div>
 </div>
 

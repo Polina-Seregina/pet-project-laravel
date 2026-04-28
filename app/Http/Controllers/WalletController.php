@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\RedirectResponse;
+use App\Models\Transaction;
 
 class WalletController extends Controller
 {
@@ -48,6 +49,12 @@ class WalletController extends Controller
 
         $wallet->save();
         $request->session()->flash('status', 'Wallet top-up completed');
+        
+        $transaction = Transaction::create([
+            'amount' => $amount,
+            'type' => 'replenishment',
+            'wallet_id' => $wallet->id,
+        ]);
 
         return Redirect::route('wallet.show'); 
     }
