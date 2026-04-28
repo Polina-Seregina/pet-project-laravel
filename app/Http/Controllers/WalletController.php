@@ -26,7 +26,7 @@ class WalletController extends Controller
      * Просмотр формы пополнения кошелька.
      */
 
-    public function show_top_up_balance_form(Request $request): View
+    public function showTopUpForm(Request $request): View
     {
         return view('wallet.top-up-balance-form', [
             'user' => $request->user(),
@@ -38,7 +38,7 @@ class WalletController extends Controller
      * Пополнение баланса кошелька с flash сообщением об успещшости.
      */
 
-    public function top_up_balance(WalletTopUpRequest $request): RedirectResponse
+    public function topUp(WalletTopUpRequest $request): RedirectResponse
     {
         $validData = $request->validated();
         $amount = $validData['amount'];
@@ -49,6 +49,6 @@ class WalletController extends Controller
         $wallet->save();
         $request->session()->flash('status', 'Wallet top-up completed');
 
-        return Redirect::route('wallet.show');
+        return Redirect::route('wallet.show'); 
     }
 }

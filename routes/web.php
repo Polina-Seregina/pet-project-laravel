@@ -32,8 +32,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     
     Route::get('/wallet', [WalletController::class, 'show'])->name('wallet.show');
-    Route::get('/wallet/replenishment', [WalletController::class, 'show_top_up_balance_form'])->name('wallet.replenishment.form');
-    Route::patch('/wallet', [WalletController::class, 'top_up_balance'])->name('wallet.replenishment');
+    Route::get('/wallet/replenishment', [WalletController::class, 'showTopUpForm'])->name('wallet.replenishment.form');
+    Route::patch('/wallet', [WalletController::class, 'topUp'])->name('wallet.replenishment');
 });
 
 Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
