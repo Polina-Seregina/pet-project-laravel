@@ -6,7 +6,11 @@ use App\Http\Requests\WalletTopUpRequest;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\RedirectResponse;
+use App\Models\Transaction;
+use App\Enums\TransactionType;
+use Exception;
 
 class WalletController extends Controller
 {
@@ -42,12 +46,23 @@ class WalletController extends Controller
     {
         $validData = $request->validated();
         $amount = $validData['amount'];
-
         $wallet = $request->user()->wallet;
-        $wallet->balance += $amount;
+        
+        try {
+            DB::transaction(function() use ($wallet, $amount) {
+                $wallet->increment('balance', $amount);
+                $wallet->save();
 
-        $wallet->save();
-        $request->session()->flash('status', 'Wallet top-up completed');
+                $transaction = Transaction::create([
+                    'amount' => $amount,
+                    'type' => TransactionType::Replenishment->value,
+                    'wallet_id' => $wallet->id,
+                ]);
+            }, 3);
+            $request->session()->flash('status', 'Wallet top-up completed');
+        } catch (Exception $e) {
+            $request->session()->flash('status', 'Replenishment failed');
+        }
 
         return Redirect::route('wallet.show'); 
     }

@@ -26,6 +26,17 @@
                 >{{ __('Wallet top-up completed.') }}</p>
             @endif
 
+            @if (session('status') === 'Replenishment failed')
+                <p
+                    x-data="{ show: true }"
+                    x-show="show"
+                    x-transition
+                    x-init="setTimeout(() => show = false, 2000)"
+                    class="text-sm text-red-500"
+                >{{ __('Replenishment failed.') }}</p>
+            @endif
+
+
             <section class="ht-project-section pt-140 pb-140 pt-lg-60 pb-lg-60">
                 <blockquote class="blockquote mt-10 mb-30 ml-10">
                     <p style="font-weight: normal; font-size: 30px;" class="name"> Balance </p> 
@@ -36,6 +47,10 @@
 
         <button class="ht-btn bs-style mb-2 ml-10" type="submit">
             <a href="{{ route('wallet.replenishment.form') }}"> Top up your balance </a>
+        </button>
+
+        <button class="ht-btn bs-style mb-2 ml-10" type="submit">
+            <a href="{{ route('transaction.history') }}"> Transaction history </a>
         </button>
     </div>
 </div>

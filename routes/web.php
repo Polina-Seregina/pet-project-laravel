@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WalletController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\Auth\GoogleController;
@@ -34,6 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/wallet', [WalletController::class, 'show'])->name('wallet.show');
     Route::get('/wallet/replenishment', [WalletController::class, 'showTopUpForm'])->name('wallet.replenishment.form');
     Route::patch('/wallet', [WalletController::class, 'topUp'])->name('wallet.replenishment');
+    Route::get('/wallet/history', [TransactionController::class, 'showHistory'])->name('transaction.history');
 });
 
 Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
