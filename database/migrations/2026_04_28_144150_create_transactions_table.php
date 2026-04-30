@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('wallet_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->decimal('amount', $precision = 15, $scale = 2);
-            $table->enum('type', ['replenishment', 'write-off']);
+            $table->string('type');
             $table->timestamps();
         });
     }

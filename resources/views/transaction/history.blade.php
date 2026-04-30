@@ -36,6 +36,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                    
                     {{ $transactions->links() }}
                     @else
                     <div style="text-align: center;" class="footer-widget mb-10">

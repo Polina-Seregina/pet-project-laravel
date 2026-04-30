@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->string('nickname')->unique();
-            $table->string('avatar')->nullable(); // path to the image
-            $table->date('birthday');
+            $table->string('avatar')->nullable();
+            $table->date('birthday')->nullable();
             $table->timestamps();
         });
     }

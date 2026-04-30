@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('wallets', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
-            $table->decimal('balance', $precision = 9, $scale = 2); 
+            $table->decimal('balance', $precision = 15, $scale = 2); 
             $table->timestamps();
         });
     }
