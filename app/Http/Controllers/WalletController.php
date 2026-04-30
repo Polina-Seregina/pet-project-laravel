@@ -37,7 +37,7 @@ class WalletController extends Controller
             'wallet' => $request->user()->wallet,
         ]);
     }
-    
+
     /**
      * Пополнение баланса кошелька с flash сообщением об успещшости.
      */
@@ -64,6 +64,6 @@ class WalletController extends Controller
             $request->session()->flash('status', 'Replenishment failed');
         }
 
-        return Redirect::route('wallet.show'); 
+        return Redirect::route('wallet.show');
     }
 }

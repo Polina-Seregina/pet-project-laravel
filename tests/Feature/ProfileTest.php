@@ -2,8 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Models\User; 
+use App\Models\User;
 use App\Models\Profile;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ProfileTest extends TestCase
@@ -13,14 +14,14 @@ class ProfileTest extends TestCase
      * @return void
      */
 
-    public function test_users_profile_showed(): void 
+    public function test_users_profile_showed(): void
     {
         $profile = Profile::factory()->create();
 
         $response = $this->actingAs($profile->user)->get('/profile');
 
         $response->assertStatus(200);
-    
+
     }
 
     /**
@@ -38,7 +39,7 @@ class ProfileTest extends TestCase
             'birthday' => fake()->unique()->date(),
             'email' => fake()->unique()->email(),
         ]);
-        
+
         $response->assertStatus(302);
 
     }

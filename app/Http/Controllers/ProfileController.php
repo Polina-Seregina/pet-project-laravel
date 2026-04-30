@@ -14,16 +14,16 @@ class ProfileController extends Controller
 {
     public function show(Request $request): View
     {
-        $avatar = $request->user()->profile->avatar 
-            ? Storage::disk('s3')->url($request->user()->profile->avatar) 
+        $avatar = $request->user()->profile->avatar
+            ? Storage::disk('s3')->url($request->user()->profile->avatar)
             : asset(config('filesystems.default_avatar'));
-        
+
         return view('profile.show', [
             'user' => $request->user(),
             'avatar' => $avatar,
         ]);
     }
-    
+
     /**
      * Display the user's profile form.
      */
@@ -46,7 +46,7 @@ class ProfileController extends Controller
             $request->user()->email_verified_at = null;
         }
 
-        if ($request->hasFile('avatar')) { 
+        if ($request->hasFile('avatar')) {
             $file = $request->file('avatar');
             $name = $file->getClientOriginalName();
             $path = Storage::disk('s3')->putFile("avatars/{$request->user()->id}/{$name}", $file);
@@ -76,4 +76,4 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
-} 
+}
