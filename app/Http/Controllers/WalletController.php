@@ -47,9 +47,9 @@ class WalletController extends Controller
         $validData = $request->validated();
         $amount = $validData['amount'];
         $wallet = $request->user()->wallet;
-        
+
         try {
-            DB::transaction(function() use ($wallet, $amount) {
+            DB::transaction(function () use ($wallet, $amount) {
                 $wallet->increment('balance', $amount);
                 $wallet->save();
 

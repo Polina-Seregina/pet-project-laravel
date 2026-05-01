@@ -14,11 +14,13 @@ class TransactionTest extends TestCase
     public function test_transaction_history_showed(): void
     {
         $wallet = Wallet::factory()->create();
-        
+
         $response = $this->actingAs($wallet->user)->get('/wallet/history');
 
         $response->assertStatus(200);
     }
+
+
 
     /**
      * Проверяет, что транзакция создается при пополнении кошелька.
@@ -27,7 +29,7 @@ class TransactionTest extends TestCase
     public function test_transaction_created(): void
     {
         $wallet = Wallet::factory()->create();
-        
+
         $response = $this->actingAs($wallet->user)->patch('/wallet', [
             'amount' => 100,
         ]);
