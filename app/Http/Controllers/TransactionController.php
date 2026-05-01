@@ -10,7 +10,6 @@ class TransactionController extends Controller
     /**
      * Просмотр истории транзакций.
      */
-
     public function showHistory(Request $request): View
     {
         $transactions = $request->user()->wallet->transactions()->orderByDesc('created_at')->paginate();

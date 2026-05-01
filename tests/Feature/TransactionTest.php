@@ -9,7 +9,6 @@ class TransactionTest extends TestCase
 {
     /**
      * Проверяет, что страница с историей операций отображается.
-     * @return void
      */
     public function test_transaction_history_showed(): void
     {
@@ -20,11 +19,8 @@ class TransactionTest extends TestCase
         $response->assertStatus(200);
     }
 
-
-
     /**
      * Проверяет, что транзакция создается при пополнении кошелька.
-     * @return void
      */
     public function test_transaction_created(): void
     {

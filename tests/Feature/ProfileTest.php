@@ -2,17 +2,15 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
 use App\Models\Profile;
+use App\Models\User;
 use Tests\TestCase;
 
 class ProfileTest extends TestCase
 {
     /**
      * Проверяет успешный показ профиля пользователя.
-     * @return void
      */
-
     public function test_users_profile_showed(): void
     {
         $profile = Profile::factory()->create();
@@ -25,9 +23,7 @@ class ProfileTest extends TestCase
 
     /**
      * Проверяет возможность корректировать данные профиля пользователя.
-     * @return void
      */
-
     public function test_users_profile_data_changable(): void
     {
         $profile = Profile::factory()->create();
@@ -45,9 +41,7 @@ class ProfileTest extends TestCase
 
     /**
      * Проверает отображение формы редактирования профиля пользователя.
-     * @return void
      */
-
     public function test_user_profile_editing_page_showed(): void
     {
         $profile = Profile::factory()->create();
@@ -59,9 +53,7 @@ class ProfileTest extends TestCase
 
     /**
      * Проверяет результат удаления профиля пользователя.
-     * @return void
      */
-
     public function test_deleting_user(): void
     {
         $user = User::factory()->create();
