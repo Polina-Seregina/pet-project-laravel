@@ -23,4 +23,4 @@ class ProfileUpdateRequest extends FormRequest
             'avatar' => ['dimensions:min_width=100', 'nullable'],
         ];
     }
-} 
+}

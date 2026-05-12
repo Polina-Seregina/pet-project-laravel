@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\{User, Profile};
 use Illuminate\Auth\Events\Registered;
@@ -11,11 +10,13 @@ use Illuminate\Support\Facades\Auth;
 
 class GoogleController extends Controller
 {
-    public function redirectToGoogle() {
+    public function redirectToGoogle()
+    {
         return Socialite::driver('google')->redirect();
     }
 
-    public function handleGoogleCallback() {
+    public function handleGoogleCallback()
+    {
         $googleUser = Socialite::driver('google')->user();
 
         $user = User::where('google_id', $googleUser->getId())->first();
@@ -33,19 +34,19 @@ class GoogleController extends Controller
                     'email' => $googleUser->getEmail(),
                     'google_id' => $googleUser->getId(),
                 ]);
-                
-                event(new Registered($user)); 
+
+                event(new Registered($user));
             }
         }
-        
+
         $profile = Profile::where('user_id', $user->id)->first();
 
-         if (!$profile) {
+        if (!$profile) {
             $user->profile()->create([
-                'nickname' => $googleUser->getEmail(), 
+                'nickname' => $googleUser->getEmail(),
             ]);
         }
-        
+
         Auth::login($user);
 
         return redirect('/dashboard');

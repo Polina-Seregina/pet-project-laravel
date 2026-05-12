@@ -2,22 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\WalletTopUpRequest;
-use Illuminate\Http\Request;
-use Illuminate\View\View;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Http\RedirectResponse;
-use App\Models\Transaction;
 use App\Enums\TransactionType;
+use App\Http\Requests\WalletTopUpRequest;
+use App\Models\Transaction;
 use Exception;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\View\View;
 
 class WalletController extends Controller
 {
     /**
      * Просмотр страницы кошелька .
      */
-
     public function show(Request $request): View
     {
         return view('wallet.show', [
@@ -29,7 +28,6 @@ class WalletController extends Controller
     /**
      * Просмотр формы пополнения кошелька.
      */
-
     public function showTopUpForm(Request $request): View
     {
         return view('wallet.top-up-balance-form', [
@@ -37,19 +35,18 @@ class WalletController extends Controller
             'wallet' => $request->user()->wallet,
         ]);
     }
-    
+
     /**
      * Пополнение баланса кошелька с flash сообщением об успещшости.
      */
-
     public function topUp(WalletTopUpRequest $request): RedirectResponse
     {
         $validData = $request->validated();
         $amount = $validData['amount'];
         $wallet = $request->user()->wallet;
-        
+
         try {
-            DB::transaction(function() use ($wallet, $amount) {
+            DB::transaction(function () use ($wallet, $amount) {
                 $wallet->increment('balance', $amount);
                 $wallet->save();
 
@@ -64,6 +61,6 @@ class WalletController extends Controller
             $request->session()->flash('status', 'Replenishment failed');
         }
 
-        return Redirect::route('wallet.show'); 
+        return Redirect::route('wallet.show');
     }
 }

@@ -2,14 +2,14 @@
 
 namespace Tests\Feature;
 
-use App\Models\User; 
+use App\Models\User;
 use App\Models\Wallet;
 use Tests\TestCase;
 
 class WalletTest extends TestCase
 {
     /**
-     * Проверяет, что кошелек создается при регистрации Пользователя и имеет нулевой баланс. 
+     * Проверяет, что кошелек создается при регистрации Пользователя и имеет нулевой баланс.
      * @return void
      */
 
@@ -75,7 +75,7 @@ class WalletTest extends TestCase
     public function test_increasing_balance_upon_replenishment(): void
     {
         $wallet = Wallet::factory()->create();
-        
+
         $response = $this->actingAs($wallet->user)->patch('/wallet', [
             'amount' => 100,
         ]);
