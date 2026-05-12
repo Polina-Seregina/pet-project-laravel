@@ -185,4 +185,10 @@ return [
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 
+    /**
+     * Количество продуктов, отображаемых на странице. Перемеенная для пагинации.
+     */
+
+    'productsOnPage' => 3,
+
 ];

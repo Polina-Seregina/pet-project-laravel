@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Laravel\Socialite\Facades\Socialite;
-use App\Models\{User, Profile};
+use App\Models\User;
+use App\Models\Profile;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Support\Facades\Redirect;
 
 class GoogleController extends Controller
 {
@@ -49,6 +52,6 @@ class GoogleController extends Controller
 
         Auth::login($user);
 
-        return redirect('/dashboard');
+        return Redirect::route('home')->with('status', 'success-login');
     }
 }

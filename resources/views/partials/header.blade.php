@@ -20,8 +20,8 @@
 							<ul class="menu-list">
 								<li> <a href="/"> HOME </a> </li>
 								@auth
-								<li> <a href="">MARKET</a> </li>
-								<li> <a href="">MY ARTWORKS</a> </li>
+								<li> <a href="{{ route('product.index') }}">MARKET</a> </li>
+								<li> <a href="{{ route('product.my.index') }}">MY ARTWORKS</a> </li>
 								<li> <a href="{{ route('wallet.show') }}">WALLET</a> </li>
 								<li> <a href="{{ route('profile.show') }}">PROFILE</a> </li>		
 								@endauth
