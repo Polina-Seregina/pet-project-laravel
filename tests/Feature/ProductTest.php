@@ -19,6 +19,7 @@ class ProductTest extends TestCase
         $response->assertStatus(200);
 
     }
+
     /**
      * Проверяет отображение страницы с продуктами, принадлежащими пользователю.
      */
@@ -30,6 +31,7 @@ class ProductTest extends TestCase
         $response->assertStatus(200);
 
     }
+
     /**
      * Должен проверять, что страница конкретного арта отображается.
      * НЕ РАБОТАЕТ. Не понимаю почему:(
@@ -41,15 +43,17 @@ class ProductTest extends TestCase
         $response = $this->actingAs($product->user)->get("/products/{$product->id}");
         $response->assertStatus(200);
     }
+
     /**
      * Проверяет отображение формы создания продукта.
      */
-     public function test_create_form_showed(): void
+    public function test_create_form_showed(): void
     {
         $user = User::factory()->create();
         $response = $this->actingAs($user)->get('/products/create');
         $response->assertStatus(200);
     }
+
     /**
      * Проверяет, что Пользователь может создать арт.
      */
@@ -62,9 +66,9 @@ class ProductTest extends TestCase
         $response = $this->actingAs($user)->post('/products', [
             'name' => $name,
             'description' => fake()->realTextBetween(),
-            'price' => fake()->numberBetween(0,100000),
-            'image' => fake()->unique()->filePath()
-            ]);
+            'price' => fake()->numberBetween(0, 100000),
+            'image' => fake()->unique()->filePath(),
+        ]);
 
         $response->assertRedirect();
 
@@ -73,5 +77,4 @@ class ProductTest extends TestCase
             'name' => $name,
         ]);
     }
-
 }

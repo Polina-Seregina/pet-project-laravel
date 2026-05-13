@@ -16,12 +16,11 @@ class Product extends Model
         'price',
         'image',
         'user_id',
-        'status'
+        'status',
     ];
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
-
 }

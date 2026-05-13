@@ -1,11 +1,11 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\WalletController;
-use App\Http\Controllers\TransactionController;
-use App\Http\Controllers\ProductController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\WalletController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +22,6 @@ Route::get('/', function () {
     return view('home');
 })->name('home');
 
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -38,10 +37,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/products/create', [ProductController::class, 'create'])->name('product.create');
     Route::get('/my/products', [ProductController::class, 'usersIndex'])->name('product.my.index');
     Route::get('/products/{productId}', [ProductController::class, 'show'])->name('product.show');
-    Route::get('/products/{productId}/edit', [ProductController::class, 'edit'])->name('product.edit')->middleware("owner");
+    Route::get('/products/{productId}/edit', [ProductController::class, 'edit'])->name('product.edit')->middleware('owner');
     Route::post('/products', [ProductController::class, 'publish'])->name('product.publish');
-    Route::patch('/products/{productId}', [ProductController::class, 'update'])->name('product.update')->middleware("owner");
-    Route::delete('/products/{productId}', [ProductController::class, 'destroy'])->name('product.destroy')->middleware("owner");
+    Route::patch('/products/{productId}', [ProductController::class, 'update'])->name('product.update')->middleware('owner');
+    Route::delete('/products/{productId}', [ProductController::class, 'destroy'])->name('product.destroy')->middleware('owner');
 });
 
 Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');

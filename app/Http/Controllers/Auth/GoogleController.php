@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Laravel\Socialite\Facades\Socialite;
-use App\Models\User;
 use App\Models\Profile;
+use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Laravel\Socialite\Facades\Socialite;
 
 class GoogleController extends Controller
 {
@@ -23,7 +23,7 @@ class GoogleController extends Controller
 
         $user = User::where('google_id', $googleUser->getId())->first();
 
-        if (!$user) {
+        if (! $user) {
             $user = User::where('email', $googleUser->getEmail())->first();
 
             if ($user) {
@@ -43,7 +43,7 @@ class GoogleController extends Controller
 
         $profile = Profile::where('user_id', $user->id)->first();
 
-        if (!$profile) {
+        if (! $profile) {
             $user->profile()->create([
                 'nickname' => $googleUser->getEmail(),
             ]);

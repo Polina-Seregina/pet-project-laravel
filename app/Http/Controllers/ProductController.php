@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\View\View;
-use App\Models\Product;
-use Illuminate\Http\RedirectResponse;
+use App\Enums\ProductsStatus;
 use App\Http\Requests\ProductRequest;
 use App\Http\Requests\ProductUpdateRequest;
-use App\Enums\ProductsStatus;
-use Illuminate\Support\Facades\Storage;
+use App\Models\Product;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 
 class ProductController extends Controller
 {
@@ -23,15 +23,17 @@ class ProductController extends Controller
             'products' => Product::where('status', 'for sale')->paginate(config('app.productsOnPage')),
         ]);
     }
+
     /**
      * Возвращает отображение всех товаров, которые продает Пользователь.
      */
     public function usersIndex(Request $request): View
     {
         return view('product.myIndex', [
-            'products' => $request->user()->products()->paginate(config('app.productsOnPage'))
+            'products' => $request->user()->products()->paginate(config('app.productsOnPage')),
         ]);
     }
+
     /**
      * Возвращает страницу с отображением конкретного товара.
      */
@@ -62,6 +64,7 @@ class ProductController extends Controller
             'user' => $request->user(),
         ]);
     }
+
     /**
      * Публикация нового товара.
      */
@@ -86,6 +89,7 @@ class ProductController extends Controller
 
         return Redirect::route('product.show', ['productId' => $product->id])->with('status', 'product-created');
     }
+
     /**
      * Обновление данных у существующего товара.
      */
@@ -107,6 +111,7 @@ class ProductController extends Controller
 
         return Redirect::route('product.show', ['productId' => $productId])->with('status', 'product-updated');
     }
+
     /**
      * Удаление товара.
      */
