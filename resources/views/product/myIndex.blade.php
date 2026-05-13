@@ -39,6 +39,8 @@
                         </div>
                         <h4 class="product-title mt-9 mb-0"><a href="{{ route('product.show', ['productId' => $product->id]) }}"> {{ $product->name }} </a></h4>
                         <a class="pr-price" href="{{ route('product.show', ['productId' => $product->id]) }}">{{ $product->price }}</a>
+                        <br>
+                        <p style="color: #cc722d;" class="pr-price">{{ $product->status }}</p>
                     </div>
                 </div>
             </div>
@@ -51,7 +53,7 @@
         <div class="p-2 sm:p-8 bg-white shadow sm:rounded-lg">
             <div class="column product-wrapper text-center mb-50">
                 <div style="height: 30px;"></div>
-                <h4 class="product-title mt-9 mb-0"><a href=""> You have no art </a></h4>
+                <h4 class="product-title mt-9 mb-0"><a href=""> You have no artworks yet. </a></h4>
                 <div style="height: 30px;"></div>
             </div>
         </div>

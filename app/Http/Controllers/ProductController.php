@@ -20,13 +20,13 @@ class ProductController extends Controller
     public function index(): View
     {
         return view('product.index', [
-            'products' => Product::paginate(config('app.productsOnPage')),
+            'products' => Product::where('status', 'for sale')->paginate(config('app.productsOnPage')),
         ]);
     }
     /**
      * Возвращает отображение всех товаров, которые продает Пользователь.
      */
-    public function usersIndex(Request $request): View 
+    public function usersIndex(Request $request): View
     {
         return view('product.myIndex', [
             'products' => $request->user()->products()->paginate(config('app.productsOnPage'))
@@ -78,7 +78,7 @@ class ProductController extends Controller
         $product = Product::create([
             'name' => $validData['name'],
             'description' => $validData['description'],
-            'price' => $validData['price'], 
+            'price' => $validData['price'],
             'image' => $path,
             'user_id' => $user->id,
             'status' => ProductsStatus::ForSale->value,
@@ -95,8 +95,8 @@ class ProductController extends Controller
 
         $product = Product::findOrFail($productId);
         $product->fill($request->validated());
-        
-        if ($request->hasFile('avatar')) { 
+
+        if ($request->hasFile('avatar')) {
             $file = $request->file('image');
             $name = $file->getClientOriginalName();
             $path = Storage::disk('s3')->putFile("products/{$user->id}/products", $file);

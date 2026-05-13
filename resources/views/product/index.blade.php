@@ -13,7 +13,7 @@
 </section>
 
 <section class="max-w-7xl mx-auto sm:px-8">
-
+@if (count($products) !== 0)
     <div style='display: flex; '>
         @foreach ($products as $product)
             <div style="width:40% " class="max-w-7xl mb-10 mx-auto sm:px-8 lg px-5 space-y-6">
@@ -33,7 +33,17 @@
         @endforeach
     </div>
     {{ $products->links() }}
-
+@else
+    <div class="max-w-7xl mb-10 mx-auto sm:px-8 lg px-5 space-y-6">
+        <div class="p-2 sm:p-8 bg-white shadow sm:rounded-lg">
+            <div class="column product-wrapper text-center mb-50">
+                <div style="height: 30px;"></div>
+                <h4 class="product-title mt-9 mb-0"><a href=""> No artworks have been published yet. </a></h4>
+                <div style="height: 30px;"></div>
+            </div>
+        </div>
+    </div>
+@endif
 <section class="max-w-7xl mx-auto sm:px-8">
 
 @include('partials.footer')

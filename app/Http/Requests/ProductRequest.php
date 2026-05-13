@@ -11,12 +11,12 @@ class ProductRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+    public function rules(): array 
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'description' => ['required'],
-            'price' => ['required', 'numeric', 'min:0'],
+            'description' => ['required', 'max:255'],
+            'price' => ['required', 'numeric', 'min:0.01'],
             'image' => ['required', 'image'],
         ];
     }

@@ -8,7 +8,6 @@ use App\Models\User;
 use App\Models\Profile;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Redirect;
 
 class GoogleController extends Controller
