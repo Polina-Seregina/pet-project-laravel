@@ -3,10 +3,9 @@
 namespace Tests\Feature;
 
 use App\Models\Product;
-use App\Models\User;
 use App\Models\Profile;
+use App\Models\User;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ProductTest extends TestCase

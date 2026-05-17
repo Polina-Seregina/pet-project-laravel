@@ -4,16 +4,15 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Redirect;
-use App\Models\Product;
+use Symfony\Component\HttpFoundation\Response;
 
 class EnsureUserIsOwner
 {
     /**
      * Посредник, определяющий, что Пользователь является собственником арта.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -22,6 +21,7 @@ class EnsureUserIsOwner
         if ($request->user()->id !== $userId) {
             return Redirect::route('product.show', ['product' => $product]);
         }
+
         return $next($request);
     }
 }
