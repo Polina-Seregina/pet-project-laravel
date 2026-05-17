@@ -20,7 +20,7 @@ class ProductController extends Controller
     public function index(): View
     {
         return view('product.index', [
-            'products' => Product::where('status', 'for sale')->paginate(config('app.productsOnPage')),
+            'products' => Product::where('status', 'for sale')->paginate(config('app.products-on-page')),
         ]);
     }
 
@@ -37,10 +37,10 @@ class ProductController extends Controller
     /**
      * Возвращает страницу с отображением конкретного товара.
      */
-    public function show(Request $request, $productId): View
+    public function show(Request $request, Product $product): View
     {
         return view('product.show', [
-            'product' => Product::findOrFail($productId),
+            'product' => $product,
             'user' => $request->user()]);
     }
 
@@ -55,20 +55,17 @@ class ProductController extends Controller
     /**
      * Возвращает форму для редактирования товара.
      */
-    public function edit(Request $request, $productId): View
+    public function edit(Request $request, Product $product): View
     {
-        $product = $productId ? Product::findOrFail($productId) : null;
-
         return view('product.editForm', [
             'product' => $product,
-            'user' => $request->user(),
         ]);
     }
 
     /**
      * Публикация нового товара.
      */
-    public function publish(ProductRequest $request): RedirectResponse
+    public function store(ProductRequest $request): RedirectResponse
     {
         $validData = $request->validated();
 
@@ -84,20 +81,19 @@ class ProductController extends Controller
             'price' => $validData['price'],
             'image' => $path,
             'user_id' => $user->id,
-            'status' => ProductsStatus::ForSale->value,
+            'status' => $validData['status'] === 'for sale' ?
+                ProductsStatus::ForSale->value : ProductsStatus::Draft->value,
         ]);
 
-        return Redirect::route('product.show', ['productId' => $product->id])->with('status', 'product-created');
+        return Redirect::route('products.show', ['product' => $product])->with('status', 'product-created');
     }
 
     /**
      * Обновление данных у существующего товара.
      */
-    public function update(ProductUpdateRequest $request, $productId): RedirectResponse
+    public function update(ProductUpdateRequest $request, Product $product): RedirectResponse
     {
         $user = $request->user();
-
-        $product = Product::findOrFail($productId);
         $product->fill($request->validated());
 
         if ($request->hasFile('avatar')) {
@@ -109,17 +105,16 @@ class ProductController extends Controller
 
         $product->save();
 
-        return Redirect::route('product.show', ['productId' => $productId])->with('status', 'product-updated');
+        return Redirect::route('products.show', ['product' => $product])->with('status', 'product-updated');
     }
 
     /**
      * Удаление товара.
      */
-    public function destroy(Request $request, $productId): RedirectResponse
+    public function destroy(Request $request, Product $product): RedirectResponse
     {
-        $product = Product::findOrFail($productId);
         $product->delete();
 
-        return Redirect::route('product.my.index');
+        return Redirect::route('products.my.index');
     }
 }

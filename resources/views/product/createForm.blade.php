@@ -16,7 +16,7 @@
     <div class="p-2 sm:p-8 bg-white shadow sm:rounded-lg">
         <div class="column product-wrapper mb-50">
 
-            <form method="post" action="{{ route('product.publish') }}" enctype="multipart/form-data" class="mt-6 space-y-6">
+            <form method="post" action="{{ route('products.store') }}" enctype="multipart/form-data" class="mt-6 space-y-6">
                 @csrf
 
                 <div>
@@ -38,10 +38,20 @@
                 </div>
 
                 <div>
+                    <x-input-label for="status" :value="__('Status')" />
+                    <select name="status" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                        <option value="for sale" selected> Public </option>
+                        <option value="draft"> Draft </option>
+                    </select>
+                    <x-input-error class="mt-2" :messages="$errors->get('status')" />
+                </div>
+
+                <div>
                     <x-input-label for="image" :value="__('Image')" />
                     <input id="image" type="file" name="image">
                     <x-input-error class="mt-2" :messages="$errors->get('image')" />
                 </div>
+
                 
                 <div class="flex items-center gap-4">
                     <x-primary-button>{{ __('Save') }}</x-primary-button>

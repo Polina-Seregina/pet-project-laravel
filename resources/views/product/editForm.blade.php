@@ -12,13 +12,11 @@
     </div>
 </section>
 
-@if ($user->id === $product->user->id)
-
 <div class="max-w-7xl mb-10 mx-auto sm:px-8 lg px-5 space-y-6">
     <div class="p-2 sm:p-8 bg-white shadow sm:rounded-lg">
         <div class="column product-wrapper mb-50">
 
-            <form method="post" action="{{ route('product.update', ['productId' => $product->id]) }}" enctype="multipart/form-data" class="mt-6 space-y-6">
+            <form method="post" action="{{ route('products.update', ['product' => $product]) }}" enctype="multipart/form-data" class="mt-6 space-y-6">
                 @csrf
                 @method('patch')
                 <div>
@@ -40,6 +38,15 @@
                 </div>
 
                 <div>
+                    <x-input-label for="status" :value="__('Status')" />
+                    <select name="status" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('status', $product->status)">
+                        <option value="for sale"> Public </option>
+                        <option value="draft"> Draft </option>
+                    </select>
+                    <x-input-error class="mt-2" :messages="$errors->get('status')" />
+                </div>
+
+                <div>
                     <x-input-label for="image" :value="__('Image')" />
                     <input id="image" type="file" name="image" :value="old('image')">
                     <x-input-error class="mt-2" :messages="$errors->get('image')" />
@@ -53,7 +60,6 @@
     </div>
 </div>
 
-@endif
 
 @include('partials.footer')
 

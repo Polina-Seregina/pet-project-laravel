@@ -67,10 +67,10 @@
                 <div class="title-one text-center ">
                     @if ($user->id === $product->user->id)
                     <button class="ht-btn bs-style mb-2" type="submit">
-                        <a href="{{ route('product.edit', ['productId' => $product->id]) }}"> Edit art {{ $product->name }}</a>
+                        <a href="{{ route('products.edit', ['product' => $product]) }}"> Edit art {{ $product->name }}</a>
                     </button>
 
-                    <form method="post" action="{{ route('product.destroy', ['productId' => $product->id]) }}" class="p-6">
+                    <form method="post" action="{{ route('products.destroy', ['product' => $product]) }}" class="p-6">
                         @csrf
                         @method('delete')
                     

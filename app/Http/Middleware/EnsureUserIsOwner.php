@@ -17,11 +17,10 @@ class EnsureUserIsOwner
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $productId = $request->productId;
-        $product = Product::findOrFail($productId);
+        $product = $request->product;
         $userId = $product->user_id;
         if ($request->user()->id !== $userId) {
-            return Redirect::route('product.show', ['productId' => $productId]);
+            return Redirect::route('product.show', ['product' => $product]);
         }
         return $next($request);
     }

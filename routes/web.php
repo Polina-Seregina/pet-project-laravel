@@ -33,14 +33,14 @@ Route::middleware('auth')->group(function () {
     Route::patch('/wallet', [WalletController::class, 'topUp'])->name('wallet.replenishment');
     Route::get('/wallet/history', [TransactionController::class, 'showHistory'])->name('transaction.history');
 
-    Route::get('/products', [ProductController::class, 'index'])->name('product.index');
-    Route::get('/products/create', [ProductController::class, 'create'])->name('product.create');
-    Route::get('/my/products', [ProductController::class, 'usersIndex'])->name('product.my.index');
-    Route::get('/products/{productId}', [ProductController::class, 'show'])->name('product.show');
-    Route::get('/products/{productId}/edit', [ProductController::class, 'edit'])->name('product.edit')->middleware('owner');
-    Route::post('/products', [ProductController::class, 'publish'])->name('product.publish');
-    Route::patch('/products/{productId}', [ProductController::class, 'update'])->name('product.update')->middleware('owner');
-    Route::delete('/products/{productId}', [ProductController::class, 'destroy'])->name('product.destroy')->middleware('owner');
+    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
+    Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+    Route::get('/my/products', [ProductController::class, 'usersIndex'])->name('products.my.index');
+    Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
+    Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit')->middleware('owner');
+    Route::patch('/products/{product}', [ProductController::class, 'update'])->name('products.update')->middleware('owner');
+    Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy')->middleware('owner');
 });
 
 Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');

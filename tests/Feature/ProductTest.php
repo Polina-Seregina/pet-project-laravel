@@ -4,6 +4,9 @@ namespace Tests\Feature;
 
 use App\Models\Product;
 use App\Models\User;
+use App\Models\Profile;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ProductTest extends TestCase
@@ -33,12 +36,12 @@ class ProductTest extends TestCase
     }
 
     /**
-     * Должен проверять, что страница конкретного арта отображается.
-     * НЕ РАБОТАЕТ. Не понимаю почему:(
+     * Проверяет, что страница конкретного арта отображается.
      */
     public function test_product_page_showed(): void
     {
         $product = Product::factory()->create();
+        Profile::factory()->create(['user_id' => $product->user->id]);
 
         $response = $this->actingAs($product->user)->get("/products/{$product->id}");
         $response->assertStatus(200);
@@ -62,12 +65,14 @@ class ProductTest extends TestCase
         $user = User::factory()->create();
 
         $name = fake()->name();
+        $image = UploadedFile::fake()->create('image.jpg', 100);
 
         $response = $this->actingAs($user)->post('/products', [
             'name' => $name,
             'description' => fake()->realTextBetween(),
             'price' => fake()->numberBetween(0, 100000),
-            'image' => fake()->unique()->filePath(),
+            'status' => 'for sale',
+            'image' => $image,
         ]);
 
         $response->assertRedirect();
