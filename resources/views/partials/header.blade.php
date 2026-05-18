@@ -21,7 +21,7 @@
 								<li> <a href="/"> HOME </a> </li>
 								@auth
 								<li> <a href="{{ route('products.index') }}">MARKET</a> </li>
-								<li> <a href="{{ route('products.my.index') }}">MY ARTWORKS</a> </li>
+								<li> <a href="{{ route('user.products.index') }}">MY ARTWORKS</a> </li>
 								<li> <a href="{{ route('wallet.show') }}">WALLET</a> </li>
 								<li> <a href="{{ route('profile.show') }}">PROFILE</a> </li>		
 								@endauth

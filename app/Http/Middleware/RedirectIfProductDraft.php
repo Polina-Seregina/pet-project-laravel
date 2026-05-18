@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Symfony\Component\HttpFoundation\Response;
+use App\Enums\ProductsStatus;
 
 class RedirectIfProductDraft
 {
@@ -19,7 +20,7 @@ class RedirectIfProductDraft
         $product = $request->product;
         $userId = $product->user_id;
 
-        if (($request->user()->id !== $userId) && ! ($product->status === 'public')) {
+        if (($request->user()->id !== $userId) && ! ($product->status === ProductsStatus::FORSALE->label())) {
             return Redirect::route('products.index');
         }
 

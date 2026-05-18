@@ -19,7 +19,7 @@ class EnsureUserIsOwner
         $product = $request->product;
         $userId = $product->user_id;
         if ($request->user()->id !== $userId) {
-            return Redirect::route('product.show', ['product' => $product]);
+            return Redirect::route('products.show', ['product' => $product]);
         }
 
         return $next($request);

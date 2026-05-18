@@ -66,6 +66,18 @@
                 </div>
                 <div class="title-one text-center ">
                     @if ($user->id === $product->user->id)
+                    <div class="title-one text-center"> 
+                        Status
+                    </div>
+                    <div style="height: 30px;"></div>
+                    <div class="max-w-7xl mb-10 mx-auto sm:px-9 lg px-5 space-y-6">
+                        <section class="theme-banner-one">
+                            <div class="title-one text-center ">
+                                <a style="color: #cc722d;" class="pr-price">{{ $product->status }} </a>
+                            </div>
+                        </section>
+                    </div>
+                    
                     <button class="ht-btn bs-style mb-2" type="submit">
                         <a href="{{ route('products.edit', ['product' => $product]) }}"> Edit art {{ $product->name }}</a>
                     </button>

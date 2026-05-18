@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use App\Enums\ProductsStatus;
 
 class ProductUpdateRequest extends FormRequest
 {
@@ -18,7 +20,7 @@ class ProductUpdateRequest extends FormRequest
             'name' => ['string', 'max:255'],
             'description' => ['max:255'],
             'price' => ['numeric', 'min:0.01'],
-            'status' => ['string'],
+            'status' => ['string', Rule::in([ProductsStatus::FORSALE->value, ProductsStatus::DRAFT->value])],
             'image' => ['image', 'nullable'],
         ];
     }

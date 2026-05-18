@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ProductsStatus;
-use App\Http\Requests\ProductRequest;
+use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
@@ -20,7 +20,7 @@ class ProductController extends Controller
     public function index(): View
     {
         return view('product.index', [
-            'products' => Product::where('status', 'for sale')->paginate(config('app.products-on-page')),
+            'products' => Product::where('status', ProductsStatus::FORSALE->label())->paginate(config('app.products-on-page')),
         ]);
     }
 
@@ -30,7 +30,7 @@ class ProductController extends Controller
     public function usersIndex(Request $request): View
     {
         return view('product.myIndex', [
-            'products' => $request->user()->products()->paginate(config('app.productsOnPage')),
+            'products' => $request->user()->products()->paginate(config('app.products-on-page')),
         ]);
     }
 
@@ -65,7 +65,7 @@ class ProductController extends Controller
     /**
      * Публикация нового товара.
      */
-    public function store(ProductRequest $request): RedirectResponse
+    public function store(ProductStoreRequest $request): RedirectResponse
     {
         $validData = $request->validated();
 
@@ -82,7 +82,7 @@ class ProductController extends Controller
             'image' => $path,
             'user_id' => $user->id,
             'status' => $validData['status'] === 'for sale' ?
-                ProductsStatus::ForSale->value : ProductsStatus::Draft->value,
+                ProductsStatus::FORSALE->label() : ProductsStatus::DRAFT->label(),
         ]);
 
         return Redirect::route('products.show', ['product' => $product])->with('status', 'product-created');
@@ -94,7 +94,10 @@ class ProductController extends Controller
     public function update(ProductUpdateRequest $request, Product $product): RedirectResponse
     {
         $user = $request->user();
-        $product->fill($request->validated());
+        $validData = $request->validated();
+        $product->fill($validData);
+        $product->status = $validData['status'] === 'for sale' ?
+            ProductsStatus::FORSALE->label() : ProductsStatus::DRAFT->label();
 
         if ($request->hasFile('avatar')) {
             $file = $request->file('image');
@@ -115,6 +118,6 @@ class ProductController extends Controller
     {
         $product->delete();
 
-        return Redirect::route('products.my.index');
+        return Redirect::route('user.products.index');
     }
 }

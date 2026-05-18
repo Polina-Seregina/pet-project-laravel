@@ -25,7 +25,7 @@ class ProductFactory extends Factory
             'price' => fake()->numberBetween(0, 100000),
             'image' => fake()->unique()->filePath(),
             'user_id' => User::factory(),
-            'status' => ProductsStatus::ForSale->value,
+            'status' => ProductsStatus::FORSALE->label(),
         ];
     }
 }
