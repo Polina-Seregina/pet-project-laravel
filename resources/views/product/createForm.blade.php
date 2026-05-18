@@ -40,8 +40,8 @@
                 <div>
                     <x-input-label for="status" :value="__('Status')" />
                     <select name="status" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
-                        <option value="for sale" selected> public </option>
-                        <option value="draft"> draft </option>
+                        <option value="for_sale" selected> {{ $status::FORSALE->label() }} </option>
+                        <option value="draft"> {{ $status::DRAFT->label() }} </option>
                     </select>
                     <x-input-error class="mt-2" :messages="$errors->get('status')" />
                 </div>

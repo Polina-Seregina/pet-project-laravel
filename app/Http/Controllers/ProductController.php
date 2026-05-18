@@ -49,7 +49,7 @@ class ProductController extends Controller
      */
     public function create(): View
     {
-        return view('product.createForm');
+        return view('product.createForm', ['status' => ProductsStatus::class]);
     }
 
     /**
@@ -59,6 +59,7 @@ class ProductController extends Controller
     {
         return view('product.editForm', [
             'product' => $product,
+            'status' => ProductsStatus::class,
         ]);
     }
 
@@ -81,7 +82,7 @@ class ProductController extends Controller
             'price' => $validData['price'],
             'image' => $path,
             'user_id' => $user->id,
-            'status' => $validData['status'] === 'for sale' ?
+            'status' => $validData['status'] === ProductsStatus::FORSALE->value ?
                 ProductsStatus::FORSALE->label() : ProductsStatus::DRAFT->label(),
         ]);
 
@@ -96,7 +97,7 @@ class ProductController extends Controller
         $user = $request->user();
         $validData = $request->validated();
         $product->fill($validData);
-        $product->status = $validData['status'] === 'for sale' ?
+        $product->status = $validData['status'] === ProductsStatus::FORSALE->value ?
             ProductsStatus::FORSALE->label() : ProductsStatus::DRAFT->label();
 
         if ($request->hasFile('avatar')) {

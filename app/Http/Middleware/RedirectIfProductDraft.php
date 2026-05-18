@@ -2,11 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\ProductsStatus;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Symfony\Component\HttpFoundation\Response;
-use App\Enums\ProductsStatus;
 
 class RedirectIfProductDraft
 {
