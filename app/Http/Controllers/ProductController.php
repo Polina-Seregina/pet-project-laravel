@@ -100,7 +100,7 @@ class ProductController extends Controller
         $product->status = $validData['status'] === ProductsStatus::FORSALE->value ?
             ProductsStatus::FORSALE->label() : ProductsStatus::DRAFT->label();
 
-        if ($request->hasFile('avatar')) {
+        if ($request->hasFile('image')) {
             $file = $request->file('image');
             $name = $file->getClientOriginalName();
             $path = Storage::disk('s3')->putFile("products/{$user->id}/products", $file);

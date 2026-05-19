@@ -40,15 +40,24 @@
                 <div>
                     <x-input-label for="status" :value="__('Status')" />
                     <select name="status" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('status', $product->status)">
-                        <option value="for_sale"> {{ $status::FORSALE->label() }}  </option>
-                        <option value="draft"> {{ $status::DRAFT->label() }} </option>
+                        <option value="for_sale" 
+                        @if ($product->status === $status::FORSALE->label())
+                            selected
+                        @endif
+                        > {{ $status::FORSALE->label() }}  </option>
+                        <option value="draft" 
+                        @if ($product->status === $status::DRAFT->label())
+                            selected
+                        @endif> {{ $status::DRAFT->label() }} </option>
                     </select>
                     <x-input-error class="mt-2" :messages="$errors->get('status')" />
                 </div>
 
                 <div>
                     <x-input-label for="image" :value="__('Image')" />
-                    <input id="image" type="file" name="image" :value="old('image')">
+                    <img class="mt-2 mb-3" style="border-radius:10%" width="100" src="{{ Storage::url($product->image) }}">
+                    <p class="text-sm text-gray-600 mb-4"> Установленное изображение. Загрузи новое, чтобы заменить. </p>
+                    <input id="image" type="file" name="image">
                     <x-input-error class="mt-2" :messages="$errors->get('image')" />
                 </div>
                 
