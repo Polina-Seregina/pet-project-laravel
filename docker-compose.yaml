@@ -16,6 +16,7 @@ services:
     volumes:
       - .:/var/www/laravel
     container_name: app_container
+    command: sh -c "chown -R www-data:www-data /var/www/laravel/storage && php-fpm"
   mysql:
     image: mysql:8.0
     ports:

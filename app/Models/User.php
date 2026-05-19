@@ -57,4 +57,12 @@ class User extends Authenticatable
     {
         return $this->hasOne(Wallet::class);
     }
+    /**
+     * Получить товары, принадлежащие пользователю.
+     */
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 }
