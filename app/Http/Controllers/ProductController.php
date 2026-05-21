@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ProductsStatus;
+use App\Enums\TransactionType;
 use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
+use App\Models\Transaction;
 use App\Models\Product;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -120,5 +123,52 @@ class ProductController extends Controller
         $product->delete();
 
         return Redirect::route('user.products.index');
+    }
+
+    /**
+     * Покупка товара.
+     */
+    public function buyProduct(Request $request, Product $product): RedirectResponse
+    {
+        $owner = $product->user;
+        $buyer = $request->user();
+
+        $userHaveMoney = $product->price <= $buyer->wallet->balance; 
+
+        if (!$userHaveMoney) {
+            return Redirect::route('products.show', ['product' => $product])->with('status', 'noMoney');
+        }
+
+        try {
+            DB::transaction(function () use ($product, $buyer, $owner) {
+                $owner->wallet->increment('balance', $product->price);
+                $owner->wallet->save();
+
+                $buyer->wallet->decrement('balance', $product->price);
+                $buyer->wallet->save();
+                
+                $product->user_id = $buyer->id;
+                $product->status = ProductsStatus::SOLD->label();
+                $product->save();
+
+                $transactionBuyer = Transaction::create([
+                    'amount' => $product->price,
+                    'type' => TransactionType::SPENDING->label(),
+                    'wallet_id' => $buyer->wallet->id,
+                ]);
+
+                $transactionOwner = Transaction::create([
+                    'amount' => $product->price,
+                    'type' => TransactionType::REPLENISHMENT->label(),
+                    'wallet_id' => $owner->wallet->id,
+                ]);
+
+            }, 3);
+            $request->session()->flash('status', 'success');
+        } catch (Exception $e) {
+            $request->session()->flash('status', 'fail');
+        } 
+        
+        return Redirect::route('products.show', ['product' => $product]);
     }
 }
