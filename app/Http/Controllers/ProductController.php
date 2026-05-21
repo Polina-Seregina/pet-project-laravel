@@ -6,11 +6,11 @@ use App\Enums\ProductsStatus;
 use App\Enums\TransactionType;
 use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
-use App\Models\Transaction;
 use App\Models\Product;
-use Illuminate\Support\Facades\DB;
+use App\Models\Transaction;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
@@ -133,9 +133,9 @@ class ProductController extends Controller
         $owner = $product->user;
         $buyer = $request->user();
 
-        $userHaveMoney = $product->price <= $buyer->wallet->balance; 
+        $userHaveMoney = $product->price <= $buyer->wallet->balance;
 
-        if (!$userHaveMoney) {
+        if (! $userHaveMoney) {
             return Redirect::route('products.show', ['product' => $product])->with('status', 'noMoney');
         }
 
@@ -146,7 +146,7 @@ class ProductController extends Controller
 
                 $buyer->wallet->decrement('balance', $product->price);
                 $buyer->wallet->save();
-                
+
                 $product->user_id = $buyer->id;
                 $product->status = ProductsStatus::SOLD->label();
                 $product->save();
@@ -167,8 +167,8 @@ class ProductController extends Controller
             $request->session()->flash('status', 'success');
         } catch (Exception $e) {
             $request->session()->flash('status', 'fail');
-        } 
-        
+        }
+
         return Redirect::route('products.show', ['product' => $product]);
     }
 }
