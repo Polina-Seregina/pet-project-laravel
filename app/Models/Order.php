@@ -15,5 +15,4 @@ class Order extends Model
         'buyer',
         'seller',
     ];
-    
 }
