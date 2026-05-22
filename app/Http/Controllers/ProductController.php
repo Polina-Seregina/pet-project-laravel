@@ -135,7 +135,7 @@ class ProductController extends Controller
 
         $userHaveMoney = $product->price <= $buyer->wallet->balance;
 
-        if (! $userHaveMoney) {
+        if (!$userHaveMoney) {
             return Redirect::route('products.show', ['product' => $product])->with('status', 'noMoney');
         }
 
