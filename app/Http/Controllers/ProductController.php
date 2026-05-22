@@ -130,7 +130,7 @@ class ProductController extends Controller
      */
     public function buyProduct(Request $request, Product $product): RedirectResponse
     {
-        $owner = $product->user;
+        $seller = $product->user;
         $buyer = $request->user();
 
         $userHaveMoney = $product->price <= $buyer->wallet->balance;
@@ -140,16 +140,25 @@ class ProductController extends Controller
         }
 
         try {
-            DB::transaction(function () use ($product, $buyer, $owner) {
-                $owner->wallet->increment('balance', $product->price);
-                $owner->wallet->save();
+            DB::transaction(function () use ($product, $buyer, $seller) {
+                $seller->wallet->increment('balance', $product->price);
+                $seller->wallet->save();
 
                 $buyer->wallet->decrement('balance', $product->price);
                 $buyer->wallet->save();
+                
+                $newProduct = Product::create([
+                    'name' => $product->name,
+                    'description' => $product->description,
+                    'price' => $product->price,
+                    'image' => $product->image,
+                    'user_id' => $buyer->id,
+                    'status' => ProductsStatus::PURCHASED->label(),
+                ]);
 
-                $product->user_id = $buyer->id;
                 $product->status = ProductsStatus::SOLD->label();
                 $product->save();
+                $product->delete();
 
                 $transactionBuyer = Transaction::create([
                     'amount' => $product->price,
@@ -157,10 +166,10 @@ class ProductController extends Controller
                     'wallet_id' => $buyer->wallet->id,
                 ]);
 
-                $transactionOwner = Transaction::create([
+                $transactionSeller = Transaction::create([
                     'amount' => $product->price,
                     'type' => TransactionType::REPLENISHMENT->label(),
-                    'wallet_id' => $owner->wallet->id,
+                    'wallet_id' => $seller->wallet->id,
                 ]);
 
             }, 3);
@@ -168,7 +177,6 @@ class ProductController extends Controller
         } catch (Exception $e) {
             $request->session()->flash('status', 'fail');
         }
-
-        return Redirect::route('products.show', ['product' => $product]);
+        return Redirect::route('user.products.index');
     }
 }

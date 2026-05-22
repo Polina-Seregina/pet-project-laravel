@@ -41,7 +41,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit')->middleware('owner');
     Route::patch('/products/{product}', [ProductController::class, 'update'])->name('products.update')->middleware('owner');
     Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy')->middleware('owner');
-    Route::get('/pproducts/{product}/buy', [ProductController::class, 'buyProduct'])->name('products.buy')->middleware('onlyPublic');
+    Route::get('/products/{product}/buy', [ProductController::class, 'buyProduct'])->name('products.buy')->middleware('onlyPublic');
 });
 
 Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
