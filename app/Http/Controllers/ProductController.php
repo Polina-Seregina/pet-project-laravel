@@ -146,7 +146,7 @@ class ProductController extends Controller
 
                 $buyer->wallet->decrement('balance', $product->price);
                 $buyer->wallet->save();
-                
+
                 $newProduct = Product::create([
                     'name' => $product->name,
                     'description' => $product->description,
@@ -177,6 +177,7 @@ class ProductController extends Controller
         } catch (Exception $e) {
             $request->session()->flash('status', 'fail');
         }
+
         return Redirect::route('user.products.index');
     }
 }
