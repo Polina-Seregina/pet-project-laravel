@@ -1,10 +1,6 @@
 {
   "preset": "psr12",
   "rules": {
-    "binary_operator_spaces": {
-      "operators": {
-        "!": false
-      }
-    }
+    "binary_operator_spaces": false
   }
 }
