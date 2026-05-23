@@ -9,7 +9,7 @@ IFS='
 get_config() {
     # https://laravel.com/docs/master/pint#configuring-pint
     if test -f "./pint.json"; then
-        echo "/pint.json"
+        echo "./pint.json"
         return
     fi
 }
@@ -18,7 +18,6 @@ run_laravel_pint() {
     laravel_pint_bin=
     if test -f "vendor/bin/pint"; then
         laravel_pint_bin="vendor/bin/pint"
-        break
     fi
 
     if test -z "$laravel_pint_bin"; then

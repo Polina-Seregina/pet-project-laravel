@@ -1,6 +1,6 @@
 {
   "preset": "psr12",
   "rules": {
-    "binary_operator_spaces": false
+    "not_operator_with_successor_space": false
   }
 }
