@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ProductsStatus;
+use App\Enums\TransactionType;
 use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
 use App\Models\Product;
+use App\Models\Transaction;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
@@ -118,6 +121,62 @@ class ProductController extends Controller
     public function destroy(Request $request, Product $product): RedirectResponse
     {
         $product->delete();
+
+        return Redirect::route('user.products.index');
+    }
+
+    /**
+     * Покупка товара.
+     */
+    public function buyProduct(Request $request, Product $product): RedirectResponse
+    {
+        $seller = $product->user;
+        $buyer = $request->user();
+
+        $userHaveMoney = $product->price <= $buyer->wallet->balance;
+
+        if (!$userHaveMoney) {
+            return Redirect::route('products.show', ['product' => $product])->with('status', 'noMoney');
+        }
+
+        try {
+            DB::transaction(function () use ($product, $buyer, $seller) {
+                $seller->wallet->increment('balance', $product->price);
+                $seller->wallet->save();
+
+                $buyer->wallet->decrement('balance', $product->price);
+                $buyer->wallet->save();
+
+                $newProduct = Product::create([
+                    'name' => $product->name,
+                    'description' => $product->description,
+                    'price' => $product->price,
+                    'image' => $product->image,
+                    'user_id' => $buyer->id,
+                    'status' => ProductsStatus::PURCHASED->label(),
+                ]);
+
+                $product->status = ProductsStatus::SOLD->label();
+                $product->save();
+                $product->delete();
+
+                $transactionBuyer = Transaction::create([
+                    'amount' => $product->price,
+                    'type' => TransactionType::SPENDING->label(),
+                    'wallet_id' => $buyer->wallet->id,
+                ]);
+
+                $transactionSeller = Transaction::create([
+                    'amount' => $product->price,
+                    'type' => TransactionType::REPLENISHMENT->label(),
+                    'wallet_id' => $seller->wallet->id,
+                ]);
+
+            }, 3);
+            $request->session()->flash('status', 'success');
+        } catch (Exception $e) {
+            $request->session()->flash('status', 'fail');
+        }
 
         return Redirect::route('user.products.index');
     }

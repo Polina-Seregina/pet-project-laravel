@@ -23,6 +23,37 @@
         </div>
     </section>
 
+    @if (session('status') === 'success')
+        <p
+            x-data="{ show: true }"
+            x-show="show"
+            x-transition
+            x-init="setTimeout(() => show = false, 2000)"
+            class="text-sm text-gray-600"
+        >{{ __("Поздравляем! Вы купили арт '{$product->name}'.") }}</p>
+    @endif
+
+    @if (session('status') === 'fail')
+        <p
+            x-data="{ show: true }"
+            x-show="show"
+            x-transition
+            x-init="setTimeout(() => show = false, 2000)"
+            class="text-sm text-gray-600"
+        > Что-то пошло не так, попробуйте позже. </p>
+    @endif
+
+    @if (session('status') === 'noMoney')
+        <p
+            x-data="{ show: true }"
+            x-show="show"
+            x-transition
+            x-init="setTimeout(() => show = false, 2000)"
+            class="text-sm text-gray-600"
+        > Недостаточно средств на балансе для покупки арта '{{$product->name }}'.</p>
+    @endif
+
+
 <div class="max-w-7xl mb-10 mx-auto sm:px-9 lg px-5 space-y-6">
 
     <div style="display: flex;">
@@ -94,7 +125,7 @@
 
                     @else
                     <button class="ht-btn bs-style mb-2" type="submit">
-                        <a href=""> Buy art {{ $product->name }}</a>
+                        <a href="{{ route('products.buy', ['product' => $product]) }}"> Buy art {{ $product->name }}</a>
                     </button>
                     @endif
                 </div>

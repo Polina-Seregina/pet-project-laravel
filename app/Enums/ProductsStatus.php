@@ -7,6 +7,7 @@ enum ProductsStatus: string
     case FORSALE = 'for_sale';
     case SOLD = 'sold';
     case DRAFT = 'draft';
+    case PURCHASED = 'purchased';
 
     public function label(): string
     {
@@ -14,6 +15,7 @@ enum ProductsStatus: string
             self::FORSALE => 'На продажу',
             self::SOLD => 'Продан',
             self::DRAFT => 'Черновик',
+            self::PURCHASED => 'Приобретен'
         };
     }
 }
