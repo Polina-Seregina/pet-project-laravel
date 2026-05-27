@@ -5,6 +5,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WalletController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -42,6 +43,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/products/{product}', [ProductController::class, 'update'])->name('products.update')->middleware('owner');
     Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy')->middleware('owner');
     Route::get('/products/{product}/buy', [ProductController::class, 'buyProduct'])->name('products.buy')->middleware('onlyPublic');
+
+    Route::get('/orders/sold', [OrderController::class, 'getListOfSoldProducts'])->name('orders.sold');
+    Route::get('/orders/purchased', [OrderController::class, 'getListOfPurchasedProducts'])->name('orders.purchased');
+
 });
 
 Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');

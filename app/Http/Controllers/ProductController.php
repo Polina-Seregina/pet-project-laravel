@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Enums\ProductsStatus;
 use App\Enums\TransactionType;
+use App\Enums\OrderStatus;
 use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
 use App\Models\Product;
+use App\Models\Wallet;
+use App\Models\Order;
 use App\Models\Transaction;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -139,8 +142,18 @@ class ProductController extends Controller
             return Redirect::route('products.show', ['product' => $product])->with('status', 'noMoney');
         }
 
+        $order = Order::create([
+                    'status' => OrderStatus::CREATED->label(),
+                    'product_id' => $product->id,
+                    'seller_id' => $seller->id,
+                    'buyer_id' => $buyer->id,
+                ]);
+
         try {
-            DB::transaction(function () use ($product, $buyer, $seller) {
+            DB::transaction(function () use ($product, $buyer, $seller, &$order) {
+                Wallet::where('user_id', $buyer->id)->lockForUpdate()->first();
+                Wallet::where('user_id', $seller->id)->lockForUpdate()->first();
+
                 $seller->wallet->increment('balance', $product->price);
                 $seller->wallet->save();
 
@@ -155,6 +168,10 @@ class ProductController extends Controller
                     'user_id' => $buyer->id,
                     'status' => ProductsStatus::PURCHASED->label(),
                 ]);
+                
+                $order->new_product_id = $newProduct->id;
+                $order->status = OrderStatus::COMPLETED->label();
+                $order->save();
 
                 $product->status = ProductsStatus::SOLD->label();
                 $product->save();
@@ -173,11 +190,17 @@ class ProductController extends Controller
                 ]);
 
             }, 3);
+        
             $request->session()->flash('status', 'success');
-        } catch (Exception $e) {
-            $request->session()->flash('status', 'fail');
-        }
 
+        } catch (Exception $e) {
+
+            $request->session()->flash('status', 'fail');
+            $order->new_product_id = $newProduct->id;
+            $order->status = OrderStatus::CENCELED->label();
+            $order->save();
+        }
+    
         return Redirect::route('user.products.index');
     }
 }

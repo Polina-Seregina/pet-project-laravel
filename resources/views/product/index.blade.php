@@ -44,7 +44,7 @@
         </div>
     </div>
 @endif
-<section class="max-w-7xl mx-auto sm:px-8">
+</section>
 
 @include('partials.footer')
 

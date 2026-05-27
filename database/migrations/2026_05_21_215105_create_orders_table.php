@@ -13,9 +13,18 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('buyer')->references('id')->on('users');
-            $table->foreignId('seller')->references('id')->on('users');
+            $table->unsignedBigInteger('product_id');
+            $table->foreign('product_id')->references('id')->on('products');
+
+            $table->unsignedBigInteger('new_product_id')->nullable();
+            $table->foreign('new_product_id')->references('id')->on('products');
+            
+            $table->unsignedBigInteger('buyer_id');
+            $table->foreign('buyer_id')->references('id')->on('users');
+
+            $table->unsignedBigInteger('seller_id');
+            $table->foreign('seller_id')->references('id')->on('users');
+            
             $table->string('status');
             $table->timestamps();
         });
