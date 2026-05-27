@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      */
@@ -18,13 +17,13 @@ return new class extends Migration
 
             $table->unsignedBigInteger('new_product_id')->nullable();
             $table->foreign('new_product_id')->references('id')->on('products');
-            
+
             $table->unsignedBigInteger('buyer_id');
             $table->foreign('buyer_id')->references('id')->on('users');
 
             $table->unsignedBigInteger('seller_id');
             $table->foreign('seller_id')->references('id')->on('users');
-            
+
             $table->string('status');
             $table->timestamps();
         });

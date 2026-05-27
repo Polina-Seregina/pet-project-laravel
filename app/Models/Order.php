@@ -4,10 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Product;
-use App\Models\User;
 
-class Order extends Model 
+class Order extends Model
 {
     use HasFactory;
 
@@ -27,7 +25,7 @@ class Order extends Model
 
     public function purchasedProduct(): Product
     {
-        $product = Product::withTrashed()->where('id', $this->new_product_id)->first();   
+        $product = Product::withTrashed()->where('id', $this->new_product_id)->first();
         return $product;
     }
 

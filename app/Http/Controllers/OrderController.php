@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Enums\OrderStatus;
@@ -9,7 +10,7 @@ use Illuminate\View\View;
 class OrderController extends Controller
 {
     /**
-     * Получить список успешно выполненных заказов по продаже артов. 
+     * Получить список успешно выполненных заказов по продаже артов.
      */
 
     public function getListOfSoldProducts(Request $request): View
@@ -24,7 +25,7 @@ class OrderController extends Controller
     }
 
     /**
-     * Получить список приобретеннх артов.  
+     * Получить список приобретеннх артов.
      */
 
     public function getListOfPurchasedProducts(Request $request): View
@@ -32,7 +33,7 @@ class OrderController extends Controller
         $orders = Order::where('buyer_id', $request->user()->id)
             ->where('status', OrderStatus::COMPLETED->label())
             ->paginate(config('app.products-on-page'));
-        
+
         return view('orders.purchased', ['orders' => $orders]);
     }
 

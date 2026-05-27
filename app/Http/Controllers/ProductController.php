@@ -168,7 +168,7 @@ class ProductController extends Controller
                     'user_id' => $buyer->id,
                     'status' => ProductsStatus::PURCHASED->label(),
                 ]);
-                
+
                 $order->new_product_id = $newProduct->id;
                 $order->status = OrderStatus::COMPLETED->label();
                 $order->save();
@@ -190,7 +190,7 @@ class ProductController extends Controller
                 ]);
 
             }, 3);
-        
+
             $request->session()->flash('status', 'success');
 
         } catch (Exception $e) {
@@ -200,7 +200,7 @@ class ProductController extends Controller
             $order->status = OrderStatus::CENCELED->label();
             $order->save();
         }
-    
+
         return Redirect::route('user.products.index');
     }
 }
