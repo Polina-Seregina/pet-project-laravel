@@ -142,8 +142,12 @@ class ProductController extends Controller
             return Redirect::route('products.show', ['product' => $product])->with('status', 'noMoney');
         }
 
+        if ($seller->id == $buyer->id) {
+            return Redirect::route('products.show', ['product' => $product])->with('status', 'yourProduct');
+        }
+
         $order = Order::create([
-                    'status' => OrderStatus::CREATED->label(),
+                    'status' => OrderStatus::CREATED,
                     'product_id' => $product->id,
                     'seller_id' => $seller->id,
                     'buyer_id' => $buyer->id,
@@ -151,14 +155,14 @@ class ProductController extends Controller
 
         try {
             DB::transaction(function () use ($product, $buyer, $seller, &$order) {
-                Wallet::where('user_id', $buyer->id)->lockForUpdate()->first();
-                Wallet::where('user_id', $seller->id)->lockForUpdate()->first();
+                $sellerWallet = Wallet::where('user_id', $seller->id)->lockForUpdate()->first();
+                $buyerWallet = Wallet::where('user_id', $buyer->id)->lockForUpdate()->first();
 
-                $seller->wallet->increment('balance', $product->price);
-                $seller->wallet->save();
+                $sellerWallet->increment('balance', $product->price);
+                $sellerWallet->save();
 
-                $buyer->wallet->decrement('balance', $product->price);
-                $buyer->wallet->save();
+                $buyerWallet->decrement('balance', $product->price);
+                $buyerWallet->save();
 
                 $newProduct = Product::create([
                     'name' => $product->name,
@@ -170,20 +174,20 @@ class ProductController extends Controller
                 ]);
 
                 $order->new_product_id = $newProduct->id;
-                $order->status = OrderStatus::COMPLETED->label();
+                $order->status = OrderStatus::COMPLETED;
                 $order->save();
 
                 $product->status = ProductsStatus::SOLD->label();
                 $product->save();
                 $product->delete();
 
-                $transactionBuyer = Transaction::create([
+                Transaction::create([
                     'amount' => $product->price,
                     'type' => TransactionType::SPENDING->label(),
                     'wallet_id' => $buyer->wallet->id,
                 ]);
 
-                $transactionSeller = Transaction::create([
+                Transaction::create([
                     'amount' => $product->price,
                     'type' => TransactionType::REPLENISHMENT->label(),
                     'wallet_id' => $seller->wallet->id,
@@ -197,7 +201,7 @@ class ProductController extends Controller
 
             $request->session()->flash('status', 'fail');
             $order->new_product_id = $newProduct->id;
-            $order->status = OrderStatus::CENCELED->label();
+            $order->status = OrderStatus::CANCELED;
             $order->save();
         }
 

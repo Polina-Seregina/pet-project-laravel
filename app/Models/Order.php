@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
@@ -17,25 +18,23 @@ class Order extends Model
         'seller_id',
     ];
 
-    public function soldProduct(): Product
+    public function soldProduct(): BelongsTo
     {
-        $product = Product::withTrashed()->where('id', $this->product_id)->first();
-        return $product;
+        return $this->belongsTo(Product::class, 'product_id')->withTrashed();
     }
 
-    public function purchasedProduct(): Product
+    public function purchasedProduct(): BelongsTo
     {
-        $product = Product::withTrashed()->where('id', $this->new_product_id)->first();
-        return $product;
+        return $this->belongsTo(Product::class, 'new_product_id')->withTrashed();
     }
 
-    public function buyer(): User
+    public function buyer(): BelongsTo
     {
-        return User::where('id', $this->buyer_id)->first();
+        return $this->belongsTo(User::class, 'buyer_id');
     }
 
-    public function seller(): User
+    public function seller(): BelongsTo
     {
-        return User::where('id', $this->seller_id)->first();
+        return $this->belongsTo(User::class, 'seller_id');
     }
 }

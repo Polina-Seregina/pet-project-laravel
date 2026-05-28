@@ -17,21 +17,22 @@ class OrderController extends Controller
     {
         $user = $request->user();
         $orders = Order::where('seller_id', $user->id)
-            ->where('status', OrderStatus::COMPLETED->label())
+            ->where('status', OrderStatus::COMPLETED)
+            ->orderByDesc('created_at')
             ->paginate(config('app.products-on-page'));
-
         return view('orders.sold', ['orders' => $orders]);
 
     }
 
     /**
-     * Получить список приобретеннх артов.
+     * Получить список приобретенных артов.
      */
 
     public function getListOfPurchasedProducts(Request $request): View
     {
         $orders = Order::where('buyer_id', $request->user()->id)
-            ->where('status', OrderStatus::COMPLETED->label())
+            ->where('status', OrderStatus::COMPLETED)
+            ->orderByDesc('created_at')
             ->paginate(config('app.products-on-page'));
 
         return view('orders.purchased', ['orders' => $orders]);
