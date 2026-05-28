@@ -20,7 +20,7 @@ class OrderController extends Controller
             ->where('status', OrderStatus::COMPLETED->value)
             ->orderByDesc('created_at')
             ->paginate(config('app.products-on-page'));
-            
+
         return view($nameOfView, ['orders' => $orders]);
     }
     /**
