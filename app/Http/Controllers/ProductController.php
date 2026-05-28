@@ -147,7 +147,7 @@ class ProductController extends Controller
         }
 
         $order = Order::create([
-                    'status' => OrderStatus::CREATED,
+                    'status' => OrderStatus::CREATED->value,
                     'product_id' => $product->id,
                     'seller_id' => $seller->id,
                     'buyer_id' => $buyer->id,
@@ -174,7 +174,7 @@ class ProductController extends Controller
                 ]);
 
                 $order->new_product_id = $newProduct->id;
-                $order->status = OrderStatus::COMPLETED;
+                $order->status = OrderStatus::COMPLETED->value;
                 $order->save();
 
                 $product->status = ProductsStatus::SOLD->label();
@@ -200,8 +200,7 @@ class ProductController extends Controller
         } catch (Exception $e) {
 
             $request->session()->flash('status', 'fail');
-            $order->new_product_id = $newProduct->id;
-            $order->status = OrderStatus::CANCELED;
+            $order->status = OrderStatus::CANCELED->value;
             $order->save();
         }
 

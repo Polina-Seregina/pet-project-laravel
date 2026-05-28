@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\OrderStatus;
 
 class Order extends Model
 {
@@ -17,6 +18,10 @@ class Order extends Model
         'buyer_id',
         'seller_id',
     ];
+
+    protected $casts = [
+        'status' => OrderStatus::class
+    ]; 
 
     public function soldProduct(): BelongsTo
     {

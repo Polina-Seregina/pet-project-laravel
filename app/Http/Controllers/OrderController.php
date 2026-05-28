@@ -10,32 +10,36 @@ use Illuminate\View\View;
 class OrderController extends Controller
 {
     /**
+     * Получить успешно выполненные заказы по продаже/покупке артов.
+     */
+
+    private function getOrders(String $role, String $nameOfView, Request $request)
+    {
+        $orders = Order::with(['seller', 'buyer', 'soldProduct', 'purchasedProduct' ])
+            ->where($role, $request->user()->id)
+            ->where('status', OrderStatus::COMPLETED->value)
+            ->orderByDesc('created_at')
+            ->paginate(config('app.products-on-page'));
+            
+        return view($nameOfView, ['orders' => $orders]);
+    }
+    /**
      * Получить список успешно выполненных заказов по продаже артов.
      */
 
     public function getListOfSoldProducts(Request $request): View
     {
-        $user = $request->user();
-        $orders = Order::where('seller_id', $user->id)
-            ->where('status', OrderStatus::COMPLETED)
-            ->orderByDesc('created_at')
-            ->paginate(config('app.products-on-page'));
-        return view('orders.sold', ['orders' => $orders]);
-
+        return $this->getOrders('seller_id', 'orders.sold', $request);
     }
 
     /**
-     * Получить список приобретенных артов.
+     * Получить успешно выполненные заказы по покупке артов.
      */
 
     public function getListOfPurchasedProducts(Request $request): View
     {
-        $orders = Order::where('buyer_id', $request->user()->id)
-            ->where('status', OrderStatus::COMPLETED)
-            ->orderByDesc('created_at')
-            ->paginate(config('app.products-on-page'));
+        return $this->getOrders('buyer_id', 'orders.purchased', $request);
 
-        return view('orders.purchased', ['orders' => $orders]);
     }
 
 }

@@ -23,26 +23,6 @@
         </div>
     </section>
 
-    @if (session('status') === 'success')
-        <p
-            x-data="{ show: true }"
-            x-show="show"
-            x-transition
-            x-init="setTimeout(() => show = false, 2000)"
-            class="text-sm text-gray-600"
-        >{{ __("Поздравляем! Вы купили арт '{$product->name}'.") }}</p>
-    @endif
-
-    @if (session('status') === 'fail')
-        <p
-            x-data="{ show: true }"
-            x-show="show"
-            x-transition
-            x-init="setTimeout(() => show = false, 2000)"
-            class="text-sm text-gray-600"
-        > Что-то пошло не так, попробуйте позже. </p>
-    @endif
-
     @if (session('status') === 'noMoney')
         <p
             x-data="{ show: true }"
