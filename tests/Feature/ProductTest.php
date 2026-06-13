@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Product;
+use App\Enums\ProductsStatus;
 use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
@@ -70,7 +71,7 @@ class ProductTest extends TestCase
             'name' => $name,
             'description' => fake()->realTextBetween(),
             'price' => fake()->numberBetween(0, 100000),
-            'status' => 'for sale',
+            'status' => ProductsStatus::FORSALE->label(),
             'image' => $image,
         ]);
 
