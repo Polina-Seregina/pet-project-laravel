@@ -8,7 +8,6 @@ use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
-use Illuminate\Support\Facades\Storage;
 use App\Enums\ProductsStatus;
 
 class ProductTest extends TestCase
@@ -85,7 +84,7 @@ class ProductTest extends TestCase
         ]);
     }
     /** ТЕСТ НЕ ДОПИСАН */
-    /** Проверяет, что Пользователь, являющийся автором и владелецем, может редактировать image, 
+    /** Проверяет, что Пользователь, являющийся автором и владелецем, может редактировать image,
      * а Пользователь владелец - нет. */
     public function test_author_can_edit_image(): void
     {
@@ -100,7 +99,7 @@ class ProductTest extends TestCase
             'price' => fake()->numberBetween(0, 100000),
             'status' => ProductsStatus::FORSALE->label()]);
         */
-        dd($newImage);    
+        dd($newImage);
         dd(realPath($newImage), $oldImage, $product);
         //echo($oldImage);
         //echo($product->image);

@@ -105,7 +105,7 @@ class ProductController extends Controller
     {
         $user = $request->user();
         $author = $product->author;
-        
+
         $validData = $request->validated();
         $product->name = $validData['name'];
         $product->description = $validData['description'];
