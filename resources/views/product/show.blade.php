@@ -62,6 +62,18 @@
                 </div>
 
                 <div class="title-one text-center"> 
+                    Автор
+                </div>
+                <div style="height: 30px;"></div>
+                <div class="max-w-7xl mb-10 mx-auto sm:px-9 lg px-5 space-y-6">
+                    <section class="theme-banner-one">
+                        <div class="title-one text-center ">
+                            {{ $product->author->profile->nickname }} 
+                        </div>
+                    </section>
+                </div>
+
+                <div class="title-one text-center"> 
                     Price 
                 </div>
                 <div style="height: 30px;"></div>

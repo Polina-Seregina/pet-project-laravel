@@ -52,7 +52,7 @@
                     </select>
                     <x-input-error class="mt-2" :messages="$errors->get('status')" />
                 </div>
-
+                @if ($product->author == $user)
                 <div>
                     <x-input-label for="image" :value="__('Image')" />
                     <img class="mt-2 mb-3" style="border-radius:10%" width="100" src="{{ Storage::url($product->image) }}">
@@ -60,6 +60,7 @@
                     <input id="image" type="file" name="image">
                     <x-input-error class="mt-2" :messages="$errors->get('image')" />
                 </div>
+                @endif
                 
                 <div class="flex items-center gap-4">
                     <x-primary-button>{{ __('Save') }}</x-primary-button>

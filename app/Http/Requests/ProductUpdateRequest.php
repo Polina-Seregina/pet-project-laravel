@@ -20,7 +20,9 @@ class ProductUpdateRequest extends FormRequest
             'name' => ['string', 'max:255'],
             'description' => ['max:255'],
             'price' => ['numeric', 'min:0.01'],
-            'status' => ['string', Rule::in([ProductsStatus::FORSALE->value, ProductsStatus::DRAFT->value])],
+            'status' => ['string', Rule::in([ProductsStatus::FORSALE->label(),
+                ProductsStatus::DRAFT->label(),
+                ProductsStatus::PURCHASED->label()])],
             'image' => ['image', 'nullable'],
         ];
     }

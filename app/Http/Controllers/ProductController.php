@@ -67,6 +67,7 @@ class ProductController extends Controller
         return view('product.editForm', [
             'product' => $product,
             'status' => ProductsStatus::class,
+            'user' => $request->user(),
         ]);
     }
 
@@ -87,6 +88,7 @@ class ProductController extends Controller
             'name' => $validData['name'],
             'description' => $validData['description'],
             'price' => $validData['price'],
+            'author_id' => $user->id,
             'image' => $path,
             'user_id' => $user->id,
             'status' => $validData['status'] === ProductsStatus::FORSALE->value ?
@@ -97,17 +99,21 @@ class ProductController extends Controller
     }
 
     /**
-     * Обновление данных у существующего товара.
+     * Обновление данных у существующего товара. Обновление изображения доступно только Автору.
      */
     public function update(ProductUpdateRequest $request, Product $product): RedirectResponse
     {
         $user = $request->user();
+        $author = $product->author;
+        
         $validData = $request->validated();
-        $product->fill($validData);
+        $product->name = $validData['name'];
+        $product->description = $validData['description'];
+        $product->price = $validData['price'];
         $product->status = $validData['status'] === ProductsStatus::FORSALE->value ?
             ProductsStatus::FORSALE->label() : ProductsStatus::DRAFT->label();
 
-        if ($request->hasFile('image')) {
+        if (($request->hasFile('image')) && ($user == $author)) {
             $file = $request->file('image');
             $name = $file->getClientOriginalName();
             $path = Storage::disk('s3')->putFile("products/{$user->id}/products", $file);
@@ -176,6 +182,7 @@ class ProductController extends Controller
                     'name' => $product->name,
                     'description' => $product->description,
                     'price' => $product->price,
+                    'author_id' => $product->author_id,
                     'image' => $product->image,
                     'user_id' => $buyer->id,
                     'status' => ProductsStatus::PURCHASED->label(),
