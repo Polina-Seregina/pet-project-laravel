@@ -23,26 +23,25 @@
         </div>
     </section>
 
-    @if (session('status') === 'noMoney')
+    @if (session('status') === 'success')
         <p
             x-data="{ show: true }"
             x-show="show"
             x-transition
             x-init="setTimeout(() => show = false, 2000)"
             class="text-sm text-gray-600"
-        > Недостаточно средств на балансе для покупки арта '{{$product->name }}'.</p>
+        >{{ __("Поздравляем! Вы купили новый арт.") }}</p>
     @endif
 
-    @if (session('status') === 'yourProduct')
+    @if (session('status') !== 'success')
         <p
             x-data="{ show: true }"
             x-show="show"
             x-transition
             x-init="setTimeout(() => show = false, 2000)"
             class="text-sm text-gray-600"
-        > Этот арт уже твой </p>
+        >{{ session('status') }}</p>
     @endif
-
 
 <div class="max-w-7xl mb-10 mx-auto sm:px-9 lg px-5 space-y-6">
 

@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Exception;
+
 
 class ProductController extends Controller
 {
@@ -115,7 +117,7 @@ class ProductController extends Controller
 
         $product->save();
 
-        return Redirect::route('products.show', ['product' => $product])->with('status', 'product-updated');
+        return Redirect::route('products.show', ['product' => $product])->with('status', 'Арт успешно обновлен.');
     }
 
     /**
@@ -136,34 +138,41 @@ class ProductController extends Controller
         $seller = $product->user;
         $buyer = $request->user();
 
-        $userHaveMoney = $product->price <= $buyer->wallet->balance;
-
-        if (!$userHaveMoney) {
-            return Redirect::route('products.show', ['product' => $product])->with('status', 'noMoney');
-        }
-
         if ($seller->id == $buyer->id) {
-            return Redirect::route('products.show', ['product' => $product])->with('status', 'yourProduct');
+            return Redirect::route('products.show', ['product' => $product])->with('status', 'Этот арт уже принадлежит тебе.');
         }
 
-        $order = Order::create([
+        try {
+            DB::transaction(function () use ($product, $buyer, $seller) {
+
+                $product = Product::where('id', $product->id)->lockForUpdate()->first();
+                $sellerWallet = Wallet::where('user_id', $seller->id)->lockForUpdate()->first();
+                $buyerWallet = Wallet::where('user_id', $buyer->id)->lockForUpdate()->first();
+
+                $order = Order::create([
                     'status' => OrderStatus::CREATED->value,
                     'product_id' => $product->id,
                     'seller_id' => $seller->id,
                     'buyer_id' => $buyer->id,
                 ]);
 
-        try {
-            DB::transaction(function () use ($product, $buyer, $seller, &$order) {
-                $sellerWallet = Wallet::where('user_id', $seller->id)->lockForUpdate()->first();
-                $buyerWallet = Wallet::where('user_id', $buyer->id)->lockForUpdate()->first();
+                $userHaveMoney = $product->price <= $buyerWallet->balance;
+                $productIsForSale = $product->status === ProductsStatus::FORSALE->label();
+
+                if (!$userHaveMoney) {
+                    throw new Exception('Недостаточно средств на балансе кошелька для покупки арта.');
+                }
+
+                if (!$productIsForSale) {
+                    throw new Exception('Арт не продается.');
+                }
 
                 $sellerWallet->increment('balance', $product->price);
                 $sellerWallet->save();
 
                 $buyerWallet->decrement('balance', $product->price);
                 $buyerWallet->save();
-
+                
                 $newProduct = Product::create([
                     'name' => $product->name,
                     'description' => $product->description,
@@ -184,26 +193,30 @@ class ProductController extends Controller
                 Transaction::create([
                     'amount' => $product->price,
                     'type' => TransactionType::SPENDING->label(),
-                    'wallet_id' => $buyer->wallet->id,
+                    'wallet_id' => $buyerWallet->id,
                 ]);
 
                 Transaction::create([
                     'amount' => $product->price,
                     'type' => TransactionType::REPLENISHMENT->label(),
-                    'wallet_id' => $seller->wallet->id,
+                    'wallet_id' => $sellerWallet->id,
                 ]);
 
             }, 3);
 
             $request->session()->flash('status', 'success');
+            
 
         } catch (Exception $e) {
-
-            $request->session()->flash('status', 'fail');
-            $order->status = OrderStatus::CANCELED->value;
-            $order->save();
+            $exception = $e->getMessage() ? $e->getMessage() : "Что-то пошло не так, попробуйте позже.";
+            $request->session()->flash('status', $exception);
         }
 
-        return Redirect::route('user.products.index');
+        $product = Product::where([
+            'name' => $product->name,
+            'description' => $product->description,
+            'image' => $product->image])->first();
+        
+        return Redirect::route('products.show', ['product' => $product]);
     }
 }

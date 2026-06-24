@@ -13,7 +13,7 @@ class OrderController extends Controller
      * Получить успешно выполненные заказы по продаже/покупке артов.
      */
 
-    private function getOrders(String $role, String $nameOfView, Request $request)
+    private function getOrders(string $role, string $nameOfView, Request $request)
     {
         $orders = Order::with(['seller', 'buyer', 'soldProduct', 'purchasedProduct' ])
             ->where($role, $request->user()->id)

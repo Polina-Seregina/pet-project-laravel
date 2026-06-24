@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\OrderStatus;
 use App\Models\Product;
 use App\Models\User;
 use App\Models\Wallet;
@@ -20,13 +21,15 @@ class OrderTest extends TestCase
         $buyer = User::factory()->create();
 
         $product = Product::factory()->for($seller)->create();
-        $wallet = Wallet::factory()->create(['user_id' => $buyer->id, 'balance' => $product->price + 1 ]);
+        Wallet::factory()->create(['user_id' => $buyer->id, 'balance' => $product->price + 1 ]);
+        Wallet::factory()->create(['user_id' => $seller->id]);
 
         $response = $this->actingAs($buyer)->post(route('products.buy', $product));
 
         $this->assertDatabaseHas('orders', [
             'buyer_id' => $buyer->id,
             'product_id' => $product->id,
+            'status' => OrderStatus::COMPLETED->value,
         ]);
     }
 
