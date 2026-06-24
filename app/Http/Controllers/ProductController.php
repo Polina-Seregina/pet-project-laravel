@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Exception;
 
-
 class ProductController extends Controller
 {
     /**
@@ -172,7 +171,7 @@ class ProductController extends Controller
 
                 $buyerWallet->decrement('balance', $product->price);
                 $buyerWallet->save();
-                
+
                 $newProduct = Product::create([
                     'name' => $product->name,
                     'description' => $product->description,
@@ -205,7 +204,7 @@ class ProductController extends Controller
             }, 3);
 
             $request->session()->flash('status', 'success');
-            
+
 
         } catch (Exception $e) {
             $exception = $e->getMessage() ? $e->getMessage() : "Что-то пошло не так, попробуйте позже.";
@@ -216,7 +215,7 @@ class ProductController extends Controller
             'name' => $product->name,
             'description' => $product->description,
             'image' => $product->image])->first();
-        
+
         return Redirect::route('products.show', ['product' => $product]);
     }
 }
