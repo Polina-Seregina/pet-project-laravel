@@ -78,15 +78,15 @@ class ProductTest extends TestCase
         ]);
 
         $response->assertRedirect();
-        
+
         $this->assertDatabaseHas('products', [
             'user_id' => $user->id,
             'name' => $name,
         ]);
     }
-    /* ТЕСТ НЕ ДОПИСАН 
+    /* ТЕСТ НЕ ДОПИСАН
      Проверяет, что Пользователь, являющийся автором и владелецем, может редактировать image,
-     а Пользователь владелец - нет. 
+     а Пользователь владелец - нет.
 
     public function test_author_can_edit_image(): void
     {
@@ -100,7 +100,7 @@ class ProductTest extends TestCase
             'description' => fake()->realTextBetween(),
             'price' => fake()->numberBetween(0, 100000),
             'status' => ProductsStatus::FORSALE->label()]);
-        
+
         //dd($newImage);
         dd(realPath($newImage), $oldImage, $product);
         //echo($oldImage);
@@ -108,5 +108,5 @@ class ProductTest extends TestCase
         $this->assertEquals($product->image, realPath($newImage));
 
     } */
-    
+
 }
