@@ -110,7 +110,7 @@ class ProductController extends Controller
         $product->name = $validData['name'];
         $product->description = $validData['description'];
         $product->price = $validData['price'];
-        $product->status = $validData['status'] === ProductsStatus::FORSALE->value ?
+        $product->status = $validData['status'] === ProductsStatus::FORSALE->value ? 
             ProductsStatus::FORSALE->label() : ProductsStatus::DRAFT->label();
 
         if (($request->hasFile('image')) && ($user == $author)) {

@@ -43,8 +43,9 @@ class ProductTest extends TestCase
     {
         $product = Product::factory()->create();
         Profile::factory()->create(['user_id' => $product->user->id]);
+        Profile::factory()->create(['user_id' => $product->author->id]);
 
-        $response = $this->actingAs($product->user)->get("/products/{$product->id}");
+        $response = $this->actingAs($product->user)->get(route("products.show", ['product' => $product]));
         $response->assertStatus(200);
     }
 
@@ -72,38 +73,40 @@ class ProductTest extends TestCase
             'name' => $name,
             'description' => fake()->realTextBetween(),
             'price' => fake()->numberBetween(0, 100000),
-            'status' => ProductsStatus::FORSALE->label(),
+            'status' => 'for_sale',
             'image' => $image,
         ]);
 
         $response->assertRedirect();
-
+        
         $this->assertDatabaseHas('products', [
             'user_id' => $user->id,
             'name' => $name,
         ]);
     }
-    /** ТЕСТ НЕ ДОПИСАН */
-    /** Проверяет, что Пользователь, являющийся автором и владелецем, может редактировать image,
-     * а Пользователь владелец - нет. */
+    /* ТЕСТ НЕ ДОПИСАН 
+     Проверяет, что Пользователь, являющийся автором и владелецем, может редактировать image,
+     а Пользователь владелец - нет. 
+
     public function test_author_can_edit_image(): void
     {
         $user = User::factory()->create();
         $product = Product::factory()->create(['user_id' => $user->id, 'author_id' => $user->id ]);
         $oldImage = $product->image;
         $newImage = UploadedFile::fake()->create('image.jpg', 100);
-        /**$response = $this->actingAs($user)->patch(route('products.update', ['product' => $product]), [
+        $response = $this->actingAs($user)->patch(route('products.update', ['product' => $product]), [
             'image' => $newImage,
             'name' => fake()->name(),
             'description' => fake()->realTextBetween(),
             'price' => fake()->numberBetween(0, 100000),
             'status' => ProductsStatus::FORSALE->label()]);
-        */
-        dd($newImage);
+        
+        //dd($newImage);
         dd(realPath($newImage), $oldImage, $product);
         //echo($oldImage);
         //echo($product->image);
         $this->assertEquals($product->image, realPath($newImage));
 
-    }
+    } */
+    
 }
