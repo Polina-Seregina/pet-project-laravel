@@ -24,7 +24,7 @@ class OrderTest extends TestCase
         Wallet::factory()->create(['user_id' => $buyer->id, 'balance' => $product->price + 1 ]);
         Wallet::factory()->create(['user_id' => $seller->id]);
 
-        $response = $this->actingAs($buyer)->post(route('products.buy', $product));
+        $this->actingAs($buyer)->post(route('products.buy', $product));
 
         $this->assertDatabaseHas('orders', [
             'buyer_id' => $buyer->id,
@@ -41,7 +41,7 @@ class OrderTest extends TestCase
         $seller = User::factory()->has(Profile::factory())->create();
         $buyer  = User::factory()->has(Profile::factory())->create();
 
-        $order = Order::factory()->create(['buyer_id' => $buyer->id, 'seller_id' => $seller->id]);
+        Order::factory()->create(['buyer_id' => $buyer->id, 'seller_id' => $seller->id]);
 
         $response = $this->actingAs($seller)->get(route('orders.sold'));
         $response->assertStatus(200);

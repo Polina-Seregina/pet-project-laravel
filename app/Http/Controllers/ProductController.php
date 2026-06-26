@@ -93,7 +93,7 @@ class ProductController extends Controller
                 ProductsStatus::FORSALE->label() : ProductsStatus::DRAFT->label(),
         ]);
 
-        return Redirect::route('products.show', ['product' => $product])->with('status', 'product-created');
+        return Redirect::route('products.show', ['product' => $product])->with('status', 'Арт успешно создан');
     }
 
     /**
@@ -142,7 +142,7 @@ class ProductController extends Controller
         }
 
         try {
-            DB::transaction(function () use ($product, $buyer, $seller) {
+            $newProduct = DB::transaction(function () use ($product, $buyer, $seller) {
 
                 $product = Product::where('id', $product->id)->lockForUpdate()->first();
                 $sellerWallet = Wallet::where('user_id', $seller->id)->lockForUpdate()->first();
@@ -201,20 +201,19 @@ class ProductController extends Controller
                     'wallet_id' => $sellerWallet->id,
                 ]);
 
+                return $newProduct;
+
             }, 3);
 
             $request->session()->flash('status', 'success');
 
 
         } catch (Exception $e) {
-            $exception = $e->getMessage() ? $e->getMessage() : "Что-то пошло не так, попробуйте позже.";
+            $exception = $e->getMessage() ?: "Что-то пошло не так, попробуйте позже.";
             $request->session()->flash('status', $exception);
         }
-
-        $product = Product::where([
-            'name' => $product->name,
-            'description' => $product->description,
-            'image' => $product->image])->first();
+        
+        $product = $newProduct ?? $product;
 
         return Redirect::route('products.show', ['product' => $product]);
     }

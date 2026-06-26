@@ -10,20 +10,6 @@ use Illuminate\View\View;
 class OrderController extends Controller
 {
     /**
-     * Получить успешно выполненные заказы по продаже/покупке артов.
-     */
-
-    private function getOrders(string $role, string $nameOfView, Request $request)
-    {
-        $orders = Order::with(['seller', 'buyer', 'soldProduct', 'purchasedProduct' ])
-            ->where($role, $request->user()->id)
-            ->where('status', OrderStatus::COMPLETED->value)
-            ->orderByDesc('created_at')
-            ->paginate(config('app.products-on-page'));
-
-        return view($nameOfView, ['orders' => $orders]);
-    }
-    /**
      * Получить список успешно выполненных заказов по продаже артов.
      */
 
@@ -42,4 +28,18 @@ class OrderController extends Controller
 
     }
 
+    /**
+     * Получить успешно выполненные заказы по продаже/покупке артов.
+     */
+
+    private function getOrders(string $role, string $nameOfView, Request $request)
+    {
+        $orders = Order::with(['seller', 'buyer', 'soldProduct', 'purchasedProduct',  'seller.profile', 'buyer.profile' ])
+            ->where($role, $request->user()->id)
+            ->where('status', OrderStatus::COMPLETED->value)
+            ->orderByDesc('created_at')
+            ->paginate(config('app.products-on-page'));
+
+        return view($nameOfView, ['orders' => $orders]);
+    }
 }

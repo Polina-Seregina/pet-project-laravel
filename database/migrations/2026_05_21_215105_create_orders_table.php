@@ -18,11 +18,11 @@ return new class () extends Migration {
             $table->unsignedBigInteger('new_product_id')->nullable();
             $table->foreign('new_product_id')->references('id')->on('products');
 
-            $table->unsignedBigInteger('buyer_id');
-            $table->foreign('buyer_id')->references('id')->on('users');
+            $table->unsignedBigInteger('buyer_id')->nullable();
+            $table->foreign('buyer_id')->references('id')->on('users')->onDelete('set null');
 
-            $table->unsignedBigInteger('seller_id');
-            $table->foreign('seller_id')->references('id')->on('users');
+            $table->unsignedBigInteger('seller_id')->nullable();
+            $table->foreign('seller_id')->references('id')->on('users')->onDelete('set null');
 
             $table->string('status');
             $table->timestamps();
