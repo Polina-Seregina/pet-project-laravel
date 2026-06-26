@@ -212,7 +212,7 @@ class ProductController extends Controller
             $exception = $e->getMessage() ?: "Что-то пошло не так, попробуйте позже.";
             $request->session()->flash('status', $exception);
         }
-        
+
         $product = $newProduct ?? $product;
 
         return Redirect::route('products.show', ['product' => $product]);
