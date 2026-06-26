@@ -18,12 +18,22 @@
 					<div class="main-menu d-none d-lg-block">
 						<nav id="mobile-menu">
 							<ul class="menu-list">
-								<li> <a href="/"> HOME </a> </li>
 								@auth
 								<li> <a href="{{ route('products.index') }}">MARKET</a> </li>
 								<li> <a href="{{ route('user.products.index') }}">MY ARTWORKS</a> </li>
 								<li> <a href="{{ route('wallet.show') }}">WALLET</a> </li>
-								<li> <a href="{{ route('profile.show') }}">PROFILE</a> </li>		
+								<li> <a href=""> ORDERS HISTORY </a> 
+									<ul class="sub-menu">
+										<li>
+											<ul> 
+												<li> <a href="{{ route('orders.purchased') }}">Приобретенные арты </a> </li>
+												<li> <a href="{{ route('orders.sold') }}"> Проданные арты </a> </li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+								<li> <a href="{{ route('profile.show') }}">PROFILE</a> </li>
+
 								@endauth
 								@guest
 								<li> <a href="/login">LOGIN</a> </li>

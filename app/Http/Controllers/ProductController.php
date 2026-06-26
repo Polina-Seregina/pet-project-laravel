@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Enums\ProductsStatus;
 use App\Enums\TransactionType;
+use App\Enums\OrderStatus;
 use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
 use App\Models\Product;
+use App\Models\Wallet;
+use App\Models\Order;
 use App\Models\Transaction;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -14,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Exception;
 
 class ProductController extends Controller
 {
@@ -89,7 +93,7 @@ class ProductController extends Controller
                 ProductsStatus::FORSALE->label() : ProductsStatus::DRAFT->label(),
         ]);
 
-        return Redirect::route('products.show', ['product' => $product])->with('status', 'product-created');
+        return Redirect::route('products.show', ['product' => $product])->with('status', 'Арт успешно создан');
     }
 
     /**
@@ -112,7 +116,7 @@ class ProductController extends Controller
 
         $product->save();
 
-        return Redirect::route('products.show', ['product' => $product])->with('status', 'product-updated');
+        return Redirect::route('products.show', ['product' => $product])->with('status', 'Арт успешно обновлен.');
     }
 
     /**
@@ -133,19 +137,40 @@ class ProductController extends Controller
         $seller = $product->user;
         $buyer = $request->user();
 
-        $userHaveMoney = $product->price <= $buyer->wallet->balance;
-
-        if (!$userHaveMoney) {
-            return Redirect::route('products.show', ['product' => $product])->with('status', 'noMoney');
+        if ($seller->id == $buyer->id) {
+            return Redirect::route('products.show', ['product' => $product])->with('status', 'Этот арт уже принадлежит тебе.');
         }
 
         try {
-            DB::transaction(function () use ($product, $buyer, $seller) {
-                $seller->wallet->increment('balance', $product->price);
-                $seller->wallet->save();
+            $newProduct = DB::transaction(function () use ($product, $buyer, $seller) {
 
-                $buyer->wallet->decrement('balance', $product->price);
-                $buyer->wallet->save();
+                $product = Product::where('id', $product->id)->lockForUpdate()->first();
+                $sellerWallet = Wallet::where('user_id', $seller->id)->lockForUpdate()->first();
+                $buyerWallet = Wallet::where('user_id', $buyer->id)->lockForUpdate()->first();
+
+                $order = Order::create([
+                    'status' => OrderStatus::CREATED->value,
+                    'product_id' => $product->id,
+                    'seller_id' => $seller->id,
+                    'buyer_id' => $buyer->id,
+                ]);
+
+                $userHaveMoney = $product->price <= $buyerWallet->balance;
+                $productIsForSale = $product->status === ProductsStatus::FORSALE->label();
+
+                if (!$userHaveMoney) {
+                    throw new Exception('Недостаточно средств на балансе кошелька для покупки арта.');
+                }
+
+                if (!$productIsForSale) {
+                    throw new Exception('Арт не продается.');
+                }
+
+                $sellerWallet->increment('balance', $product->price);
+                $sellerWallet->save();
+
+                $buyerWallet->decrement('balance', $product->price);
+                $buyerWallet->save();
 
                 $newProduct = Product::create([
                     'name' => $product->name,
@@ -156,28 +181,40 @@ class ProductController extends Controller
                     'status' => ProductsStatus::PURCHASED->label(),
                 ]);
 
+                $order->new_product_id = $newProduct->id;
+                $order->status = OrderStatus::COMPLETED->value;
+                $order->save();
+
                 $product->status = ProductsStatus::SOLD->label();
                 $product->save();
                 $product->delete();
 
-                $transactionBuyer = Transaction::create([
+                Transaction::create([
                     'amount' => $product->price,
                     'type' => TransactionType::SPENDING->label(),
-                    'wallet_id' => $buyer->wallet->id,
+                    'wallet_id' => $buyerWallet->id,
                 ]);
 
-                $transactionSeller = Transaction::create([
+                Transaction::create([
                     'amount' => $product->price,
                     'type' => TransactionType::REPLENISHMENT->label(),
-                    'wallet_id' => $seller->wallet->id,
+                    'wallet_id' => $sellerWallet->id,
                 ]);
 
+                return $newProduct;
+
             }, 3);
+
             $request->session()->flash('status', 'success');
+
+
         } catch (Exception $e) {
-            $request->session()->flash('status', 'fail');
+            $exception = $e->getMessage() ?: "Что-то пошло не так, попробуйте позже.";
+            $request->session()->flash('status', $exception);
         }
 
-        return Redirect::route('user.products.index');
+        $product = $newProduct ?? $product;
+
+        return Redirect::route('products.show', ['product' => $product]);
     }
 }
