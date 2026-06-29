@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\User;
 use App\Models\Wallet;
 use Tests\TestCase;
+use Illuminate\Support\Facades\Auth;
 
 class WalletTest extends TestCase
 {
@@ -26,7 +27,7 @@ class WalletTest extends TestCase
             'password_confirmation' => $password,
         ]);
 
-        $user = User::where('email', $email)->first();
+        $user = Auth::user();
 
         $this->assertDatabaseHas('wallets', [
             'user_id' => $user->id,

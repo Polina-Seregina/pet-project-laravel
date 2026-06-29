@@ -47,7 +47,7 @@
 
 *Создает новый товар. Автоматически присваивает статус - 'for sale'.*
 
-*Входные данные*: ProductRequest, $product
+*Входные данные*: ProductStoreRequest, $product
 
 | Параметр | Тип | Обязательный | Правила валидации | Описание |
 | -------- | ----|--------------|-------------------|----------|
@@ -66,9 +66,9 @@
 
 | Параметр | Тип | Обязательный | Правила валидации | Описание |
 | -------- | ----|--------------|-------------------|----------|
-| 'name'  | string | Да | required, string, max:255| Название арта|
-| 'description' | string | Да | required, max:255| Описание арта |
-| 'price' |  decimal | Да | required, numeric, min:0.01 | Cтоимость арта |
+| 'name'  | string | нет | required, string, max:255| Название арта|
+| 'description' | string | нет | required, max:255| Описание арта |
+| 'price' |  decimal | нет | required, numeric, min:0.01 | Cтоимость арта |
 | 'image' | string | нет | nullable, image| Изображение |
 
 *Формат ответа*: (302 OK)

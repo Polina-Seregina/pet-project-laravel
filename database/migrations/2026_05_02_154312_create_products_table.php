@@ -15,8 +15,8 @@ return new class () extends Migration {
             $table->string('name');
             $table->text('description');
             $table->string('image');
-            $table->unsignedBigInteger('author_id');
-            $table->foreign('author_id')->references('id')->on('users');
+            $table->unsignedBigInteger('author_id')->nullable();
+            $table->foreign('author_id')->references('id')->on('users')->onDelete('set null');
             $table->decimal('price', $precision = 15, $scale = 2);
             $table->string('status');
             $table->foreignId('user_id')->constrained()->onUpdate('cascade')->onDelete('cascade');

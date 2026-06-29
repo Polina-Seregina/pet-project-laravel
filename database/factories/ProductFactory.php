@@ -26,7 +26,7 @@ class ProductFactory extends Factory
             'image' => fake()->unique()->filePath(),
             'author_id' => User::factory(),
             'user_id' => User::factory(),
-            'status' => ProductsStatus::FORSALE->label(),
+            'status' => ProductsStatus::FORSALE->value,
         ];
     }
 }

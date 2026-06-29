@@ -21,13 +21,14 @@ class RegistrationTest extends TestCase
     {
         $password = fake()->unique()->password();
 
-        $response = $this->post('/register', [
+        $response = $this->post('register', [
             'name' => fake()->unique()->name(),
             'email' => fake()->unique()->email(),
             'nickname' => fake()->unique()->firstName(),
             'password' => $password,
             'password_confirmation' => $password,
         ]);
+
         $this->assertAuthenticated();
         $response->assertRedirect(RouteServiceProvider::HOME);
     }

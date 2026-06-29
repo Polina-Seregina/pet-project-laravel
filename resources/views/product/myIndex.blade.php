@@ -40,7 +40,7 @@
                         <h4 class="product-title mt-9 mb-0"><a href="{{ route('products.show', ['product' => $product]) }}"> {{ $product->name }} </a></h4>
                         <a class="pr-price" href="{{ route('products.show', ['product' => $product]) }}">{{ $product->price }}</a>
                         <br>
-                        <p style="color: #cc722d;" class="pr-price">{{ $product->status }}</p>
+                        <p style="color: #cc722d;" class="pr-price">{{ $product->status->label() }}</p>
                     </div>
                 </div>
             </div>

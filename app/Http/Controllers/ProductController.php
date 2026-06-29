@@ -27,7 +27,7 @@ class ProductController extends Controller
     public function index(): View
     {
         return view('product.index', [
-            'products' => Product::where('status', ProductsStatus::FORSALE->label())->paginate(config('app.products-on-page')),
+            'products' => Product::where('status', ProductsStatus::FORSALE->value)->paginate(config('app.products-on-page')),
         ]);
     }
 
@@ -91,8 +91,7 @@ class ProductController extends Controller
             'author_id' => $user->id,
             'image' => $path,
             'user_id' => $user->id,
-            'status' => $validData['status'] === ProductsStatus::FORSALE->value ?
-                ProductsStatus::FORSALE->label() : ProductsStatus::DRAFT->label(),
+            'status' => $validData['status'],
         ]);
 
         return Redirect::route('products.show', ['product' => $product])->with('status', 'Арт успешно создан');
@@ -110,8 +109,7 @@ class ProductController extends Controller
         $product->name = $validData['name'];
         $product->description = $validData['description'];
         $product->price = $validData['price'];
-        $product->status = $validData['status'] === ProductsStatus::FORSALE->value ?
-            ProductsStatus::FORSALE->label() : ProductsStatus::DRAFT->label();
+        $product->status = $validData['status'];
 
         if (($request->hasFile('image')) && ($user == $author)) {
             $file = $request->file('image');
@@ -162,8 +160,8 @@ class ProductController extends Controller
                 ]);
 
                 $userHaveMoney = $product->price <= $buyerWallet->balance;
-                $productIsForSale = $product->status === ProductsStatus::FORSALE->label();
-
+                $productIsForSale = $product->status->value === ProductsStatus::FORSALE->value;
+                
                 if (!$userHaveMoney) {
                     throw new Exception('Недостаточно средств на балансе кошелька для покупки арта.');
                 }
@@ -185,14 +183,14 @@ class ProductController extends Controller
                     'author_id' => $product->author_id,
                     'image' => $product->image,
                     'user_id' => $buyer->id,
-                    'status' => ProductsStatus::PURCHASED->label(),
+                    'status' => ProductsStatus::PURCHASED->value,
                 ]);
 
                 $order->new_product_id = $newProduct->id;
                 $order->status = OrderStatus::COMPLETED->value;
                 $order->save();
 
-                $product->status = ProductsStatus::SOLD->label();
+                $product->status = ProductsStatus::SOLD->value;
                 $product->save();
                 $product->delete();
 

@@ -7,13 +7,14 @@ use App\Enums\ProductsStatus;
 use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
-use App\Enums\ProductsStatus;
 
 class ProductTest extends TestCase
 {
     /**
      * Проверяет отображение страницы магазина.
+     * @return void
      */
     public function test_products_market_page_showed(): void
     {
@@ -26,6 +27,7 @@ class ProductTest extends TestCase
 
     /**
      * Проверяет отображение страницы с продуктами, принадлежащими пользователю.
+     * @return void
      */
     public function test_my_products_page_showed(): void
     {
@@ -38,6 +40,7 @@ class ProductTest extends TestCase
 
     /**
      * Проверяет, что страница конкретного арта отображается.
+     * @return void
      */
     public function test_product_page_showed(): void
     {
@@ -51,6 +54,7 @@ class ProductTest extends TestCase
 
     /**
      * Проверяет отображение формы создания продукта.
+     * @return void
      */
     public function test_create_form_showed(): void
     {
@@ -61,6 +65,7 @@ class ProductTest extends TestCase
 
     /**
      * Проверяет, что Пользователь может создать арт.
+     * @return void
      */
     public function test_user_can_create_art(): void
     {
@@ -84,29 +89,28 @@ class ProductTest extends TestCase
             'name' => $name,
         ]);
     }
-    /* ТЕСТ НЕ ДОПИСАН
-     Проверяет, что Пользователь, являющийся автором и владелецем, может редактировать image,
-     а Пользователь владелец - нет.
+    /**
+     * ТЕСТ НЕ РАБОТАЕТ
+     * Проверяет, что Пользователь, являющийся автором и владелецем, может редактировать image,
+     * а Пользователь владелец - нет.
+     * @return void
+     */
 
     public function test_author_can_edit_image(): void
     {
         $user = User::factory()->create();
         $product = Product::factory()->create(['user_id' => $user->id, 'author_id' => $user->id ]);
-        $oldImage = $product->image;
+        
         $newImage = UploadedFile::fake()->create('image.jpg', 100);
+        
         $response = $this->actingAs($user)->patch(route('products.update', ['product' => $product]), [
             'image' => $newImage,
-            'name' => fake()->name(),
-            'description' => fake()->realTextBetween(),
-            'price' => fake()->numberBetween(0, 100000),
-            'status' => ProductsStatus::FORSALE->label()]);
+            'name' => $product->name,
+            'description' => $product->description,
+            'price' => $product->price,
+            'status' => ProductsStatus::FORSALE->value]);
 
-        //dd($newImage);
-        dd(realPath($newImage), $oldImage, $product);
-        //echo($oldImage);
-        //echo($product->image);
         $this->assertEquals($product->image, realPath($newImage));
-
-    } */
+    }
 
 }

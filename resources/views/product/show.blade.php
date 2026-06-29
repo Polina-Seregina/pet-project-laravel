@@ -105,7 +105,7 @@
                     <div class="max-w-7xl mb-10 mx-auto sm:px-9 lg px-5 space-y-6">
                         <section class="theme-banner-one">
                             <div class="title-one text-center ">
-                                <a style="color: #cc722d;" class="pr-price">{{ $product->status }} </a>
+                                <a style="color: #cc722d;" class="pr-price">{{ $product->status->label() }} </a>
                             </div>
                         </section>
                     </div>
