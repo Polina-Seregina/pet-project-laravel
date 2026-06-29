@@ -161,7 +161,7 @@ class ProductController extends Controller
 
                 $userHaveMoney = $product->price <= $buyerWallet->balance;
                 $productIsForSale = $product->status->value === ProductsStatus::FORSALE->value;
-                
+
                 if (!$userHaveMoney) {
                     throw new Exception('Недостаточно средств на балансе кошелька для покупки арта.');
                 }
