@@ -7,7 +7,6 @@ use App\Enums\ProductsStatus;
 use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ProductTest extends TestCase
@@ -109,9 +108,9 @@ class ProductTest extends TestCase
             'status' => ProductsStatus::FORSALE->value]);
 
         $product = Product::where(['id' => $product->id])->first();
-        
+
         $this->assertEquals(basename($product->image), basename($newImage));
-    
+
     }
 
 }

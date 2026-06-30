@@ -15,7 +15,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Exception;
 
@@ -108,7 +107,7 @@ class ProductController extends Controller
 
         $validData = $request->validated();
         $product->fill($validData);
-       
+
         if (($file) && ($user == $author)) {
             $name = $file->getClientOriginalName();
             $path = $file->storeAs("products/{$user->id}/products", $name, 's3');
