@@ -192,13 +192,13 @@ class ProductController extends Controller
 
                 Transaction::create([
                     'amount' => $product->price,
-                    'type' => TransactionType::SPENDING->label(),
+                    'type' => TransactionType::SPENDING->value,
                     'wallet_id' => $buyerWallet->id,
                 ]);
 
                 Transaction::create([
                     'amount' => $product->price,
-                    'type' => TransactionType::REPLENISHMENT->label(),
+                    'type' => TransactionType::REPLENISHMENT->value,
                     'wallet_id' => $sellerWallet->id,
                 ]);
 

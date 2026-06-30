@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\TransactionType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,6 +15,10 @@ class Transaction extends Model
         'amount',
         'type',
         'wallet_id'
+    ];
+
+    protected $casts = [
+        'type' => TransactionType::class
     ];
 
     public function wallet(): BelongsTo

@@ -52,7 +52,7 @@ class WalletController extends Controller
 
                 $transaction = Transaction::create([
                     'amount' => $amount,
-                    'type' => TransactionType::REPLENISHMENT->label(),
+                    'type' => TransactionType::REPLENISHMENT->value,
                     'wallet_id' => $wallet->id,
                 ]);
             }, 3);

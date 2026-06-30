@@ -29,7 +29,7 @@
                         <tbody>
                             @foreach ($transactions as $transaction)
                             <tr>
-                                <td style="text-align: center; border: 1px solid"> {{ $transaction->type }} </td>
+                                <td style="text-align: center; border: 1px solid"> {{ $transaction->type->label() }} </td>
                                 <td style="text-align: center; border: 1px solid"> {{ $transaction->amount }} </td>
                                 <td style="text-align: center; border: 1px solid"> {{ $transaction->created_at }} </td>
                             </tr>
