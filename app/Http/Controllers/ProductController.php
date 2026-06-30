@@ -82,7 +82,7 @@ class ProductController extends Controller
 
         $file = $request->file('image');
         $name = $file->getClientOriginalName();
-        $path = Storage::disk('s3')->putFile("products/{$user->id}/products", $file);
+        $path = $file->storeAs("products/{$user->id}/products", $name, 's3');
 
         $product = Product::create([
             'name' => $validData['name'],
@@ -104,17 +104,14 @@ class ProductController extends Controller
     {
         $user = $request->user();
         $author = $product->author;
+        $file = $request->file('image');
 
         $validData = $request->validated();
-        $product->name = $validData['name'];
-        $product->description = $validData['description'];
-        $product->price = $validData['price'];
-        $product->status = $validData['status'];
-
-        if (($request->hasFile('image')) && ($user == $author)) {
-            $file = $request->file('image');
+        $product->fill($validData);
+       
+        if (($file) && ($user == $author)) {
             $name = $file->getClientOriginalName();
-            $path = Storage::disk('s3')->putFile("products/{$user->id}/products", $file);
+            $path = $file->storeAs("products/{$user->id}/products", $name, 's3');
             $product->image = $path;
         }
 

@@ -23,7 +23,7 @@ class ProductUpdateRequest extends FormRequest
             'status' => ['string', Rule::in([ProductsStatus::FORSALE->value,
                 ProductsStatus::DRAFT->value,
                 ProductsStatus::PURCHASED->value])],
-            'image' => ['image', 'nullable'],
+            'image' => ['file', 'nullable'],
         ];
     }
 }

@@ -15,10 +15,10 @@ class WalletTest extends TestCase
 
     public function test_users_wallet_created(): void
     {
-        $password = fake()->unique()->password();
+        $password = fake()->unique()->password(8,20);
         $email = fake()->unique()->email();
 
-        $this->post('/register', [
+        $response = $this->post('/register', [
             'name' => fake()->unique()->name(),
             'email' => $email,
             'nickname' => fake()->unique()->firstName(),

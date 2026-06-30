@@ -57,7 +57,7 @@
                     <div class="title-one text-center"> Покупатель </div>
                     <div class="max-w-7xl mb-3 mx-auto sm:px-9 lg px-5 space-y-6">
                         <section class="theme-banner-one">
-                            <div class="title-one text-center "> {{ $order->buyer->profile->nickname }} </div>
+                            <div class="title-one text-center "> {{ $order->buyer->profile->nickname ?? 'Данные о покупателе отсутствуют'}} </div>
                         </section>
                     </div>
 

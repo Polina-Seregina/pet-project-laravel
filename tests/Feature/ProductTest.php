@@ -7,6 +7,7 @@ use App\Enums\ProductsStatus;
 use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ProductTest extends TestCase
@@ -89,7 +90,6 @@ class ProductTest extends TestCase
         ]);
     }
     /**
-     * ТЕСТ НЕ РАБОТАЕТ
      * Проверяет, что Пользователь, являющийся автором и владелецем, может редактировать image,
      * а Пользователь владелец - нет.
      * @return void
@@ -99,8 +99,7 @@ class ProductTest extends TestCase
     {
         $user = User::factory()->create();
         $product = Product::factory()->create(['user_id' => $user->id, 'author_id' => $user->id ]);
-
-        $newImage = UploadedFile::fake()->create('image.jpg', 100);
+        $newImage = UploadedFile::fake()->create('image.jpg');
 
         $response = $this->actingAs($user)->patch(route('products.update', ['product' => $product]), [
             'image' => $newImage,
@@ -109,7 +108,10 @@ class ProductTest extends TestCase
             'price' => $product->price,
             'status' => ProductsStatus::FORSALE->value]);
 
-        $this->assertEquals($product->image, realPath($newImage));
+        $product = Product::where(['id' => $product->id])->first();
+        
+        $this->assertEquals(basename($product->image), basename($newImage));
+    
     }
 
 }

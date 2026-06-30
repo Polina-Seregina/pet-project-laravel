@@ -19,7 +19,7 @@ class RegistrationTest extends TestCase
 
     public function test_new_users_can_register(): void
     {
-        $password = fake()->unique()->password();
+        $password = fake()->unique()->password(8, 20);
 
         $response = $this->post('register', [
             'name' => fake()->unique()->name(),
