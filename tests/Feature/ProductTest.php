@@ -77,7 +77,7 @@ class ProductTest extends TestCase
             'name' => $name,
             'description' => fake()->realTextBetween(),
             'price' => fake()->numberBetween(0, 100000),
-            'status' => 'for_sale',
+            'status' => ProductsStatus::FORSALE->value,
             'image' => $image,
         ]);
 
