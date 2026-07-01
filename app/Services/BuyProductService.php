@@ -11,7 +11,6 @@ use App\Models\Order;
 use App\Models\User;
 use App\Models\Transaction;
 use Exception;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 
 class BuyProductService
@@ -39,7 +38,7 @@ class BuyProductService
             $this->updateAndDeleteOldProduct($product);
 
             $this->createWalletHistory($buyerWallet, $sellerWallet, $product->price);
-            
+
             return $newProduct;
 
         }, 3);
@@ -95,7 +94,7 @@ class BuyProductService
         }
     }
 
-    private function createOrder(Product $product, User $seller,  User $buyer): Order
+    private function createOrder(Product $product, User $seller, User $buyer): Order
     {
         return Order::create([
                     'status' => OrderStatus::CREATED->value,

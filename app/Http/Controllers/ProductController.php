@@ -3,14 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ProductsStatus;
-use App\Enums\TransactionType;
-use App\Enums\OrderStatus;
 use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
 use App\Models\Product;
-use App\Models\Wallet;
-use App\Models\Order;
-use App\Models\Transaction;
 use App\Services\BuyProductService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
