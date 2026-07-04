@@ -123,7 +123,7 @@ class ProductTest extends TestCase
     {
         $user = User::factory()->create();
         $author = User::factory()->create();
-        
+
         $product = Product::factory()->create(['user_id' => $user->id, 'author_id' => $author->id]);
         $oldImage = $product->image;
         $newImage = UploadedFile::fake()->create('image.jpg');

@@ -116,7 +116,7 @@ class ProductController extends Controller
             $product->save();
             return Redirect::route('products.show', ['product' => $product])->with('status', 'Данные успешно обновлены.');
         }
-       
+
         if ($user->id !== $author->id) {
             $product->save();
             return Redirect::route('products.show', ['product' => $product])->with('status', 'Изображение может менять только автор.');
