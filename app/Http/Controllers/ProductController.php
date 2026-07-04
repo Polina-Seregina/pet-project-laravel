@@ -106,17 +106,30 @@ class ProductController extends Controller
         $file = $request->file('image');
 
         $validData = $request->validated();
-        $product->fill($validData);
 
-        if (($file) && ($user == $author)) {
+        $product->name = $validData['name'];
+        $product->description = $validData['description'];
+        $product->price = $validData['price'];
+        $product->status = $validData['status'];
+
+        if (!$file) {
+            $product->save();
+            return Redirect::route('products.show', ['product' => $product])->with('status', 'Данные успешно обновлены.');
+        }
+       
+        if ($user->id !== $author->id) {
+            $product->save();
+            return Redirect::route('products.show', ['product' => $product])->with('status', 'Изображение может менять только автор.');
+        }
+
+        if ($user->id == $author->id) {
             $name = $file->getClientOriginalName();
             $path = $file->storeAs("products/{$user->id}/products", $name, 's3');
             $product->image = $path;
+            $product->save();
+            return Redirect::route('products.show', ['product' => $product])->with('status', 'Арт успешно обновлен.');
         }
 
-        $product->save();
-
-        return Redirect::route('products.show', ['product' => $product])->with('status', 'Арт успешно обновлен.');
     }
 
     /**

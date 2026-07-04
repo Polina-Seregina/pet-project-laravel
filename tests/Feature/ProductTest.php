@@ -97,7 +97,7 @@ class ProductTest extends TestCase
     public function test_author_can_edit_image(): void
     {
         $user = User::factory()->create();
-        $product = Product::factory()->create(['user_id' => $user->id, 'author_id' => $user->id ]);
+        $product = Product::factory()->create(['user_id' => $user->id, 'author_id' => $user->id]);
         $newImage = UploadedFile::fake()->create('image.jpg');
 
         $response = $this->actingAs($user)->patch(route('products.update', ['product' => $product]), [
@@ -107,9 +107,37 @@ class ProductTest extends TestCase
             'price' => $product->price,
             'status' => ProductsStatus::FORSALE->value]);
 
+
         $product = Product::where(['id' => $product->id])->first();
 
-        $this->assertEquals(basename($product->image), basename($newImage));
+        $this->assertEquals(basename($product->image), 'image.jpg');
+
+    }
+
+    /**
+     * Проверяет, что Пользователь, не являющийся автором, не может редактировать image,
+     * @return void
+     */
+
+    public function test_user_can_not_edit_image(): void
+    {
+        $user = User::factory()->create();
+        $author = User::factory()->create();
+        
+        $product = Product::factory()->create(['user_id' => $user->id, 'author_id' => $author->id]);
+        $oldImage = $product->image;
+        $newImage = UploadedFile::fake()->create('image.jpg');
+
+        $response = $this->actingAs($user)->patch(route('products.update', ['product' => $product]), [
+            'image' => $newImage,
+            'name' => $product->name,
+            'description' => $product->description,
+            'price' => $product->price,
+            'status' => ProductsStatus::FORSALE->value]);
+
+        $updatedProduct = Product::where(['id' => $product->id])->first();
+
+        $this->assertEquals($oldImage, $updatedProduct->image);
 
     }
 
