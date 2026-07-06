@@ -114,7 +114,7 @@ class ProductController extends Controller
             $path = $file->storeAs("products/{$user->id}/products", $name, 's3');
             $product->image = $path;
         }
-        
+
         $product->save();
         return Redirect::route('products.show', ['product' => $product])->with('status', 'Арт успешно обновлен.');
 

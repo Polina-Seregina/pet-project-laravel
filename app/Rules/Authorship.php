@@ -2,8 +2,6 @@
 
 namespace App\Rules;
 
-
-use Illuminate\Http\Request;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
@@ -14,7 +12,7 @@ class Authorship implements ValidationRule
         $this->user = $user;
         $this->product = $product;
     }
-    
+
     /**
      * Правило проверки.
      */
