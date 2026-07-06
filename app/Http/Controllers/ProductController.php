@@ -15,7 +15,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Exception;
 
@@ -27,7 +26,7 @@ class ProductController extends Controller
     public function index(): View
     {
         return view('product.index', [
-            'products' => Product::where('status', ProductsStatus::FORSALE->label())->paginate(config('app.products-on-page')),
+            'products' => Product::where('status', ProductsStatus::FORSALE->value)->paginate(config('app.products-on-page')),
         ]);
     }
 
@@ -67,6 +66,7 @@ class ProductController extends Controller
         return view('product.editForm', [
             'product' => $product,
             'status' => ProductsStatus::class,
+            'user' => $request->user(),
         ]);
     }
 
@@ -81,42 +81,42 @@ class ProductController extends Controller
 
         $file = $request->file('image');
         $name = $file->getClientOriginalName();
-        $path = Storage::disk('s3')->putFile("products/{$user->id}/products", $file);
+        $path = $file->storeAs("products/{$user->id}/products", $name, 's3');
 
         $product = Product::create([
             'name' => $validData['name'],
             'description' => $validData['description'],
             'price' => $validData['price'],
+            'author_id' => $user->id,
             'image' => $path,
             'user_id' => $user->id,
-            'status' => $validData['status'] === ProductsStatus::FORSALE->value ?
-                ProductsStatus::FORSALE->label() : ProductsStatus::DRAFT->label(),
+            'status' => $validData['status'],
         ]);
 
         return Redirect::route('products.show', ['product' => $product])->with('status', 'Арт успешно создан');
     }
 
     /**
-     * Обновление данных у существующего товара.
+     * Обновление данных у существующего товара. Обновление изображения доступно только Автору.
      */
     public function update(ProductUpdateRequest $request, Product $product): RedirectResponse
     {
         $user = $request->user();
-        $validData = $request->validated();
-        $product->fill($validData);
-        $product->status = $validData['status'] === ProductsStatus::FORSALE->value ?
-            ProductsStatus::FORSALE->label() : ProductsStatus::DRAFT->label();
+        $file = $request->file('image');
 
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
+        $validData = $request->validated();
+
+        $product->fill($validData);
+
+        if ($file) {
             $name = $file->getClientOriginalName();
-            $path = Storage::disk('s3')->putFile("products/{$user->id}/products", $file);
+            $path = $file->storeAs("products/{$user->id}/products", $name, 's3');
             $product->image = $path;
         }
 
         $product->save();
-
         return Redirect::route('products.show', ['product' => $product])->with('status', 'Арт успешно обновлен.');
+
     }
 
     /**
@@ -156,7 +156,7 @@ class ProductController extends Controller
                 ]);
 
                 $userHaveMoney = $product->price <= $buyerWallet->balance;
-                $productIsForSale = $product->status === ProductsStatus::FORSALE->label();
+                $productIsForSale = $product->status->value === ProductsStatus::FORSALE->value;
 
                 if (!$userHaveMoney) {
                     throw new Exception('Недостаточно средств на балансе кошелька для покупки арта.');
@@ -176,28 +176,29 @@ class ProductController extends Controller
                     'name' => $product->name,
                     'description' => $product->description,
                     'price' => $product->price,
+                    'author_id' => $product->author_id,
                     'image' => $product->image,
                     'user_id' => $buyer->id,
-                    'status' => ProductsStatus::PURCHASED->label(),
+                    'status' => ProductsStatus::PURCHASED->value,
                 ]);
 
                 $order->new_product_id = $newProduct->id;
                 $order->status = OrderStatus::COMPLETED->value;
                 $order->save();
 
-                $product->status = ProductsStatus::SOLD->label();
+                $product->status = ProductsStatus::SOLD->value;
                 $product->save();
                 $product->delete();
 
                 Transaction::create([
                     'amount' => $product->price,
-                    'type' => TransactionType::SPENDING->label(),
+                    'type' => TransactionType::SPENDING->value,
                     'wallet_id' => $buyerWallet->id,
                 ]);
 
                 Transaction::create([
                     'amount' => $product->price,
-                    'type' => TransactionType::REPLENISHMENT->label(),
+                    'type' => TransactionType::REPLENISHMENT->value,
                     'wallet_id' => $sellerWallet->id,
                 ]);
 

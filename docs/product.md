@@ -29,25 +29,25 @@
 *Входные данные*: Request
 *Формат ответа*: (200 OK) - text/html
 
-#### 4. GET /products/{productId}
+#### 4. GET /products/{product}
 *Возвращает страницу/профиль конкретного арта с более подробной информацией о нем - Цена, описание, атвор, крупное изображение.*
 
-*Входные данные*: Request, $productId - id арта
+*Входные данные*: Request, $product 
 *Формат ответа*: (200 OK) - text/html
 
-#### 5. GET /products/{productId}/edit
+#### 5. GET /products/{product}/edit
 
 *Возвращает форму для редактирования Арта. Содержит поля, аналогичные форме создания.*
 *Поля автоматически заполняются старыми данными арта.*
 
-*Входные данные*: Request, $productId - id арта
+*Входные данные*: Request, $product
 *Формат ответа*: (200 OK) - text/html
 
 #### 6. POST /products
 
 *Создает новый товар. Автоматически присваивает статус - 'for sale'.*
 
-*Входные данные*: ProductRequest, $productId - id арта
+*Входные данные*: ProductStoreRequest, $product
 
 | Параметр | Тип | Обязательный | Правила валидации | Описание |
 | -------- | ----|--------------|-------------------|----------|
@@ -58,26 +58,26 @@
 
 *Формат ответа*: (302 OK)
 
-#### 7. PATCH /products/{productId}
+#### 7. PATCH /products/{product}
 
-*Обновляет данные арта.*
+*Обновляет данные арта. Все нежеуказанные поля доступны для редактирования только Автору, владеющему артом. Пользователь-владелец (user_id) не может редактировать image.*
 
-*Входные данные*: ProductUpdateRequest, $productId - id арта
+*Входные данные*: ProductUpdateRequest, $product
 
 | Параметр | Тип | Обязательный | Правила валидации | Описание |
 | -------- | ----|--------------|-------------------|----------|
-| 'name'  | string | Да | required, string, max:255| Название арта|
-| 'description' | string | Да | required, max:255| Описание арта |
-| 'price' |  decimal | Да | required, numeric, min:0.01 | Cтоимость арта |
-| 'image' | string | нет | nullable, mage| Изображение |
+| 'name'  | string | нет | required, string, max:255| Название арта|
+| 'description' | string | нет | required, max:255| Описание арта |
+| 'price' |  decimal | нет | required, numeric, min:0.01 | Cтоимость арта |
+| 'image' | string | нет | nullable, image| Изображение |
 
 *Формат ответа*: (302 OK)
 
-#### 8. DELETE /products/{productId}
+#### 8. DELETE /products/{product}
 
 *Удаляет арт.*
 
-*Входные данные*: Request, $productId - id арта
+*Входные данные*: Request, $product
 *Формат ответа*: (302 OK) 
 
 

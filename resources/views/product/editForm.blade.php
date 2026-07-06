@@ -40,19 +40,19 @@
                 <div>
                     <x-input-label for="status" :value="__('Status')" />
                     <select name="status" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('status', $product->status)">
-                        <option value="for_sale" 
-                        @if ($product->status === $status::FORSALE->label())
+                        <option value="{{ $status::FORSALE->value }}"
+                        @if ($product->status->value === $status::FORSALE->value)
                             selected
                         @endif
                         > {{ $status::FORSALE->label() }}  </option>
-                        <option value="draft" 
-                        @if ($product->status === $status::DRAFT->label())
+                        <option value="{{ $status::DRAFT->value }}" 
+                        @if ($product->status->value === $status::DRAFT->value)
                             selected
                         @endif> {{ $status::DRAFT->label() }} </option>
                     </select>
                     <x-input-error class="mt-2" :messages="$errors->get('status')" />
                 </div>
-
+                @if ($product->author == $user)
                 <div>
                     <x-input-label for="image" :value="__('Image')" />
                     <img class="mt-2 mb-3" style="border-radius:10%" width="100" src="{{ Storage::url($product->image) }}">
@@ -60,6 +60,7 @@
                     <input id="image" type="file" name="image">
                     <x-input-error class="mt-2" :messages="$errors->get('image')" />
                 </div>
+                @endif
                 
                 <div class="flex items-center gap-4">
                     <x-primary-button>{{ __('Save') }}</x-primary-button>

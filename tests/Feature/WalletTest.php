@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
 use App\Models\Wallet;
 use Tests\TestCase;
+use Illuminate\Support\Facades\Auth;
 
 class WalletTest extends TestCase
 {
@@ -15,10 +15,10 @@ class WalletTest extends TestCase
 
     public function test_users_wallet_created(): void
     {
-        $password = fake()->unique()->password();
+        $password = fake()->unique()->password(8, 20);
         $email = fake()->unique()->email();
 
-        $this->post('/register', [
+        $response = $this->post('/register', [
             'name' => fake()->unique()->name(),
             'email' => $email,
             'nickname' => fake()->unique()->firstName(),
@@ -26,7 +26,7 @@ class WalletTest extends TestCase
             'password_confirmation' => $password,
         ]);
 
-        $user = User::where('email', $email)->first();
+        $user = Auth::user();
 
         $this->assertDatabaseHas('wallets', [
             'user_id' => $user->id,
