@@ -102,7 +102,6 @@ class ProductController extends Controller
     public function update(ProductUpdateRequest $request, Product $product): RedirectResponse
     {
         $user = $request->user();
-        $author = $product->author;
         $file = $request->file('image');
 
         $validData = $request->validated();
