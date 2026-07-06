@@ -6,6 +6,7 @@ use App\Enums\ProductsStatus;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
+use App\Rules\Authorship;
 
 class ProductUpdateRequest extends FormRequest
 {
@@ -16,12 +17,15 @@ class ProductUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        $product = $this->route('product');
+        $user = $this->user();
+
         return [
             'name' => ['string', 'max:255'],
             'description' => ['max:255'],
             'price' => ['numeric', 'min:0.01'],
             'status' => ['required', new Enum(ProductsStatus::class)],
-            'image' => ['file', 'nullable'],
+            'image' => ['file', 'nullable', new Authorship($product, $user)],
         ];
     }
 }
