@@ -77,7 +77,15 @@
 
 *Удаляет арт.*
 
-*Входные данные*: Request, $product
+*Входные данные*: Request, $product 
 *Формат ответа*: (302 OK) 
+
+#### 9. POST /products/{product}/buy 
+
+*Роут для покупки арта. Используется сервис App\Services\BuyProductService.*
+
+*Входные данные*: Request, $product, $buyProductService 
+
+*Формат ответа*: (302 OK)
 
 
