@@ -15,9 +15,12 @@ use Illuminate\Support\Facades\DB;
 
 class BuyProductService
 {
+    /**
+     * Публичная функция, собирающая всю логику по покупке продукта воедино.
+     */
     public function purchase(Product $product, User $buyer, User $seller): Product
     {
-        $newProduct = DB::transaction(function () use ($product, $buyer, $seller) {
+        return DB::transaction(function () use ($product, $buyer, $seller) {
 
             $product = Product::where('id', $product->id)->lockForUpdate()->first();
             $sellerWallet = Wallet::where('user_id', $seller->id)->lockForUpdate()->first();
@@ -42,29 +45,29 @@ class BuyProductService
             return $newProduct;
 
         }, 3);
-
-        return $newProduct;
     }
 
-    public function checkThatSellerIsNotBuyer(User $seller, User $buyer)
-    {
-        if ($seller->id == $buyer->id) {
-            return Redirect::route('products.show', ['product' => $product])->with('status', 'Этот арт уже принадлежит тебе.');
-        }
-    }
-
+    /**
+     * Приватный метод для списания денежных средств с счета.
+     */
     private function writeOffMoney(Wallet $wallet, $amount): void
     {
         $wallet->decrement('balance', $amount);
         $wallet->save();
     }
 
+    /**
+     * Приватный метод для пополнения счета.
+     */
     private function topUpWallet(Wallet $wallet, $amount): void
     {
         $wallet->increment('balance', $amount);
         $wallet->save();
     }
 
+    /**
+     * Приватный метод, создающий историю списаний/пополнений кошелька.
+     */
     private function createWalletHistory(Wallet $buyerWallet, Wallet $sellerWallet, $amount): void
     {
         Transaction::create([
@@ -80,6 +83,9 @@ class BuyProductService
         ]);
     }
 
+    /**
+     * Приватная функция,проверяющая базовое условие для покупки - наличие необходимого количества денег на счету.
+     */
     private function checkThatBuyerHaveMoney(Product $product, Wallet $buyerWallet)
     {
         if (!($product->price <= $buyerWallet->balance)) {
@@ -87,6 +93,9 @@ class BuyProductService
         }
     }
 
+    /**
+     * Приватная функция, реализующая проверку статуса продукта.
+     */
     private function checkProductStatus(Product $product)
     {
         if (!($product->status->value === ProductsStatus::FORSALE->value)) {
@@ -94,6 +103,9 @@ class BuyProductService
         }
     }
 
+    /**
+     * Приватная функция для создания истории покупок/продаж.
+     */
     private function createOrder(Product $product, User $seller, User $buyer): Order
     {
         return Order::create([
@@ -104,6 +116,9 @@ class BuyProductService
                 ]);
     }
 
+    /**
+     * Приватная функция для обновления заказа.
+     */
     private function updateOrder(Order $order, Product $product): void
     {
         $order->new_product_id = $product->id;
@@ -111,6 +126,9 @@ class BuyProductService
         $order->save();
     }
 
+    /**
+     * Приватная функция для обноления и мягкого удаления проданного Продукта.
+     */
     private function updateAndDeleteOldProduct(Product $product): void
     {
         $product->status = ProductsStatus::SOLD->value;
@@ -118,6 +136,9 @@ class BuyProductService
         $product->delete();
     }
 
+    /**
+     * Приватная функция для создания нового продукта, взамен мягко удаленного.
+     */
     private function createNewProduct(Product $product, User $buyer): Product
     {
         return Product::create([

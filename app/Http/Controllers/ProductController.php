@@ -132,7 +132,9 @@ class ProductController extends Controller
         $seller = $product->user;
         $buyer = $request->user();
 
-        $buyProductService->checkThatSellerIsNotBuyer($seller, $buyer);
+        if ($seller->id == $buyer->id) {
+            return Redirect::route('products.show', ['product' => $product])->with('status', 'Этот арт уже принадлежит тебе.');
+        }
 
         try {
             $newProduct = $buyProductService->purchase($product, $buyer, $seller);
