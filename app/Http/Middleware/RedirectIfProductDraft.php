@@ -18,9 +18,9 @@ class RedirectIfProductDraft
     public function handle(Request $request, Closure $next): Response
     {
         $product = $request->product;
-        $userId = $product->user_id;
+        $user = $request->user();
 
-        if (($request->user()->id !== $userId) && ($product->status === ProductsStatus::DRAFT->value)) {
+        if (!$user->is($product->user) && ($product->status->value !== ProductsStatus::FORSALE->value)) {
             return Redirect::route('products.index');
         }
 

@@ -3,17 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ProductsStatus;
-use App\Enums\TransactionType;
-use App\Enums\OrderStatus;
 use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
 use App\Models\Product;
-use App\Models\Wallet;
-use App\Models\Order;
-use App\Models\Transaction;
+use App\Services\BuyProductService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use Exception;
@@ -132,7 +127,7 @@ class ProductController extends Controller
     /**
      * Покупка товара.
      */
-    public function buyProduct(Request $request, Product $product): RedirectResponse
+    public function buyProduct(Request $request, Product $product, BuyProductService $buyProductService): RedirectResponse
     {
         $seller = $product->user;
         $buyer = $request->user();
@@ -142,80 +137,14 @@ class ProductController extends Controller
         }
 
         try {
-            $newProduct = DB::transaction(function () use ($product, $buyer, $seller) {
-
-                $product = Product::where('id', $product->id)->lockForUpdate()->first();
-                $sellerWallet = Wallet::where('user_id', $seller->id)->lockForUpdate()->first();
-                $buyerWallet = Wallet::where('user_id', $buyer->id)->lockForUpdate()->first();
-
-                $order = Order::create([
-                    'status' => OrderStatus::CREATED->value,
-                    'product_id' => $product->id,
-                    'seller_id' => $seller->id,
-                    'buyer_id' => $buyer->id,
-                ]);
-
-                $userHaveMoney = $product->price <= $buyerWallet->balance;
-                $productIsForSale = $product->status->value === ProductsStatus::FORSALE->value;
-
-                if (!$userHaveMoney) {
-                    throw new Exception('Недостаточно средств на балансе кошелька для покупки арта.');
-                }
-
-                if (!$productIsForSale) {
-                    throw new Exception('Арт не продается.');
-                }
-
-                $sellerWallet->increment('balance', $product->price);
-                $sellerWallet->save();
-
-                $buyerWallet->decrement('balance', $product->price);
-                $buyerWallet->save();
-
-                $newProduct = Product::create([
-                    'name' => $product->name,
-                    'description' => $product->description,
-                    'price' => $product->price,
-                    'author_id' => $product->author_id,
-                    'image' => $product->image,
-                    'user_id' => $buyer->id,
-                    'status' => ProductsStatus::PURCHASED->value,
-                ]);
-
-                $order->new_product_id = $newProduct->id;
-                $order->status = OrderStatus::COMPLETED->value;
-                $order->save();
-
-                $product->status = ProductsStatus::SOLD->value;
-                $product->save();
-                $product->delete();
-
-                Transaction::create([
-                    'amount' => $product->price,
-                    'type' => TransactionType::SPENDING->value,
-                    'wallet_id' => $buyerWallet->id,
-                ]);
-
-                Transaction::create([
-                    'amount' => $product->price,
-                    'type' => TransactionType::REPLENISHMENT->value,
-                    'wallet_id' => $sellerWallet->id,
-                ]);
-
-                return $newProduct;
-
-            }, 3);
-
+            $newProduct = $buyProductService->purchase($product, $buyer, $seller);
             $request->session()->flash('status', 'success');
-
 
         } catch (Exception $e) {
             $exception = $e->getMessage() ?: "Что-то пошло не так, попробуйте позже.";
             $request->session()->flash('status', $exception);
         }
 
-        $product = $newProduct ?? $product;
-
-        return Redirect::route('products.show', ['product' => $product]);
+        return Redirect::route('products.show', ['product' => $newProduct ?? $product]);
     }
 }
