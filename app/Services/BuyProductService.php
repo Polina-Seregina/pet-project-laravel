@@ -10,8 +10,10 @@ use App\Models\Wallet;
 use App\Models\Order;
 use App\Models\User;
 use App\Models\Transaction;
+use App\Mail\ProductSold;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class BuyProductService
 {
@@ -42,11 +44,21 @@ class BuyProductService
 
             $this->createWalletHistory($buyerWallet, $sellerWallet, $product->price);
 
+            $this->sendMailToSeller($product, $seller, $buyer);
+
             return $newProduct;
 
         }, 3);
     }
 
+    /**
+     * Отправка уведомления о продаже на почту продавца.
+     */
+
+    private function sendMailToSeller( Product $product, User $seller, User $buyer): void
+    {
+        Mail::to($seller)->send(new ProductSold($product, $seller, $buyer));
+    }
     /**
      * Приватный метод для списания денежных средств с счета.
      */
