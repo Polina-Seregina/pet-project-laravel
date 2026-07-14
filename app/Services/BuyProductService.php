@@ -55,7 +55,7 @@ class BuyProductService
      * Отправка уведомления о продаже на почту продавца.
      */
 
-    private function sendMailToSeller( Product $product, User $seller, User $buyer): void
+    private function sendMailToSeller(Product $product, User $seller, User $buyer): void
     {
         Mail::to($seller)->send(new ProductSold($product, $seller, $buyer));
     }
