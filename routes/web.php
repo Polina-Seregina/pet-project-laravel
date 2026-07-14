@@ -39,9 +39,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
     Route::get('/my/products', [ProductController::class, 'usersIndex'])->name('user.products.index');
     Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show')->middleware('onlyPublic');
-    Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit')->middleware('owner');
-    Route::patch('/products/{product}', [ProductController::class, 'update'])->name('products.update')->middleware('owner');
-    Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy')->middleware('owner');
+    Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
+    Route::patch('/products/{product}', [ProductController::class, 'update'])->name('products.update');
+    Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
     Route::post('/products/{product}/buy', [ProductController::class, 'buyProduct'])->name('products.buy')->middleware('onlyPublic');
 
     Route::get('/orders/sold', [OrderController::class, 'getListOfSoldProducts'])->name('orders.sold');

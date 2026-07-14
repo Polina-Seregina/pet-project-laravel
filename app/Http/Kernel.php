@@ -79,7 +79,6 @@ class Kernel extends HttpKernel
      */
     protected $middlewareAliases = [
         'onlyPublic' => RedirectIfProductDraft::class,
-        'owner' => EnsureUserIsOwner::class,
         'auth' => Authenticate::class,
         'auth.basic' => AuthenticateWithBasicAuth::class,
         'auth.session' => AuthenticateSession::class,
