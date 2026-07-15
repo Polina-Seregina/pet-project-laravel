@@ -146,7 +146,7 @@ class ProductController extends Controller
             $exception = $e->getMessage() ?: "Что-то пошло не так, попробуйте позже.";
             $request->session()->flash('status', $exception);
         }
-        
+
         Mail::to($seller)->send(new ProductSold($product, $seller, $buyer));
 
         return Redirect::route('products.show', ['product' => $newProduct ?? $product]);

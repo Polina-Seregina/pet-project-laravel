@@ -10,10 +10,8 @@ use App\Models\Wallet;
 use App\Models\Order;
 use App\Models\User;
 use App\Models\Transaction;
-use App\Mail\ProductSold;
 use Exception;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 
 class BuyProductService
 {
@@ -48,7 +46,7 @@ class BuyProductService
 
         }, 3);
     }
-    
+
     /**
      * Приватный метод для списания денежных средств с счета.
      */
