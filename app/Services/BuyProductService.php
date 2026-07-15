@@ -44,21 +44,11 @@ class BuyProductService
 
             $this->createWalletHistory($buyerWallet, $sellerWallet, $product->price);
 
-            $this->sendMailToSeller($product, $seller, $buyer);
-
             return $newProduct;
 
         }, 3);
     }
-
-    /**
-     * Отправка уведомления о продаже на почту продавца.
-     */
-
-    private function sendMailToSeller(Product $product, User $seller, User $buyer): void
-    {
-        Mail::to($seller)->send(new ProductSold($product, $seller, $buyer));
-    }
+    
     /**
      * Приватный метод для списания денежных средств с счета.
      */

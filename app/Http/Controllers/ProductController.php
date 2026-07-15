@@ -6,10 +6,12 @@ use App\Enums\ProductsStatus;
 use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
 use App\Models\Product;
+use App\Mail\ProductSold;
 use App\Services\BuyProductService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 use Exception;
 
@@ -144,6 +146,8 @@ class ProductController extends Controller
             $exception = $e->getMessage() ?: "Что-то пошло не так, попробуйте позже.";
             $request->session()->flash('status', $exception);
         }
+        
+        Mail::to($seller)->send(new ProductSold($product, $seller, $buyer));
 
         return Redirect::route('products.show', ['product' => $newProduct ?? $product]);
     }
