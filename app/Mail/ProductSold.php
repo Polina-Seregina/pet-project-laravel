@@ -7,10 +7,11 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Product;
 use App\Models\User;
 
-class ProductSold extends Mailable
+class ProductSold extends Mailable implements ShouldQueue
 {
     use Queueable;
     use SerializesModels;
