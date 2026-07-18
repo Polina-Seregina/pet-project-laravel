@@ -17,6 +17,8 @@ services:
       - .:/var/www/laravel
     container_name: app_container
     command: sh -c "chown -R www-data:www-data /var/www/laravel/storage && php-fpm"
+    depends_on:
+      - redis
   mysql:
     image: mysql:8.0
     ports:
@@ -70,6 +72,20 @@ services:
       MINIO_ROOT_PASSWORD: password
     volumes:
       - minio_data:/data
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+  queues:
+    build: 
+      context: dockerfiles
+      dockerfile: Dockerfile
+    container_name: queues
+    command: php artisan horizon
+    volumes:
+      - .:/var/www/laravel
+    depends_on:
+      - redis
 volumes:
   db_data:
   minio_data:
