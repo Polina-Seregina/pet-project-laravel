@@ -17,6 +17,7 @@
         "league/flysystem-aws-s3-v3": "^3.0",
         "mailersend/laravel-driver": "^3.2",
         "predis/predis": "^3.5",
+        "spatie/laravel-permission": "^6.25",
         "symfony/css-selector": "^7.0"
     },
     "require-dev": {

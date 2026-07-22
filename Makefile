@@ -26,6 +26,7 @@ setup: env ## Complete initial configuration of the Laravel project
 	@echo "Waiting for MySQL..."
 	@until docker-compose exec php php -r "try { new PDO('mysql:host=mysql;dbname=laravel-pet-db', 'root', 'password'); echo 'OK'; } catch (Exception $$e) { exit(1); }"; do sleep 2; done
 	@docker-compose exec php php artisan migrate
+	@docker-compose exec php php artisan db:seed --class=RoleSeeder
 	@npm run build
 
 env: ## Create local environment file
