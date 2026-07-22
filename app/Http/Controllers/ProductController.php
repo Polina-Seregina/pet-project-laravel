@@ -60,6 +60,7 @@ class ProductController extends Controller
      */
     public function edit(Request $request, Product $product): View
     {
+        $this->authorize('update', $product);
         return view('product.editForm', [
             'product' => $product,
             'status' => ProductsStatus::class,
@@ -98,6 +99,7 @@ class ProductController extends Controller
      */
     public function update(ProductUpdateRequest $request, Product $product): RedirectResponse
     {
+        $this->authorize('update', $product);
         $user = $request->user();
         $file = $request->file('image');
 
@@ -121,6 +123,7 @@ class ProductController extends Controller
      */
     public function destroy(Request $request, Product $product): RedirectResponse
     {
+        $this->authorize('delete', $product);
         $product->delete();
 
         return Redirect::route('user.products.index');

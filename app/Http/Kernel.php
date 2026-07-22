@@ -4,7 +4,6 @@ namespace App\Http;
 
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\EncryptCookies;
-use App\Http\Middleware\EnsureUserIsOwner;
 use App\Http\Middleware\PreventRequestsDuringMaintenance;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Middleware\RedirectIfProductDraft;
@@ -79,7 +78,6 @@ class Kernel extends HttpKernel
      */
     protected $middlewareAliases = [
         'onlyPublic' => RedirectIfProductDraft::class,
-        'owner' => EnsureUserIsOwner::class,
         'auth' => Authenticate::class,
         'auth.basic' => AuthenticateWithBasicAuth::class,
         'auth.session' => AuthenticateSession::class,
