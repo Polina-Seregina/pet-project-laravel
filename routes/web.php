@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -46,6 +47,14 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/orders/sold', [OrderController::class, 'getListOfSoldProducts'])->name('orders.sold');
     Route::get('/orders/purchased', [OrderController::class, 'getListOfPurchasedProducts'])->name('orders.purchased');
+
+    Route::middleware('admin')->group(function () {
+        Route::get('/admin', [AdminController::class, 'showBasePanel'])->name('admin.panel');
+        Route::get('/admin/userslist', [AdminController::class, 'showUsersList'])->name('admin.usersList');
+        Route::get('/admin/list', [AdminController::class, 'showAdminsList'])->name('admin.list');
+        Route::get('/admin/{user}', [AdminController::class, 'showUser'])->name('admin.showUser');
+        Route::patch('/admin/{user}', [AdminController::class, 'changeRole'])->name('admin.changeRole');
+    });
 
 });
 

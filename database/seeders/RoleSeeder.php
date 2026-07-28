@@ -18,6 +18,12 @@ class RoleSeeder extends Seeder
             'password' => config('app.admin-password'),
         ]);
 
+        $admin->profile()->create([
+            'nickname' => 'admin',
+        ]);
+        
+        $admin->wallet()->firstOrCreate(['balance' => 0]);
+        
         $admin->assignRole('admin');
     }
 }
