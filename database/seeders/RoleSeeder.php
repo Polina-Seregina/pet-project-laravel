@@ -21,9 +21,9 @@ class RoleSeeder extends Seeder
         $admin->profile()->create([
             'nickname' => 'admin',
         ]);
-        
+
         $admin->wallet()->firstOrCreate(['balance' => 0]);
-        
+
         $admin->assignRole('admin');
     }
 }

@@ -24,7 +24,7 @@ class AdminController extends Controller
     {
         return view('admin.usersList', [
             'users' => User::role('user')->paginate(),
-            'role' => 'user', 
+            'role' => 'user',
             ]);
     }
 
@@ -66,8 +66,8 @@ class AdminController extends Controller
             $user->assignRole($request['role']);
             return Redirect::route('admin.showUser', ['user' => $user])->with('status', 'Роль пользователя изменена успешно.');
         }
-        
+
         return Redirect::route('admin.showUser', ['user' => $user])->with('status', "Роль пользователя не может быть изменена.");
-    } 
-    
+    }
+
 }

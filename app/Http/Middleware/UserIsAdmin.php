@@ -5,7 +5,6 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserIsAdmin
@@ -17,8 +16,8 @@ class UserIsAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->user()->hasRole('admin'))  {
-            return $next($request); 
+        if ($request->user()->hasRole('admin')) {
+            return $next($request);
         };
         return Redirect::route('profile.show')->with('status', 'Не хватает прав для выполнения предыдущих действий.');
     }
