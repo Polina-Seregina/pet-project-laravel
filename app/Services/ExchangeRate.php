@@ -3,12 +3,10 @@
 namespace App\Services;
 
 use GuzzleHttp\Client;
-use App\Enums\CurrencyEnum;
-use Exception;
 
 class ExchangeRate
 {
-    public function getRate(String $preferredCurrency )
+    public function getRate(String $preferredCurrency)
     {
         $client = new Client([
             'base_uri' => 'https://allratestoday.com/api/v1/',
@@ -30,6 +28,6 @@ class ExchangeRate
             $arrayBody = json_decode($body);
             return $arrayBody[0]->rate;
         }
-    
+
     }
 }
