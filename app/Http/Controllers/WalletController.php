@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
+use App\Services\ExchangeRate;
+use App\Enums\CurrencyEnum;
+
 class WalletController extends Controller
 {
     /**
@@ -19,9 +22,23 @@ class WalletController extends Controller
      */
     public function show(Request $request): View
     {
+        $currency = $request['currency'] ?? CurrencyEnum::RUB->value;
+        $wallet = $request->user()->wallet;
+        $service = new ExchangeRate();
+        try {
+            $rate = $service->getRate($currency);
+            $balanceInNewCurrency = round($wallet->balance * $rate, 2);
+        } catch (Exception $e) {
+            $request->session()->flash('status', $e->getMessage());
+            $balanceInNewCurrency = 'Сервис не доступен';
+            $currency = '';
+        }
+
         return view('wallet.show', [
             'user' => $request->user(),
-            'wallet' => $request->user()->wallet,
+            'wallet' => $wallet,
+            'balanceInNewCurrency' => $balanceInNewCurrency,
+            'currency' => $currency,
         ]);
     }
 

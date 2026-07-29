@@ -7,6 +7,7 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AdminController;
+use App\Service\ExchangeRate;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,6 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/wallet', [WalletController::class, 'show'])->name('wallet.show');
+    Route::post('/wallet', [WalletController::class, 'show'])->name('wallet.currency');
     Route::get('/wallet/replenishment', [WalletController::class, 'showTopUpForm'])->name('wallet.replenishment.form');
     Route::patch('/wallet', [WalletController::class, 'topUp'])->name('wallet.replenishment');
     Route::get('/wallet/history', [TransactionController::class, 'showHistory'])->name('transaction.history');
