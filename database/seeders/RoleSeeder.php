@@ -12,10 +12,11 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        $admin = User::firstOrCreate([
+        $admin = User::firstOrCreate(
+            [
             'email' => config('app.admin-email')],
             ['name' => config('app.admin-name'), 'password' => config('app.admin-password')]
-            );
+        );
 
         $admin->profile()->firstOrCreate([
             'nickname' => 'admin',

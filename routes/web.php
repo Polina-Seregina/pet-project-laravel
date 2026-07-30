@@ -53,7 +53,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/{user}', [AdminController::class, 'showUser'])->name('admin.show');
         Route::patch('/admin/{user}', [AdminController::class, 'changeRole'])->name('admin.update');
     });
-    
+
 });
 
 Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');

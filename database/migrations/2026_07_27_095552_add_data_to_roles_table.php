@@ -4,8 +4,6 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Carbon;
-use Spatie\Permission\Models\Role;
 
 return new class () extends Migration {
     /**
@@ -14,10 +12,10 @@ return new class () extends Migration {
     public function up(): void
     {
         DB::table('roles')->insert([
-            'name' => 'user', 
+            'name' => 'user',
             'guard_name' => 'web',
             'created_at' => now(),
-            'updated_at' => now(), 
+            'updated_at' => now(),
             ]);
 
         DB::table('roles')->insert([
