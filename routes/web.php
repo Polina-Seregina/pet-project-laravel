@@ -49,13 +49,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/purchased', [OrderController::class, 'getListOfPurchasedProducts'])->name('orders.purchased');
 
     Route::middleware('admin')->group(function () {
-        Route::get('/admin', [AdminController::class, 'showBasePanel'])->name('admin.panel');
-        Route::get('/admin/userslist', [AdminController::class, 'showUsersList'])->name('admin.usersList');
-        Route::get('/admin/list', [AdminController::class, 'showAdminsList'])->name('admin.list');
-        Route::get('/admin/{user}', [AdminController::class, 'showUser'])->name('admin.showUser');
-        Route::patch('/admin/{user}', [AdminController::class, 'changeRole'])->name('admin.changeRole');
+        Route::get('/admin/users', [AdminController::class, 'showUsersList'])->name('admin.index');
+        Route::get('/admin/{user}', [AdminController::class, 'showUser'])->name('admin.show');
+        Route::patch('/admin/{user}', [AdminController::class, 'changeRole'])->name('admin.update');
     });
-
+    
 });
 
 Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');

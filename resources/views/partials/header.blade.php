@@ -33,6 +33,9 @@
 									</ul>
 								</li>
 								<li> <a href="{{ route('profile.show') }}">PROFILE</a> </li>
+								@role('admin')
+								<li> <a href="{{ route('admin.index') }}">ADMIN PANEL</a> </li>
+								@endrole
 
 								@endauth
 								@guest

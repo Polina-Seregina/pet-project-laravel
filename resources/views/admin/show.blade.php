@@ -18,7 +18,7 @@
             <div class="main-menu d-none d-lg-block">
                 <nav id="mobile-menu">
                     <ul class="menu-list">
-                        <li> <a href="{{ route('admin.panel') }}"> Вернуться к меню выбора </a> </li>
+                        <li> <a href="{{ route('admin.index') }}"> Вернуться к списку </a> </li>
                     </ul>
                 </nav>
             </div>
@@ -77,13 +77,6 @@
                     @endif
                 </blockquote>
                 
-
-
-            <div class="title-one text-center ">
-                <p class="text-sm text-gray-700 leading-5 dark:text-gray-400">
-                    <a href="javascript:history.back()"> <- Back </a>
-                </p>
-            </div>
             </section>
         </div>    
     </div>

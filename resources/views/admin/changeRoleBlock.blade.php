@@ -1,5 +1,5 @@
 <div style="margin: 5px 350px 5px 350px; background-color: #ffefd5" class="widget-contact">
-    <form method="post" action="{{ route('admin.changeRole', ['user' => $user]) }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('admin.update', ['user' => $user]) }}" class="mt-6 space-y-6">
         @csrf
         @method('patch')
 

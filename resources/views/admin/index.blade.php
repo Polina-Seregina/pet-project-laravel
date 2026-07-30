@@ -18,7 +18,7 @@
             <div class="main-menu d-none d-lg-block">
                 <nav id="mobile-menu">
                     <ul class="menu-list">
-                        <li> <a href="{{ route('admin.panel') }}"> Вернуться к меню выбора </a> </li>
+                        <li> <a href="{{ route('home') }}"> Вернуться к пользовательскому интерфейсу </a> </li>
                     </ul>
                 </nav>
             </div>
@@ -35,7 +35,7 @@
                 <blockquote style="text-align: center;" class="mt-10 mb-30 ml-10">
                     <div class="info-box2" style="padding: 20px 10px 10px 10px;">
                         <div class="info-content">
-                            <h3 class="info-title">Список пользователей '{{$role}}'</h3>
+                            <h3 class="info-title">Список пользователей</h3>
                         </div>
                     </div>
 
@@ -44,6 +44,7 @@
                         <thead>
                             <tr>
                                 <th style="text-align: center; border: 1px solid"> <p style="font-size: 30px">  </p> </th>
+                                <th style="text-align: center; border: 1px solid"> <p style="font-size: 30px"> Роль </p> </th>
                                 <th style="text-align: center; border: 1px solid"> <p style="font-size: 30px"> Никнейм </p> </th>
                                 <th style="text-align: center; border: 1px solid"> <p style="font-size: 30px"> Почта </p> </th>
                                 <th style="text-align: center; border: 1px solid"> <p style="font-size: 30px"> Дата рождения </p> </th>
@@ -54,10 +55,11 @@
                             @foreach ($users as $user)
                             <tr>
                                 <td style="text-align: center; border: 1px solid"> 
-                                    <a href="{{route('admin.showUser', ['user' => $user])}}"> 
+                                    <a href="{{route('admin.show', ['user' => $user])}}"> 
                                         <img class="shape-1 d-none d-lg-inline-block" width="50" src="{{ asset('images/shape/link.png') }}" alt="link">
                                     </a>
                                 </td>
+                                <td style="text-align: center; border: 1px solid"> {{ $user->getRoleNames()->first()}} </td>
                                 <td style="text-align: center; border: 1px solid"> {{ $user->profile->nickname }} </td>
                                 <td style="text-align: center; border: 1px solid"> {{ $user->email }} </td>
                                 <td style="text-align: center; border: 1px solid"> {{ $user->profile->birthday ?? 'не указана'}} </td>
@@ -74,12 +76,6 @@
                     </div>
                     @endif
                 </blockquote>
-                
-            <div class="title-one text-center ">
-                <p class="text-sm text-gray-700 leading-5 dark:text-gray-400">
-                    <a href="javascript:history.back()"> <- Back </a>
-                </p>
-            </div>
             </section>
         </div>    
     </div>

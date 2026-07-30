@@ -10,37 +10,17 @@ use App\Models\User;
 class AdminController extends Controller
 {
     /**
-     * Возвращает стартовую страницу панели Админа.
-     */
-    public function showBasePanel(): View
-    {
-        return view('admin.panel');
-    }
-
-    /**
-     * Возвращает список всех зарегистрированных пользователей с ролью "user".
+     * Возвращает список всех зарегистрированных пользователей.
      */
     public function showUsersList(): View
     {
-        return view('admin.usersList', [
-            'users' => User::role('user')->paginate(),
-            'role' => 'user',
+        return view('admin.index', [
+            'users' => User::paginate(),
             ]);
     }
 
     /**
-     * Возвращает список пользователей с ролью "admin".
-     */
-    public function showAdminsList(): View
-    {
-        return view('admin.usersList', [
-            'users' => User::role('admin')->paginate(),
-            'role' => 'admin',
-            ]);
-    }
-
-    /**
-     * Возвращает страницу конкретного юзера с формой для изменения роли.
+     * Возвращает страницу конкретного Пользователя с формой для изменения роли.
      */
 
     public function showUser(Request $request, User $user): View
@@ -49,7 +29,7 @@ class AdminController extends Controller
             ? Storage::disk('s3')->url($user->profile->avatar)
             : asset(config('filesystems.default_avatar'));
 
-        return view('admin.showUser', [
+        return view('admin.show', [
             'user' => $user,
             'avatar' => $avatar,
         ]);
@@ -64,10 +44,10 @@ class AdminController extends Controller
         if ($user->email !== config('app.admin-email')) {
             $user->removeRole($user->getRoleNames());
             $user->assignRole($request['role']);
-            return Redirect::route('admin.showUser', ['user' => $user])->with('status', 'Роль пользователя изменена успешно.');
+            return Redirect::route('admin.show', ['user' => $user])->with('status', 'Роль пользователя изменена успешно.');
         }
 
-        return Redirect::route('admin.showUser', ['user' => $user])->with('status', "Роль пользователя не может быть изменена.");
+        return Redirect::route('admin.show', ['user' => $user])->with('status', "Роль пользователя не может быть изменена.");
     }
 
 }
