@@ -49,9 +49,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/purchased', [OrderController::class, 'getListOfPurchasedProducts'])->name('orders.purchased');
 
     Route::middleware('admin')->group(function () {
-        Route::get('/admin/users', [AdminController::class, 'showUsersList'])->name('admin.index');
-        Route::get('/admin/{user}', [AdminController::class, 'showUser'])->name('admin.show');
-        Route::patch('/admin/{user}', [AdminController::class, 'changeRole'])->name('admin.update');
+        Route::get('/admin/users', [AdminController::class, 'index'])->name('admin.index');
+        Route::get('/admin/{user}', [AdminController::class, 'show'])->name('admin.show');
+        Route::patch('/admin/{user}', [AdminController::class, 'update'])->name('admin.update');
     });
 
 });
