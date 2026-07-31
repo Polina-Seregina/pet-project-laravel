@@ -16,26 +16,26 @@
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6" style="text-align: center;" >
         <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
 
-            @if (session('status') === 'Wallet top-up completed')
+            @if (session('status') === 'success')
                 <p
                     x-data="{ show: true }"
                     x-show="show"
                     x-transition
                     x-init="setTimeout(() => show = false, 2000)"
                     class="text-sm text-gray-600"
-                >{{ __('Wallet top-up completed.') }}</p>
+                >{{ __('Кошелек пополнен успешно') }}</p>
                 
                 <div style="height: 30px;"></div>
             @endif
 
-            @if (session('status') === 'Replenishment failed')
+            @if (session('status') !== 'success')
                 <p
                     x-data="{ show: true }"
                     x-show="show"
                     x-transition
                     x-init="setTimeout(() => show = false, 2000)"
                     class="text-sm text-red-500"
-                >{{ __('Replenishment failed.') }}</p>
+                >{{ session('status') }}</p>
 
                 <div style="height: 30px;"></div>
             @endif

@@ -8,7 +8,7 @@
         <div class="price-border" style="margin-bottom: 0"></div>
     </div>
     <div style="text-align: center;">
-    <form method="post" action="{{route('wallet.currency')}}" class="mt-6 space-y-6">
+    <form method="post" action="{{route('currency')}}" class="mt-6 space-y-6">
         @csrf
         <p class="plan-desc" style="font-size: 18px; "> Будь в курсе </p>
         <div class="footer-widget mb-30" style="text-align: center; font-size: 18px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;">
@@ -18,7 +18,7 @@
                     <option value="{{ App\Enums\CurrencyEnum::EUR }}"> {{ App\Enums\CurrencyEnum::EUR }} </option>
                     <option value="{{ App\Enums\CurrencyEnum::CNY }}"> {{ App\Enums\CurrencyEnum::CNY }} </option>
                 </select>
-            </div>
+            </div> 
 
             <div style="height: 30px;"></div>
 

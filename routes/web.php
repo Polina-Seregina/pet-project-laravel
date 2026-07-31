@@ -31,8 +31,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/wallet', [WalletController::class, 'show'])->name('wallet.show');
-    Route::post('/wallet', [WalletController::class, 'show'])->name('wallet.currency');
+    Route::get('/wallet', [WalletController::class, 'show'])->name('wallet.show'); 
+    Route::post('/wallet/currency', [WalletController::class, 'currency'])->name('wallet.currency');
     Route::get('/wallet/replenishment', [WalletController::class, 'showTopUpForm'])->name('wallet.replenishment.form');
     Route::patch('/wallet', [WalletController::class, 'topUp'])->name('wallet.replenishment');
     Route::get('/wallet/history', [TransactionController::class, 'showHistory'])->name('transaction.history');
@@ -46,6 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/products/{product}', [ProductController::class, 'update'])->name('products.update');
     Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
     Route::post('/products/{product}/buy', [ProductController::class, 'buyProduct'])->name('products.buy')->middleware('onlyPublic');
+    Route::post('/products/{product}/currency', [ProductController::class, 'currency'])->name('products.currency');
 
     Route::get('/orders/sold', [OrderController::class, 'getListOfSoldProducts'])->name('orders.sold');
     Route::get('/orders/purchased', [OrderController::class, 'getListOfPurchasedProducts'])->name('orders.purchased');
@@ -62,3 +63,4 @@ Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name(
 Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
 require __DIR__.'/auth.php';
+ 

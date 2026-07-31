@@ -10,7 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\View\View;
+use Illuminate\View\View; 
 use App\Services\ExchangeRate;
 use App\Enums\CurrencyEnum;
 
@@ -21,24 +21,41 @@ class WalletController extends Controller
      */
     public function show(Request $request): View
     {
-        $currency = $request['currency'] ?? CurrencyEnum::RUB->value;
         $wallet = $request->user()->wallet;
-        $service = new ExchangeRate();
+
+        return view('wallet.show', [
+            'user' => $request->user(),
+            'wallet' => $wallet,
+            'balanceInNewCurrency' => $balanceInNewCurrency ?? 'запроса пока не было',
+            'currency' => $currency ?? '',
+        ]);
+    }
+
+    /**
+     * Просмотр страницы кошелька .
+     */
+    public function currency(Request $request): View
+    {
+        $wallet = $request->user()->wallet;
+        $amount = $wallet->balance;
+        $currency = $request['currency'];
+
         try {
-            $rate = $service->getRate($currency);
-            $balanceInNewCurrency = round($wallet->balance * $rate, 2);
+            $service = new ExchangeRate();
+            $balanceInNewCurrency = $service->getAmountInForeignCurrency($currency, $amount);
         } catch (Exception $e) {
             $request->session()->flash('status', $e->getMessage());
             $balanceInNewCurrency = 'Сервис не доступен';
             $currency = '';
         }
 
-        return view('wallet.show', [
+        return view('currency.exchangeWindow', [
             'user' => $request->user(),
             'wallet' => $wallet,
             'balanceInNewCurrency' => $balanceInNewCurrency,
             'currency' => $currency,
         ]);
+
     }
 
     /**
@@ -72,9 +89,9 @@ class WalletController extends Controller
                     'wallet_id' => $wallet->id,
                 ]);
             }, 3);
-            $request->session()->flash('status', 'Wallet top-up completed');
+            $request->session()->flash('status', 'success');
         } catch (Exception $e) {
-            $request->session()->flash('status', 'Replenishment failed');
+            $request->session()->flash('status', $e->getMessage());
         }
 
         return Redirect::route('wallet.show');
