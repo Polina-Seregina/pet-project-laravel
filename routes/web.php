@@ -31,7 +31,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/wallet', [WalletController::class, 'show'])->name('wallet.show'); 
+    Route::get('/wallet', [WalletController::class, 'show'])->name('wallet.show');
     Route::post('/wallet/currency', [WalletController::class, 'currency'])->name('wallet.currency');
     Route::get('/wallet/replenishment', [WalletController::class, 'showTopUpForm'])->name('wallet.replenishment.form');
     Route::patch('/wallet', [WalletController::class, 'topUp'])->name('wallet.replenishment');
@@ -63,4 +63,3 @@ Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name(
 Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
 require __DIR__.'/auth.php';
- 
