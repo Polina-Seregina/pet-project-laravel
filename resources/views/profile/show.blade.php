@@ -14,6 +14,14 @@
 
 <div>
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+        <p
+            x-data="{ show: true }"
+            x-show="show"
+            x-transition
+            x-init="setTimeout(() => show = false, 2000)"
+            class="text-sm text-gray-600"
+        >{{ session('status') }}</p>
+        
         <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
             <div class = 'row' class="row max-w-xl">
                 <div class='col'>
