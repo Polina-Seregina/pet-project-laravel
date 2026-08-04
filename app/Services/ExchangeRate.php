@@ -6,7 +6,7 @@ use GuzzleHttp\Client;
 
 class ExchangeRate
 {
-    public function getAmountInForeignCurrency(String $preferredCurrency, Float $amount)
+    public function getAmountInForeignCurrency(String $preferredCurrency, Float $amount): Float
     {
         return round($this->getRate($preferredCurrency) * $amount, 2);
     }
@@ -14,7 +14,6 @@ class ExchangeRate
     private function getRate(String $preferredCurrency)
     {
         $client = new Client([
-            //'base_uri' => 'https://allratestoday.com/api/v1/',
             'base_uri' => 'https://currate.ru/api/',
         ]);
 
@@ -32,23 +31,6 @@ class ExchangeRate
             $arrayBody = json_decode($body);
             return $arrayBody->data->{$pair};
         }
-
-        /*$response = $client->request('GET', 'rates', [
-            'headers' => [
-                'Authorization' => "Bearer ".env('CURRATE_API'),
-            ],
-            'query' => [
-                'source' => "USD",
-                'target' => "{$preferredCurrency}",
-                'amount' => "1",
-                ]
-        ]);
-
-        if ($response->getStatusCode() == 200) {
-            $body = $response->getBody();
-            dd($arrayBody = json_decode($body));
-            return $arrayBody[0]->rate;
-        }*/
 
     }
 }

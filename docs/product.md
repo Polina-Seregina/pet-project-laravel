@@ -88,4 +88,12 @@
 
 *Формат ответа*: (302 OK)
 
+#### 9. POST /products/{product}
+
+*Роут для перевода стоимости арта в выбранную валюту.*
+*Контроллер - App\Http\Controllers\CurrencyExchangeController.*
+*Входные данные*: Request, $product
+
+*Формат ответа*: (302 OK)
+
 

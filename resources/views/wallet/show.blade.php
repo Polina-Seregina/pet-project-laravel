@@ -46,11 +46,14 @@
                         <blockquote class="blockquote mt-10 mb-30 ml-10">
                             <p style="font-weight: normal; font-size: 30px;" class="name"> Баланс </p> 
                             <p class="name"> {{ $wallet->balance }} USD </p> 
+                            @if ($balanceInNewCurrency)
+                            <p style="font-weight: normal; font-size: 25px;" class="name"> {{ $balanceInNewCurrency}} {{ $currency }} </p> 
+                            @endif
                         </blockquote>
                     </section>
                 </div>
                 <div style="width: 100%">
-                    @include('currency.exchangeWindow')
+                    @include('currency.exchangeWindowWallet')
                 </div>
             </div>
         </div>    

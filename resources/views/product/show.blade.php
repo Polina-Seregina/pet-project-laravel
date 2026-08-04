@@ -80,11 +80,27 @@
                 <div class="max-w-7xl mb-10 mx-auto sm:px-9 lg px-5 space-y-6">
                     <section class="theme-banner-one">
                         <div class="title-one text-center ">
-                            {{ $product->price }} $
+                            {{ $product->price }} USD
                         </div>
                     </section>
                 </div>
 
+                <div class="title-one text-center"> 
+                    Выбери валюту
+                    @include('currency.exchangeWindowProduct')
+                </div>
+                <div style="height: 30px;"></div>
+                <div class="max-w-7xl mb-10 mx-auto sm:px-9 lg px-5 space-y-6">
+                    <section class="theme-banner-one">
+                        <div class="title-one text-center ">
+                            @if ($balanceInNewCurrency)
+                            {{ $balanceInNewCurrency}} {{ $currency }} 
+                            @else
+                            -
+                            @endif
+                        </div>
+                    </section>
+                </div>
                 <div class="title-one text-center"> 
                     Owner 
                 </div>
@@ -143,7 +159,6 @@
             </div>
         </div>
     </div>
-
     <div style="height: 30px;"></div>
     <div style="height: 30px;"></div>
 

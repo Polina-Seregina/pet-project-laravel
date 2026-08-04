@@ -42,9 +42,15 @@ class ProductController extends Controller
      */
     public function show(Request $request, Product $product): View
     {
+        $balanceInNewCurrency = $request['balanceInNewCurrency'];
+        $currency = $request['currency'];
+
         return view('product.show', [
             'product' => $product,
-            'user' => $request->user()]);
+            'user' => $request->user(),
+            'balanceInNewCurrency' => $balanceInNewCurrency,
+            'currency' => $currency,
+            ]);
     }
 
     /**

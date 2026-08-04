@@ -11,50 +11,24 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
-use App\Services\ExchangeRate;
 
 class WalletController extends Controller
 {
     /**
-     * Просмотр страницы кошелька .
+     * Просмотр страницы кошелька.
      */
     public function show(Request $request): View
     {
         $wallet = $request->user()->wallet;
-
-        return view('wallet.show', [
-            'user' => $request->user(),
-            'wallet' => $wallet,
-            'balanceInNewCurrency' => $balanceInNewCurrency ?? 'запроса пока не было',
-            'currency' => $currency ?? '',
-        ]);
-    }
-
-    /**
-     * Просмотр страницы кошелька .
-     */
-    public function currency(Request $request): View
-    {
-        $wallet = $request->user()->wallet;
-        $amount = $wallet->balance;
+        $balanceInNewCurrency = $request['balanceInNewCurrency'];
         $currency = $request['currency'];
 
-        try {
-            $service = new ExchangeRate();
-            $balanceInNewCurrency = $service->getAmountInForeignCurrency($currency, $amount);
-        } catch (Exception $e) {
-            $request->session()->flash('status', $e->getMessage());
-            $balanceInNewCurrency = 'Сервис не доступен';
-            $currency = '';
-        }
-
-        return view('currency.exchangeWindow', [
+        return view('wallet.show', [
             'user' => $request->user(),
             'wallet' => $wallet,
             'balanceInNewCurrency' => $balanceInNewCurrency,
             'currency' => $currency,
         ]);
-
     }
 
     /**
