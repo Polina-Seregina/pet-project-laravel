@@ -10,7 +10,7 @@ use App\Models\Product;
 
 class CurrencyExchangeController extends Controller
 {
-    public function exchangeWalletBalance (Request $request):  RedirectResponse
+    public function exchangeWalletBalance(Request $request): RedirectResponse
     {
         $wallet = $request->user()->wallet;
         $amount = $wallet->balance;
@@ -31,7 +31,7 @@ class CurrencyExchangeController extends Controller
         ]);
     }
 
-    public function exchangeProductPrice (Request $request, Product $product):  RedirectResponse
+    public function exchangeProductPrice(Request $request, Product $product): RedirectResponse
     {
         $amount = $product->price;
         $currency = $request['currency'];

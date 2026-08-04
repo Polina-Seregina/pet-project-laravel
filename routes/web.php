@@ -8,7 +8,6 @@ use App\Http\Controllers\WalletController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CurrencyExchangeController;
-use App\Service\ExchangeRate;
 use Illuminate\Support\Facades\Route;
 
 /*
