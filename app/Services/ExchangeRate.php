@@ -22,7 +22,7 @@ class ExchangeRate
             'query' => [
                 'get' => 'rates',
                 'pairs' => $pair,
-                'key' => 'a5a6c5429b4533a15ef9ff255178eb8b',
+                'key' => env('CURRATE_API'),
                 ]
         ]);
 
