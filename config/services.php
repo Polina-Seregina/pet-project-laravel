@@ -37,4 +37,9 @@ return [
     'redirect' => env('GOOGLE_REDIRECT_URL'),
     ],
 
+    'currate' => [
+        'api-key' => env('CURRATE_API'),
+        'base-url' => 'https://currate.ru/api/',
+    ],
+
 ];

@@ -1,19 +1,25 @@
 
-
-    <div style="text-align: center;">
-    <form method="post" action="{{ route('products.currency', ['product' => $product]) }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('products.currency', ['product' => $product]) }}" >
         @csrf
-        <div class="footer-widget mb-30" style="text-align: center; font-size: 18px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;">
-            <div style="display: flex; justify-content: center; align-items: center;" >
-                <select name="currency" style="margin: 0px 0px 0px 0px; font-size: 15px;" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
-                    <option value="{{ App\Enums\CurrencyEnum::RUB }}"> {{ App\Enums\CurrencyEnum::RUB }} </option>
-                    <option value="{{ App\Enums\CurrencyEnum::EUR }}"> {{ App\Enums\CurrencyEnum::EUR }} </option>
-                    <option value="{{ App\Enums\CurrencyEnum::CNY }}"> {{ App\Enums\CurrencyEnum::CNY }} </option>
-                </select>
-                <button type="submit" style="background: none;"> <img width="50" src="{{ asset('images/shape/mark.png') }}"> </button>
-            </div> 
+        <select name="currency" onchange="this.form.submit()" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+            <option value="USD" selected> USD </option>
 
-            <div style="height: 30px;"></div>
-        </div>
+            <option value="{{ App\Enums\CurrencyEnum::RUB }}"
+                @if ($currency === App\Enums\CurrencyEnum::RUB->value)
+                    selected
+                @endif
+            > {{ App\Enums\CurrencyEnum::RUB }} </option>
+
+            <option value="{{ App\Enums\CurrencyEnum::EUR }}"
+                @if ($currency  === App\Enums\CurrencyEnum::EUR->value)
+                    selected
+                @endif
+            > {{ App\Enums\CurrencyEnum::EUR }} </option>
+
+            <option value="{{ App\Enums\CurrencyEnum::CNY }}"
+                @if ($currency  === App\Enums\CurrencyEnum::CNY->value)
+                    selected
+                @endif
+            > {{ App\Enums\CurrencyEnum::CNY }} </option>
+        </select>
     </form>
-    </div>

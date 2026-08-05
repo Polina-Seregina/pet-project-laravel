@@ -13,8 +13,12 @@ class ExchangeRate
 
     private function getRate(String $preferredCurrency)
     {
+        if ($preferredCurrency === "USD") {
+            return 1;
+        }
+
         $client = new Client([
-            'base_uri' => 'https://currate.ru/api/',
+            'base_uri' => config('services.currate.base-url'),
         ]);
 
         $pair = "USD{$preferredCurrency}";
@@ -22,7 +26,7 @@ class ExchangeRate
             'query' => [
                 'get' => 'rates',
                 'pairs' => $pair,
-                'key' => env('CURRATE_API'),
+                'key' => config('services.currate.api-key'),
                 ]
         ]);
 

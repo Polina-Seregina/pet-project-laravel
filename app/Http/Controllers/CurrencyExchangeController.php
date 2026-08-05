@@ -10,6 +10,10 @@ use App\Models\Product;
 
 class CurrencyExchangeController extends Controller
 {
+    /**
+     * Метод для перевода суммы на балансе кошелька из USD в выбранную валюту - CNY, RUB, EUR.
+     */
+    
     public function exchangeWalletBalance(Request $request): RedirectResponse
     {
         $wallet = $request->user()->wallet;
@@ -30,6 +34,10 @@ class CurrencyExchangeController extends Controller
             'currency' => $currency,
         ]);
     }
+    
+    /**
+     * Метод для перевода стоимости Арта из USD в выбранную валюту - CNY, RUB, EUR.
+     */
 
     public function exchangeProductPrice(Request $request, Product $product): RedirectResponse
     {
@@ -38,16 +46,16 @@ class CurrencyExchangeController extends Controller
 
         try {
             $service = new ExchangeRate();
-            $balanceInNewCurrency = $service->getAmountInForeignCurrency($currency, $amount);
+            $priceInNewCurrency = $service->getAmountInForeignCurrency($currency, $amount);
         } catch (Exception $e) {
             $request->session()->flash('status', $e->getMessage());
-            $balanceInNewCurrency = 'Сервис не доступен';
+            $priceInNewCurrency = 'Сервис не доступен';
             $currency = '';
         }
 
         return Redirect::route('products.show', [
             'product' => $product,
-            'balanceInNewCurrency' => $balanceInNewCurrency,
+            'priceInNewCurrency' => $priceInNewCurrency,
             'currency' => $currency,
         ]);
     }

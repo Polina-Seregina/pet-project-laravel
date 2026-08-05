@@ -44,16 +44,19 @@
                 <div style="width: 100%; display: flex; align-items: center;">
                     <section class="ht-project-section pt-140 pb-140 pt-lg-60 pb-lg-60">
                         <blockquote class="blockquote mt-10 mb-30 ml-10">
-                            <p style="font-weight: normal; font-size: 30px;" class="name"> Баланс </p> 
-                            <p class="name"> {{ $wallet->balance }} USD </p> 
-                            @if ($balanceInNewCurrency)
-                            <p style="font-weight: normal; font-size: 25px;" class="name"> {{ $balanceInNewCurrency}} {{ $currency }} </p> 
-                            @endif
+                            <p style="font-weight: normal; font-size: 30px;" class="name"> Баланс </p>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <p class="name ml-10"> 
+                                    @if ($balanceInNewCurrency)
+                                        {{$balanceInNewCurrency}}
+                                    @else
+                                        {{ $wallet->balance }} 
+                                    @endif
+                                    @include('currency.exchangeWindowWallet') 
+                                </p> 
+                            </div>
                         </blockquote>
                     </section>
-                </div>
-                <div style="width: 100%">
-                    @include('currency.exchangeWindowWallet')
                 </div>
             </div>
         </div>    
