@@ -13,7 +13,7 @@ class CurrencyExchangeController extends Controller
     /**
      * Метод для перевода суммы на балансе кошелька из USD в выбранную валюту - CNY, RUB, EUR.
      */
-    
+
     public function exchangeWalletBalance(Request $request): RedirectResponse
     {
         $wallet = $request->user()->wallet;
@@ -34,7 +34,7 @@ class CurrencyExchangeController extends Controller
             'currency' => $currency,
         ]);
     }
-    
+
     /**
      * Метод для перевода стоимости Арта из USD в выбранную валюту - CNY, RUB, EUR.
      */
