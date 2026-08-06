@@ -19,7 +19,8 @@ class ExchangeRate
 
         $client = new Client([
             'base_uri' => config('services.currate.base-url'),
-        ]);
+            'curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4],
+            ]);
 
         $pair = "USD{$preferredCurrency}";
         $response = $client->request('GET', 'latest', [

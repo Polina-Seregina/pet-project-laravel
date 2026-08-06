@@ -29,17 +29,14 @@ setup: env ## Complete initial configuration of the Laravel project
 	@docker-compose exec php php artisan db:seed --class=RoleSeeder
 	@npm run build
 
-env: ## Create local environment file
+env: ## Create local environment file 
 	@if [ ! -f "$(ENV_EXAMPLE_FILE)" ]; then \
 		echo "Missing $(ENV_EXAMPLE_FILE)"; \
 		exit 1; \
-	fi
-	@if [ ! -f "$(ENV_FILE)" ]; then \
-		cp "$(ENV_EXAMPLE_FILE)" "$(ENV_FILE)"; \
-		echo "Created $(ENV_FILE) from $(ENV_EXAMPLE_FILE)"; \
-	else \
-		echo "$(ENV_FILE) already exists, keeping current file"; \
-	fi
+	fi 
+	@cp "$(ENV_EXAMPLE_FILE)" "$(ENV_FILE)"; \
+	echo "Copied $(ENV_EXAMPLE_FILE) to $(ENV_FILE)";
+
 
 stop: ## Stopping containers
 	@docker-compose stop
