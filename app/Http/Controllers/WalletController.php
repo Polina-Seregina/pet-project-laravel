@@ -15,13 +15,19 @@ use Illuminate\View\View;
 class WalletController extends Controller
 {
     /**
-     * Просмотр страницы кошелька .
+     * Просмотр страницы кошелька.
      */
     public function show(Request $request): View
     {
+        $wallet = $request->user()->wallet;
+        $balanceInNewCurrency = $request['balanceInNewCurrency'];
+        $currency = $request['currency'];
+
         return view('wallet.show', [
             'user' => $request->user(),
-            'wallet' => $request->user()->wallet,
+            'wallet' => $wallet,
+            'balanceInNewCurrency' => $balanceInNewCurrency,
+            'currency' => $currency,
         ]);
     }
 
@@ -56,9 +62,9 @@ class WalletController extends Controller
                     'wallet_id' => $wallet->id,
                 ]);
             }, 3);
-            $request->session()->flash('status', 'Wallet top-up completed');
+            $request->session()->flash('status', 'success');
         } catch (Exception $e) {
-            $request->session()->flash('status', 'Replenishment failed');
+            $request->session()->flash('status', $e->getMessage());
         }
 
         return Redirect::route('wallet.show');

@@ -7,6 +7,7 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CurrencyExchangeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,6 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/wallet', [WalletController::class, 'show'])->name('wallet.show');
+    Route::post('/wallet', [CurrencyExchangeController::class, 'exchangeWalletBalance'])->name('wallet.currency');
     Route::get('/wallet/replenishment', [WalletController::class, 'showTopUpForm'])->name('wallet.replenishment.form');
     Route::patch('/wallet', [WalletController::class, 'topUp'])->name('wallet.replenishment');
     Route::get('/wallet/history', [TransactionController::class, 'showHistory'])->name('transaction.history');
@@ -40,6 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
     Route::get('/my/products', [ProductController::class, 'usersIndex'])->name('user.products.index');
     Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show')->middleware('onlyPublic');
+    Route::post('/products/{product}', [CurrencyExchangeController::class, 'exchangeProductPrice'])->name('products.currency');
     Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
     Route::patch('/products/{product}', [ProductController::class, 'update'])->name('products.update');
     Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');

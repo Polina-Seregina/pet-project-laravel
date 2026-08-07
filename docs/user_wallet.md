@@ -30,3 +30,11 @@
 *Входные данные*: Request
 *Формат ответа*: (200 OK) - text/html
 
+#### 4. POST /wallet
+
+*Роут для перевода баланса кошелька в выбранную валюту.*
+*Контроллер - App\Http\Controllers\CurrencyExchangeController.*
+*Входные данные*: Request 
+
+*Формат ответа*: (302 OK)
+

@@ -29,7 +29,10 @@
                 <blockquote class="mt-10 mb-30 ml-10">
                     <div>
                         <x-input-label for="amount" :value="__('Amount')" />
-                        <input id="amount" name="amount" type="number" class="mt-1 block" min="0" step="0.01"/>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <input id="amount" name="amount" type="number" class="mt-1 block" min="0" step="0.01"/>
+                            <p> USD </p>
+                        </div>
                     </div>
                 </blockquote>
 

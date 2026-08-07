@@ -79,8 +79,13 @@
                 <div style="height: 30px;"></div>
                 <div class="max-w-7xl mb-10 mx-auto sm:px-9 lg px-5 space-y-6">
                     <section class="theme-banner-one">
-                        <div class="title-one text-center ">
-                            {{ $product->price }} $
+                        <div class="title-one text-center" style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+                            @if ($priceInNewCurrency)
+                                {{ $priceInNewCurrency}} 
+                            @else
+                                {{ $product->price }} 
+                            @endif
+                            @include('currency.exchangeWindowProduct')
                         </div>
                     </section>
                 </div>
@@ -143,7 +148,6 @@
             </div>
         </div>
     </div>
-
     <div style="height: 30px;"></div>
     <div style="height: 30px;"></div>
 
