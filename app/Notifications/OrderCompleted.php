@@ -8,7 +8,6 @@ use App\Models\User;
 use App\Models\Product;
 use Illuminate\Notifications\Slack\BlockKit\Blocks\ContextBlock;
 use Illuminate\Notifications\Slack\BlockKit\Blocks\SectionBlock;
-use Illuminate\Notifications\Slack\BlockKit\Composites\ConfirmObject;
 use Illuminate\Notifications\Slack\SlackMessage;
 use Illuminate\Notifications\Notification;
 
@@ -43,7 +42,7 @@ class OrderCompleted extends Notification implements ShouldQueue
 
     public function toSlack(object $notifiable): SlackMessage
     {
-        return (new SlackMessage)
+        return (new SlackMessage())
             ->headerBlock('Новый заказ')
             ->sectionBlock(function (SectionBlock $block) {
                 $block->text("Арт {$this->productName} был приобретен.\nПродавец - {$this->seller}, покупатель - {$this->buyer}.");
