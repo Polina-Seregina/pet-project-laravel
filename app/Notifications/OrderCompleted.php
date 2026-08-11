@@ -3,19 +3,32 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Models\User;
+use App\Models\Product;
+use Illuminate\Notifications\Slack\BlockKit\Blocks\ContextBlock;
+use Illuminate\Notifications\Slack\BlockKit\Blocks\SectionBlock;
+use Illuminate\Notifications\Slack\BlockKit\Composites\ConfirmObject;
+use Illuminate\Notifications\Slack\SlackMessage;
 use Illuminate\Notifications\Notification;
 
-class OrderCompleted extends Notification
+class OrderCompleted extends Notification implements ShouldQueue
 {
     use Queueable;
 
+    private $productName;
+    private $seller;
+    private $buyer;
+    private $price;
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct(Product $product, User $seller, User $buyer)
     {
-        //
+        $this->productName = $product->name;
+        $this->seller = $seller->email;
+        $this->buyer = $buyer->email;
+        $this->price = $product->price;
     }
 
     /**
@@ -25,29 +38,18 @@ class OrderCompleted extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['sluck'];
+        return ['slack'];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     */
-    public function toMail(object $notifiable): MailMessage
+    public function toSlack(object $notifiable): SlackMessage
     {
-        return (new MailMessage())
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
-    }
-
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(object $notifiable): array
-    {
-        return [
-            //
-        ];
+        return (new SlackMessage)
+            ->headerBlock('Новый заказ')
+            ->sectionBlock(function (SectionBlock $block) {
+                $block->text("Арт {$this->productName} был приобретен.\nПродавец - {$this->seller}, покупатель - {$this->buyer}.");
+            })
+            ->contextBlock(function (ContextBlock $block) {
+                $block->text("Cтоимость: {$this->price} USD.");
+            });
     }
 }

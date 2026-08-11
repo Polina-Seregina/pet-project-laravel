@@ -83,6 +83,9 @@
 #### 9. POST /products/{product}/buy 
 
 *Роут для покупки арта. Используется сервис App\Services\BuyProductService.*
+*После успешного приобретения Арта приходят уведомления:*
+*- продавцу по email,*
+*- в Slack в канал 'orders-pet-project'.*
 
 *Входные данные*: Request, $product, $buyProductService 
 
