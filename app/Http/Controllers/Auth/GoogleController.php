@@ -41,14 +41,6 @@ class GoogleController extends Controller
             }
         }
 
-        $profile = Profile::where('user_id', $user->id)->first();
-
-        if (! $profile) {
-            $user->profile()->create([
-                'nickname' => $googleUser->getEmail(),
-            ]);
-        }
-
         Auth::login($user);
 
         return Redirect::route('home')->with('status', 'success-login');
