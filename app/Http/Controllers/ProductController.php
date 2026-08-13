@@ -158,9 +158,11 @@ class ProductController extends Controller
             $request->session()->flash('status', $exception);
         }
 
-        Mail::to($seller)->send(new ProductSold($product, $seller, $buyer));
-        Notification::route('slack', env('SLACK_BOT_USER_DEFAULT_CHANNEL'))->notify(new OrderCompleted($product, $seller, $buyer));
-
+        if (isset($newProduct)) {
+            Mail::to($seller)->send(new ProductSold($product, $seller, $buyer));
+            Notification::route('slack', env('SLACK_BOT_USER_DEFAULT_CHANNEL'))->notify(new OrderCompleted($product, $seller, $buyer));
+        }
+        
         return Redirect::route('products.show', ['product' => $newProduct ?? $product]);
     }
 }
