@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Contracts\ReplenishmentInterface;
 use App\Http\Requests\WalletTopUpRequest;
-use App\Models\Transaction;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
