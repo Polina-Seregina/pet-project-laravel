@@ -162,7 +162,7 @@ class ProductController extends Controller
             Mail::to($seller)->send(new ProductSold($product, $seller, $buyer));
             Notification::route('slack', env('SLACK_BOT_USER_DEFAULT_CHANNEL'))->notify(new OrderCompleted($product, $seller, $buyer));
         }
-        
+
         return Redirect::route('products.show', ['product' => $newProduct ?? $product]);
     }
 }
