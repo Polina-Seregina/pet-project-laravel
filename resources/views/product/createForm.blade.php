@@ -20,20 +20,20 @@
                 @csrf
 
                 <div>
-                    <x-input-label for="name" :value="__('Name')" />
-                    <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" required autofocus autocomplete="name" />
+                    <x-input-label f or="name" :value="__('Name')" />
+                    <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name')" required autofocus autocomplete="name" />
                     <x-input-error class="mt-2" :messages="$errors->get('name')" />
                 </div>
 
                 <div>
                     <x-input-label for="description" :value="__('Description')" />
-                    <x-textarea-input id="description" name="description" type="text" class="mt-1 block w-full" required autofocus autocomplete="description" />
+                    <textarea class ='border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full' id="description" name="description" type="text" required autocomplete="description"> {{ old('description') }}</textarea>
                     <x-input-error class="mt-2" :messages="$errors->get('description')" />
                 </div>
 
                 <div>
                     <x-input-label for="price" :value="__('Price')" />
-                    <x-text-input id="price" name="price" type="number" class="mt-1 block" min="0" step="0.01"/>
+                    <x-text-input id="price" name="price" type="number" class="mt-1 block" :value="old('price')" min="0" step="0.01"/>
                     <x-input-error class="mt-2" :messages="$errors->get('price')" />
                 </div>
 

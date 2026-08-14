@@ -8,10 +8,12 @@ use App\Http\Requests\ProductUpdateRequest;
 use App\Models\Product;
 use App\Mail\ProductSold;
 use App\Services\BuyProductService;
+use App\Notifications\OrderCompleted;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\View\View;
 use Exception;
 
@@ -156,7 +158,10 @@ class ProductController extends Controller
             $request->session()->flash('status', $exception);
         }
 
-        Mail::to($seller)->send(new ProductSold($product, $seller, $buyer));
+        if (isset($newProduct)) {
+            Mail::to($seller)->send(new ProductSold($product, $seller, $buyer));
+            Notification::route('slack', env('SLACK_BOT_USER_DEFAULT_CHANNEL'))->notify(new OrderCompleted($product, $seller, $buyer));
+        }
 
         return Redirect::route('products.show', ['product' => $newProduct ?? $product]);
     }
