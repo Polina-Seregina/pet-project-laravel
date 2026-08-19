@@ -52,7 +52,9 @@
                     </select>
                     <x-input-error class="mt-2" :messages="$errors->get('status')" />
                 </div>
-                @if ($product->author == $user)
+
+                @if ($product->author->id === $user->id)
+            
                 <div>
                     <x-input-label for="image" :value="__('Image')" />
                     <img class="mt-2 mb-3" style="border-radius:10%" width="100" src="{{ Storage::url($product->image) }}">
