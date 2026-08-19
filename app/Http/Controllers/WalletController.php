@@ -46,7 +46,7 @@ class WalletController extends Controller
      */
     public function update(WalletTopUpRequest $request, ReplenishmentInterface $replenishmentInterface): RedirectResponse
     {
-        $validData = $request->validated(); 
+        $validData = $request->validated();
         $amount = $validData['amount'];
         $wallet = $request->user()->wallet;
 

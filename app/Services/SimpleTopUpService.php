@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Contracts\ReplenishmentInterface;
-use App\Models\Wallet;
 use App\Models\Transaction;
 use App\Enums\TransactionType;
 use Illuminate\Support\Facades\DB;
