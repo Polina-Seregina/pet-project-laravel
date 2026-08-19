@@ -31,7 +31,7 @@
 
         <div>
             <x-input-label for="birthday" :value="__('Birthday')" />
-            <x-text-input id="birthday" name="birthday" type="date" class="mt-1 block w-full" :value="old('birthday', $user->profile->birthday)" required autofocus autocomplete="birthday" />
+            <x-text-input id="birthday" name="birthday" type="date" class="mt-1 block w-full" :value="old('birthday', $user->profile->birthday)" autofocus autocomplete="birthday" />
             <x-input-error class="mt-2" :messages="$errors->get('birthday')" />
         </div>
 

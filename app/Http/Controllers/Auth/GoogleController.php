@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
@@ -39,14 +38,6 @@ class GoogleController extends Controller
 
                 event(new Registered($user));
             }
-        }
-
-        $profile = Profile::where('user_id', $user->id)->first();
-
-        if (! $profile) {
-            $user->profile()->create([
-                'nickname' => $googleUser->getEmail(),
-            ]);
         }
 
         Auth::login($user);
