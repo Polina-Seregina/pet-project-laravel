@@ -42,10 +42,11 @@ class WalletController extends Controller
 
     /**
      * Пополнение баланса кошелька с flash сообщением об успещшости.
+     * Для реализации процесса пополнения кошелька используется интерфейс ReplenishmentInterface(SimpleTopUpService).
      */
     public function update(WalletTopUpRequest $request, ReplenishmentInterface $replenishmentInterface): RedirectResponse
     {
-        $validData = $request->validated();
+        $validData = $request->validated(); 
         $amount = $validData['amount'];
         $wallet = $request->user()->wallet;
 
