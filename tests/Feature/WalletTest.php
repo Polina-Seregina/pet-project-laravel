@@ -4,7 +4,13 @@ namespace Tests\Feature;
 
 use App\Models\Wallet;
 use Tests\TestCase;
+use App\Http\Controllers\WalletController;
+use App\Services\SimpleTopUpService;
+use App\Contracts\ReplenishmentInterface;
 use Illuminate\Support\Facades\Auth;
+
+use Mockery;
+use Mockery\MockInterface;
 
 class WalletTest extends TestCase
 {
@@ -98,5 +104,15 @@ class WalletTest extends TestCase
 
         $response->assertRedirect('/login');
 
+    }
+
+    /**
+     * Проверка, что при создании WalletController в replenishmentService приходит необходимый сервис. 
+     */
+
+    public function test_that_binding_is_working(): void
+    {
+        $walletController = resolve(WalletController::class);
+        $this->assertEquals(is_a($walletController->getReplenishmentService(), SimpleTopUpService::class), true);
     }
 }

@@ -53,7 +53,6 @@ class BuyProductService
     private function writeOffMoney(Wallet $wallet, $amount): void
     {
         $wallet->decrement('balance', $amount);
-        $wallet->save();
     }
 
     /**
@@ -62,7 +61,6 @@ class BuyProductService
     private function topUpWallet(Wallet $wallet, $amount): void
     {
         $wallet->increment('balance', $amount);
-        $wallet->save();
     }
 
     /**

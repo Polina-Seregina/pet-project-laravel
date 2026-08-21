@@ -12,6 +12,26 @@ use Illuminate\View\View;
 
 class WalletController extends Controller
 {
+    private $replenishmentService;
+
+    /**
+     * Создать новый экземпляр контроллера.
+     */
+    public function __construct(
+        protected ReplenishmentInterface $replenishmentInterface,
+    ) 
+    {
+        $this->replenishmentService = $replenishmentInterface;
+    }
+
+    /**
+     * Геттер для получения приватного свойства $replenishmentService;
+     */
+    public function getReplenishmentService()
+    {
+        return $this->replenishmentService;
+    }
+
     /**
      * Просмотр страницы кошелька.
      */
@@ -42,16 +62,15 @@ class WalletController extends Controller
 
     /**
      * Пополнение баланса кошелька с flash сообщением об успещшости.
-     * Для реализации процесса пополнения кошелька используется интерфейс ReplenishmentInterface(SimpleTopUpService).
      */
-    public function update(WalletTopUpRequest $request, ReplenishmentInterface $replenishmentInterface): RedirectResponse
+    public function update(WalletTopUpRequest $request): RedirectResponse
     {
         $validData = $request->validated();
         $amount = $validData['amount'];
         $wallet = $request->user()->wallet;
 
         try {
-            $replenishmentInterface->topUp($wallet, $amount);
+            $this->replenishmentService->topUp($wallet, $amount);
             $request->session()->flash('status', 'success');
         } catch (Exception $e) {
             $request->session()->flash('status', $e->getMessage());

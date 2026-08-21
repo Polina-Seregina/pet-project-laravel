@@ -13,9 +13,8 @@ class SimpleTopUpService implements ReplenishmentInterface
     {
         DB::transaction(function () use ($wallet, $amount) {
             $wallet->increment('balance', $amount);
-            $wallet->save();
 
-            $transaction = Transaction::create([
+            Transaction::create([
                 'amount' => $amount,
                 'type' => TransactionType::REPLENISHMENT->value,
                 'wallet_id' => $wallet->id,
