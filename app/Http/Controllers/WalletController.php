@@ -19,8 +19,7 @@ class WalletController extends Controller
      */
     public function __construct(
         protected ReplenishmentInterface $replenishmentInterface,
-    ) 
-    {
+    ) {
         $this->replenishmentService = $replenishmentInterface;
     }
 
