@@ -107,7 +107,7 @@ class WalletTest extends TestCase
      */
 
     public function test_that_binding_is_working(): void
-    { 
+    {
         $walletController = resolve(WalletController::class);
         $this->assertInstanceOf(SimpleTopUpService::class, $walletController->replenishmentService);
     }
