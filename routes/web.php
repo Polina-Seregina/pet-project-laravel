@@ -33,8 +33,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/wallet', [WalletController::class, 'show'])->name('wallet.show');
     Route::post('/wallet', [CurrencyExchangeController::class, 'exchangeWalletBalance'])->name('wallet.currency');
-    Route::get('/wallet/replenishment', [WalletController::class, 'showTopUpForm'])->name('wallet.replenishment.form');
-    Route::patch('/wallet', [WalletController::class, 'topUp'])->name('wallet.replenishment');
+    Route::get('/wallet/replenishment', [WalletController::class, 'edit'])->name('wallet.replenishment.form');
+    Route::patch('/wallet', [WalletController::class, 'update'])->name('wallet.replenishment');
     Route::get('/wallet/history', [TransactionController::class, 'showHistory'])->name('transaction.history');
 
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');

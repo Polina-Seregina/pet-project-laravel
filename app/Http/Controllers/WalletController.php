@@ -2,18 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\TransactionType;
+use App\Contracts\ReplenishmentInterface;
 use App\Http\Requests\WalletTopUpRequest;
-use App\Models\Transaction;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
 class WalletController extends Controller
 {
+    public $replenishmentService;
+
+    /**
+     * Создать новый экземпляр контроллера.
+     */
+    public function __construct(
+        protected ReplenishmentInterface $replenishmentInterface,
+    ) {
+        $this->replenishmentService = $replenishmentInterface;
+    }
+
     /**
      * Просмотр страницы кошелька.
      */
@@ -34,7 +43,7 @@ class WalletController extends Controller
     /**
      * Просмотр формы пополнения кошелька.
      */
-    public function showTopUpForm(Request $request): View
+    public function edit(Request $request): View
     {
         return view('wallet.top-up-balance-form', [
             'user' => $request->user(),
@@ -45,23 +54,14 @@ class WalletController extends Controller
     /**
      * Пополнение баланса кошелька с flash сообщением об успещшости.
      */
-    public function topUp(WalletTopUpRequest $request): RedirectResponse
+    public function update(WalletTopUpRequest $request): RedirectResponse
     {
         $validData = $request->validated();
         $amount = $validData['amount'];
         $wallet = $request->user()->wallet;
 
         try {
-            DB::transaction(function () use ($wallet, $amount) {
-                $wallet->increment('balance', $amount);
-                $wallet->save();
-
-                $transaction = Transaction::create([
-                    'amount' => $amount,
-                    'type' => TransactionType::REPLENISHMENT->value,
-                    'wallet_id' => $wallet->id,
-                ]);
-            }, 3);
+            $this->replenishmentService->topUp($wallet, $amount);
             $request->session()->flash('status', 'success');
         } catch (Exception $e) {
             $request->session()->flash('status', $e->getMessage());
