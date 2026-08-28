@@ -12,7 +12,7 @@ use Illuminate\View\View;
 
 class WalletController extends Controller
 {
-    private $replenishmentService;
+    public $replenishmentService;
 
     /**
      * Создать новый экземпляр контроллера.
@@ -21,14 +21,6 @@ class WalletController extends Controller
         protected ReplenishmentInterface $replenishmentInterface,
     ) {
         $this->replenishmentService = $replenishmentInterface;
-    }
-
-    /**
-     * Геттер для получения приватного свойства $replenishmentService;
-     */
-    public function getReplenishmentService()
-    {
-        return $this->replenishmentService;
     }
 
     /**
