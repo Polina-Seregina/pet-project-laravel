@@ -10,7 +10,7 @@
 
         <!-- Name -->
         <div class="input-wrapper mb-10">
-            <x-input-label for="name" :value="__('Name')" />
+            <x-input-label for="name" :value="__('Имя')" />
             <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
         </div>
@@ -24,7 +24,7 @@
 
         <!-- Password -->
         <div class="input-wrapper mb-10">
-            <x-input-label for="password" :value="__('Password')" />
+            <x-input-label for="password" :value="__('Пароль')" />
 
             <x-text-input id="password" class="block mt-1 w-full"
                             type="password"
@@ -36,7 +36,7 @@
 
         <!-- Confirm Password -->
         <div class="input-wrapper mb-10">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+            <x-input-label for="password_confirmation" :value="__('Повторите пароль')" />
 
             <x-text-input id="password_confirmation" class="block mt-1 w-full"
                             type="password"
@@ -47,13 +47,13 @@
 
         <div class="col-12 text-center">
             <a class="text-heding mt-40" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
+                {{ __('Уже есть аккаунт?') }}
             </a>
         </div>
 
         <div class="col-12 text-center">
             <button class="ht-btn style-9 border-0 mt-10">
-                {{ __('Register') }}
+                {{ __('Зарегистрироваться') }}
             </button>
         </div>
     </form>

@@ -20,7 +20,7 @@
 
         <!-- Password -->
         <div class="input-wrapper mb-20">
-            <x-input-label for="password" :value="__('Password')" />
+            <x-input-label for="password" :value="__('Пароль')" />
 
             <x-text-input id="password" class="block mt-1 w-full"
                             type="password"
@@ -32,26 +32,28 @@
 
         <!-- Remember Me -->
         <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
+            <label for="remember_me" class="inline-flex items-center" style="display: flex; justify-content: space-between; width: 100%; box-sizing: border-box;">
                 <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
+                <span class="ms-2 text-sm text-gray-600" style="width: 50%; text-align: left;">{{ __('Запомни меня') }}</span>
+                <span style="width: 50%; text-align: right;">
+                    @if (Route::has('password.request'))
+                        <a class="text-heding" href="{{ route('password.request') }}">
+                            {{ __('Забыл пароль?') }}
+                        </a>
+                    @endif
+                </span>
             </label>
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="text-heding" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
-
-            <x-primary-button class="ms-3">
-                <div class="col-12 text-center">
-                    {{ __('Log in') }}
+        <div style="display: flex; justify-content: center; align-items: center;">
+            <x-primary-button class="ms-3" class="margin-left: 0; padding-left: 0;">
+                <div class="text-center items-center">
+                    {{ __('Войти') }}
                 </div>
             </x-primary-button>
         </div>
-        <div class="flex items-center justify-end mt-4">
+
+        <div class="mt-4" style="display: flex; justify-content: center; align-items: center;">
             <a class="text-heding" href="{{ route('google.login') }}">Войти через Google</a>
         </div>
     </form>

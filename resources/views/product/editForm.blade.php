@@ -6,8 +6,8 @@
 
 <section class="theme-banner-one">
     <div class="title-one text-center mb-70">
-        <h3 class="main-title z-2">
-            EDIT ART
+        <h3 style="font-size: 50px; letter-spacing: 15px; color: #93837d33" class="main-title z-2">
+            РЕДАКТИРОВАТЬ АРТ
         </h3>
     </div>
 </section>
@@ -20,25 +20,25 @@
                 @csrf
                 @method('patch')
                 <div>
-                    <x-input-label for="name" :value="__('Name')" />
+                    <x-input-label for="name" :value="__('Название')" />
                     <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $product->name)" required autofocus autocomplete="name" />
                     <x-input-error class="mt-2" :messages="$errors->get('name')" />
                 </div>
 
                 <div>
-                    <x-input-label for="description" :value="__('Description')" />
+                    <x-input-label for="description" :value="__('Описание')" />
                     <x-text-input id="description" name="description" type="text" class="mt-1 block w-full" :value="old('description', $product->description)" required autocomplete="description" />
                     <x-input-error class="mt-2" :messages="$errors->get('description')" />
                 </div>
 
                 <div>
-                    <x-input-label for="price" :value="__('Price')" />
+                    <x-input-label for="price" :value="__('Стоимость')" />
                     <x-text-input id="price" name="price" type="number" class="mt-1 block" :value="old('price', $product->price)" min="0" step="0.01"/>
                     <x-input-error class="mt-2" :messages="$errors->get('price')" />
                 </div>
 
                 <div>
-                    <x-input-label for="status" :value="__('Status')" />
+                    <x-input-label for="status" :value="__('Статус')" />
                     <select name="status" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('status', $product->status)">
                         <option value="{{ $status::FORSALE->value }}"
                         @if ($product->status->value === $status::FORSALE->value)
@@ -53,10 +53,11 @@
                     <x-input-error class="mt-2" :messages="$errors->get('status')" />
                 </div>
 
-                @if ($product->author->id === $user->id)
+                
+                @if ($product->author === $user)
             
                 <div>
-                    <x-input-label for="image" :value="__('Image')" />
+                    <x-input-label for="image" :value="__('Изображение')" />
                     <img class="mt-2 mb-3" style="border-radius:10%" width="100" src="{{ Storage::url($product->image) }}">
                     <p class="text-sm text-gray-600 mb-4"> Установленное изображение. Загрузи новое, чтобы заменить. </p>
                     <input id="image" type="file" name="image">
@@ -65,7 +66,7 @@
                 @endif
                 
                 <div class="flex items-center gap-4">
-                    <x-primary-button>{{ __('Save') }}</x-primary-button>
+                    <x-primary-button>{{ __('Сохранить') }}</x-primary-button>
                 </div>
             </form>
         </div>
