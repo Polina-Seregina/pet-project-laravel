@@ -19,28 +19,15 @@
 						<nav id="mobile-menu">
 							<ul class="menu-list">
 								@auth
-								<li> <a href="{{ route('products.index') }}">MARKET</a> </li>
-								<li> <a href="{{ route('user.products.index') }}">MY ARTWORKS</a> </li>
-								<li> <a href="{{ route('wallet.show') }}">WALLET</a> </li>
-								<li> <a href=""> ORDERS HISTORY </a> 
-									<ul class="sub-menu">
-										<li>
-											<ul> 
-												<li> <a href="{{ route('orders.purchased') }}">Приобретенные арты </a> </li>
-												<li> <a href="{{ route('orders.sold') }}"> Проданные арты </a> </li>
-											</ul>
-										</li>
-									</ul>
-								</li>
-								<li> <a href="{{ route('profile.show') }}">PROFILE</a> </li>
-								@role('admin')
-								<li> <a href="{{ route('admin.index') }}">ADMIN PANEL</a> </li>
-								@endrole
-
+									<li> <a href="{{ route('products.index') }}">КАТАЛОГ</a> </li>
+									<li> <a href="{{ route('profile.show') }}">ЛИЧНЫЙ КАБИНЕТ </a> </li>
+									@role('admin')
+										<li> <a href="{{ route('admin.index') }}">АДМИНИСТРАТИВНАЯ ПАНЕЛЬ</a> </li>
+									@endrole
 								@endauth
 								@guest
-								<li> <a href="/login">LOGIN</a> </li>
-								<li> <a href="/register">REGISTER</a> </li>
+								<li> <a href="/login">ВХОД</a> </li>
+								<li> <a href="/register">РЕГИСТРАЦИЯ</a> </li>
 								@endguest
 							</ul>
 						</nav>

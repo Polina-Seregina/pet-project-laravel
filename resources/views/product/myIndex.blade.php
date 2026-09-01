@@ -6,8 +6,8 @@
 
 <section class="theme-banner-one">
     <div class="title-one text-center mb-70">
-        <h3 class="main-title z-2">
-            MY ARTWORKS
+        <h3 style="font-size: 50px; letter-spacing: 15px; color: #93837d33" class="main-title z-2">
+            МОИ АРТЫ
         </h3>
     </div>
 </section>
@@ -18,7 +18,7 @@
             <div class="title-one text-center ">
                 <a href=" {{ route('products.create') }}"> 
                     <img style="float: left;" width="15" src="{{asset('images/shape/shape-4.png')}}"> 
-                        Create new Art 
+                        СОЗДАТЬ 
                     <img style="float: right;" width="15" src="{{asset('images/shape/shape-4.png')}}"> 
                 </a>
             </div>
@@ -53,7 +53,7 @@
         <div class="p-2 sm:p-8 bg-white shadow sm:rounded-lg">
             <div class="column product-wrapper text-center mb-50">
                 <div style="height: 30px;"></div>
-                <h4 class="product-title mt-9 mb-0"><a href=""> You have no artworks yet. </a></h4>
+                <h4 class="product-title mt-9 mb-0"><a href=""> У вас ещё нет артов. Исправим? </a></h4>
                 <div style="height: 30px;"></div>
             </div>
         </div>

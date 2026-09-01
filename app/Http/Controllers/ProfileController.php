@@ -29,8 +29,13 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $avatar = $request->user()->profile->avatar
+            ? Storage::disk('s3')->url($request->user()->profile->avatar)
+            : asset(config('filesystems.default_avatar'));
+
         return view('profile.edit', [
             'user' => $request->user(),
+            'avatar' => $avatar,
         ]);
     }
 

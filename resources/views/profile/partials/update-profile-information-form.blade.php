@@ -1,11 +1,11 @@
 <section>
     <header>
         <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Profile Information') }}
+            {{ __('Личная информация') }}
         </h2>
 
         <p class="mt-1 text-sm text-gray-600">
-            {{ __("Update your account's profile information and email address.") }}
+            {{ __("Обнови свой профиль.") }}
         </p>
     </header>
 
@@ -18,25 +18,25 @@
         @method('patch')
 
         <div>
-            <x-input-label for="name" :value="__('Name')" />
+            <x-input-label for="name" :value="__('Имя')" />
             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
         <div>
-            <x-input-label for="nickname" :value="__('Nickname')" />
+            <x-input-label for="nickname" :value="__('Никнейм')" />
             <x-text-input id="nickname" name="nickname" type="text" class="mt-1 block w-full" :value="old('nickname', $user->profile->nickname)" required autofocus autocomplete="nickname" />
             <x-input-error class="mt-2" :messages="$errors->get('nickname')" />
         </div>
 
         <div>
-            <x-input-label for="birthday" :value="__('Birthday')" />
+            <x-input-label for="birthday" :value="__('Дата рождения')" />
             <x-text-input id="birthday" name="birthday" type="date" class="mt-1 block w-full" :value="old('birthday', $user->profile->birthday)" autofocus autocomplete="birthday" />
             <x-input-error class="mt-2" :messages="$errors->get('birthday')" />
         </div>
 
         <div>
-            <x-input-label for="email" :value="__('Email')" />
+            <x-input-label for="email" :value="__('Почта')" />
             <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
 
@@ -60,13 +60,15 @@
         </div>
 
         <div>
-            <x-input-label for="avatar" :value="__('Avatar')" />
+            <x-input-label for="avatar" :value="__('Аватар')" />
+            <img class="mt-2 mb-3" style="border-radius:10%" width="100" src="{{ $avatar }}">
+            <p class="text-sm text-gray-600 mb-4"> Текущий аватар. Загрузи новый, чтобы заменить. </p>
             <input id="avatar" type="file" name="avatar">
             <x-input-error class="mt-2" :messages="$errors->get('avatar')" />
         </div>
         
         <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
+            <x-primary-button>{{ __('Сохранить') }}</x-primary-button>
 
             @if (session('status') === 'profile-updated')
                 <p
@@ -75,7 +77,7 @@
                     x-transition
                     x-init="setTimeout(() => show = false, 2000)"
                     class="text-sm text-gray-600"
-                >{{ __('Saved.') }}</p>
+                >{{ __('Изменения сохранены.') }}</p>
             @endif
         </div>
     </form>

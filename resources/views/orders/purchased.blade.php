@@ -6,8 +6,8 @@
 
 <section class="theme-banner-one">
     <div class="title-one text-center mb-70">
-        <h3 class="main-title z-2">
-            Приобретенные арты
+        <h3 style="font-size: 50px; letter-spacing: 15px; color: #93837d33" class="main-title z-2">
+            ПРИОБРЕТЁННЫЕ АРТЫ
         </h3>
     </div>
 </section>
@@ -78,6 +78,11 @@
 {{ $orders->links() }}
 </section>
 
+<div class="title-one text-center ">
+    <p class="text-sm text-gray-700 leading-5 dark:text-gray-400">
+        <a href="javascript:history.back()"> <- Назад </a>
+    </p>
+</div>
 @include('partials.footer')
 
 @endsection

@@ -9,7 +9,7 @@
 			<div class="col-xxl-4 col-lg-5 col-md-6">
 				<div class="footer-widget mb-30">
 					<div class="footer-logo"> </div>
-					<p class="mt-30 mb-30"> А здесь тоже можно будет что-то умное написать</p>
+					<p class="mt-30 mb-30"> Твоя коллекция цифрового искусства </p>
 					<img class="shape-1 d-none d-lg-inline-block" src="{{ asset('images/shape/shape-4.png') }}" alt="Shape">
 				</div>
 			</div>
@@ -28,22 +28,9 @@
 
 	<div class="container">
 		<div class="copyright-wrap pb-xl-0 pb-5">
-			<div class="row align-items-center">
-				<div class="col-xl-4 col-lg-6">
-					<div class="copyright-text text-lg-start text-center pt-40 pb-lg-5 pb-4">
-						<p class="mt-30 mb-30"> @ NAKALYAKANO BY POLICEREGINA</p>
-					</div>
-				</div>
-				<div class="col-xl-4 col-lg-6 d-flex justify-content-xl-center justify-content-lg-end justify-content-center mb-lg-0 mb-4">
-				</div>
-				<div class="col-xl-4 col-12 text-xl-end text-center">
-					<ul class="footer-menu">
-						<li><a href="">Тут будет какая-то ссылка </a></li>
-						<li><a href="">Здесь возможно тоже </a></li>
-					</ul>
-				</div>
+			<div class="copyright-text text-lg-start pt-30 pb-lg-5 pb-4" style="display: flex; align-items: center; justify-content: center;">
+				<p class="mt-30 mb-30"> BY POLICEREGINA </p>
 			</div>
 		</div>
 	</div>
 </footer>
-		<!--footer-area end-->
