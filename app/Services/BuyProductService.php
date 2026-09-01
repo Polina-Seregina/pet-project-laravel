@@ -145,6 +145,7 @@ class BuyProductService
             'price' => $product->price,
             'image' => $product->image,
             'user_id' => $buyer->id,
+            'author_id' =>$product->author_id,
             'status' => ProductsStatus::PURCHASED->value,
         ]);
     }
