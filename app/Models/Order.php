@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\OrderStatus;
 
-
 #[Fillable([
     'status',
     'product_id',
