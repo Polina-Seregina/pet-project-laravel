@@ -2,26 +2,24 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\OrderStatus;
 
+
+#[Fillable([
+    'status',
+    'product_id',
+    'new_product_id',
+    'buyer_id',
+    'seller_id',
+])]
+
 class Order extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
-        'status',
-        'product_id',
-        'new_product_id',
-        'buyer_id',
-        'seller_id',
-    ];
-
-    protected $casts = [
-        'status' => OrderStatus::class
-    ];
 
     public function soldProduct(): BelongsTo
     {
@@ -41,5 +39,12 @@ class Order extends Model
     public function seller(): BelongsTo
     {
         return $this->belongsTo(User::class, 'seller_id');
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'status' => OrderStatus::class
+        ];
     }
 }
