@@ -13,4 +13,4 @@ return RectorConfig::configure()
     ])
     ->withSetProviders(LaravelSetProvider::class)
     ->withComposerBased(laravel: true)
-    ->withPhpSets();
+    ->withPhpSets(php85: true);
