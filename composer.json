@@ -7,14 +7,13 @@
     "require": {
         "php": "^8.1",
         "aws/aws-sdk-php": "^3.384",
-        "doctrine/dbal": "^3.5.1",
         "guzzlehttp/guzzle": "^7.2",
-        "laravel/framework": "^10.10",
+        "laravel/framework": "^13.0",
         "laravel/horizon": "^5.47",
-        "laravel/sanctum": "^3.3",
+        "laravel/sanctum": "^4.0",
         "laravel/slack-notification-channel": "^3.10",
         "laravel/socialite": "^5.25",
-        "laravel/tinker": "^2.8",
+        "laravel/tinker": "^3.0",
         "league/flysystem-aws-s3-v3": "^3.0",
         "mailersend/laravel-driver": "^3.2",
         "predis/predis": "^3.5",
@@ -22,13 +21,15 @@
         "symfony/css-selector": "^7.0"
     },
     "require-dev": {
+        "driftingly/rector-laravel": "^2.6",
         "fakerphp/faker": "^1.9.1",
-        "laravel/breeze": "^1.29",
+        "laravel/breeze": "^2.0",
         "laravel/pint": "^1.29",
         "laravel/sail": "^1.53",
         "mockery/mockery": "^1.4.4",
-        "nunomaduro/collision": "^7.0",
-        "phpunit/phpunit": "^10.1",
+        "nunomaduro/collision": "^8.1",
+        "phpunit/phpunit": "^12.0",
+        "rector/rector": "^2.6",
         "spatie/laravel-ignition": "^2.0"
     },
     "autoload": {

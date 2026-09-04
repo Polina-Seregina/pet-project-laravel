@@ -2,20 +2,21 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[Fillable([
+    'user_id',
+    'nickname',
+    'avatar',
+    'birthday'
+])]
+
 class Profile extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
-        'user_id',
-        'nickname',
-        'avatar',
-        'birthday'
-    ];
 
     public function user(): BelongsTo
     {

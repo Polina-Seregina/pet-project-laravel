@@ -54,7 +54,7 @@
                 </div>
 
                 
-                @if ($product->author === $user)
+                @if ($product->author->id === $user->id)
             
                 <div>
                     <x-input-label for="image" :value="__('Изображение')" />
