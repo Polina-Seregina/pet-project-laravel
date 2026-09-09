@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use App\Services\ExchangeRate;
 use App\Models\Product;
+use Exception;
 
 class CurrencyExchangeController extends Controller
 {

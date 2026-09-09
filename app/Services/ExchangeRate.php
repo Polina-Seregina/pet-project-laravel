@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use GuzzleHttp\Client;
+use Exception;
 
 class ExchangeRate
 {
@@ -31,11 +32,13 @@ class ExchangeRate
                 ]
         ]);
 
-        if ($response->getStatusCode() == 200) {
-            $body = $response->getBody();
-            $arrayBody = json_decode($body);
-            return $arrayBody->data->{$pair};
+        if ($response->getStatusCode() !== 200) {
+            throw new Exception('Сервис перевода валют недоступен.');
         }
+        
+        $body = $response->getBody();
+        $arrayBody = json_decode($body);
+        return $arrayBody->data->{$pair};
 
     }
 }
