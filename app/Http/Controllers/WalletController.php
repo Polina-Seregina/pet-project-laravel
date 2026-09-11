@@ -17,7 +17,8 @@ class WalletController extends Controller
      */
     public function __construct(
         protected ReplenishmentInterface $replenishmentService,
-    ) {}
+    ) {
+    }
 
     /**
      * Просмотр страницы кошелька.
