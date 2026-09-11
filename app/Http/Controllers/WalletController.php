@@ -12,16 +12,12 @@ use Illuminate\View\View;
 
 class WalletController extends Controller
 {
-    public $replenishmentService;
-
     /**
      * Создать новый экземпляр контроллера.
      */
     public function __construct(
-        protected ReplenishmentInterface $replenishmentInterface,
-    ) {
-        $this->replenishmentService = $replenishmentInterface;
-    }
+        protected ReplenishmentInterface $replenishmentService,
+    ) {}
 
     /**
      * Просмотр страницы кошелька.

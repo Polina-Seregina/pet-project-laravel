@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Wallet;
 use Tests\TestCase;
+use ReflectionClass;
 use App\Http\Controllers\WalletController;
 use App\Services\SimpleTopUpService;
 use Illuminate\Support\Facades\Auth;
@@ -109,6 +110,10 @@ class WalletTest extends TestCase
     public function test_that_binding_is_working(): void
     {
         $walletController = resolve(WalletController::class);
-        $this->assertInstanceOf(SimpleTopUpService::class, $walletController->replenishmentService);
+
+        $reflectionWalletControllerClass = new ReflectionClass($walletController);
+        $replenishmenService = $reflectionWalletControllerClass->getProperty('replenishmentService');
+
+        $this->assertInstanceOf(SimpleTopUpService::class, $replenishmenService->getValue($walletController));
     }
 }
