@@ -3,15 +3,16 @@
 namespace App\Rules;
 
 use Closure;
+use App\Models\Product;
+use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 
 class Authorship implements ValidationRule
 {
-    public function __construct($product, $user)
-    {
-        $this->user = $user;
-        $this->product = $product;
-    }
+    public function __construct(
+        private Product $product, 
+        private User $user )
+        {}
 
     /**
      * Правило проверки.
