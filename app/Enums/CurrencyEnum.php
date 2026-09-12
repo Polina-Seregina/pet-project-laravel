@@ -9,4 +9,3 @@ enum CurrencyEnum: string
     case RUB = 'RUB';
     case USD = 'USD';
 }
- 
