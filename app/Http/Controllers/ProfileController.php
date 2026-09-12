@@ -16,7 +16,7 @@ class ProfileController extends Controller
     /**
      * Возвращает страницу с отображением профиля пользователя.
      */
-    
+
     public function show(Request $request): View
     {
         $avatar = $request->user()->profile->avatar
