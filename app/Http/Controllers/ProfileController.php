@@ -7,11 +7,16 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Arr;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
+    /**
+     * Возвращает страницу с отображением профиля пользователя.
+     */
+    
     public function show(Request $request): View
     {
         $avatar = $request->user()->profile->avatar
@@ -25,7 +30,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * Display the user's profile form.
+     * Отображает форму редактирования профиля.
      */
     public function edit(Request $request): View
     {
@@ -40,12 +45,18 @@ class ProfileController extends Controller
     }
 
     /**
-     * Update the user's profile information.
+     * Обновление информации о пользователе в профиле.
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
-        $request->user()->profile->fill($request->validated());
+        $user = $request->user();
+        $profile = $request->user()->profile;
+
+        $userValidData = Arr::only($request->validated(), $user->getFillable());
+        $profileValidData = Arr::only($request->validated(), $profile->getFillable());
+
+        $user->fill($userValidData);
+        $profile->fill($profileValidData);
 
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
@@ -65,7 +76,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * Delete the user's account.
+     * Удаление профиля.
      */
     public function destroy(Request $request): RedirectResponse
     {
