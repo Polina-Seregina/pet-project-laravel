@@ -10,9 +10,10 @@ use Illuminate\Contracts\Validation\ValidationRule;
 class Authorship implements ValidationRule
 {
     public function __construct(
-        private Product $product, 
-        private User $user )
-        {}
+        private Product $product,
+        private User $user
+    ) {
+    }
 
     /**
      * Правило проверки.
