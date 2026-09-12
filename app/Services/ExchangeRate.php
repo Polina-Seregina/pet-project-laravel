@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use GuzzleHttp\Client;
+use App\Enums\CurrencyEnum;
 use Exception;
 
 class ExchangeRate
@@ -14,7 +15,7 @@ class ExchangeRate
 
     private function getRate(String $preferredCurrency)
     {
-        if ($preferredCurrency === "USD") {
+        if ($preferredCurrency === CurrencyEnum::USD->value) {
             return 1;
         }
 

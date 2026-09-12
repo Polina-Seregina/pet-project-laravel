@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use App\Services\ExchangeRate;
 use App\Models\Product;
+use App\Http\Requests\ExchangeCurrencyRequest;
 use Exception;
 
 class CurrencyExchangeController extends Controller
@@ -15,11 +16,13 @@ class CurrencyExchangeController extends Controller
      * Метод для перевода суммы на балансе кошелька из USD в выбранную валюту - CNY, RUB, EUR.
      */
 
-    public function exchangeWalletBalance(Request $request): RedirectResponse
+    public function exchangeWalletBalance(ExchangeCurrencyRequest $request): RedirectResponse
     {
         $wallet = $request->user()->wallet;
         $amount = $wallet->balance;
-        $currency = $request['currency'];
+
+        $validData = $request->validated();
+        $currency = $validData['currency'];
 
         try {
             $service = new ExchangeRate();
@@ -40,10 +43,12 @@ class CurrencyExchangeController extends Controller
      * Метод для перевода стоимости Арта из USD в выбранную валюту - CNY, RUB, EUR.
      */
 
-    public function exchangeProductPrice(Request $request, Product $product): RedirectResponse
+    public function exchangeProductPrice(ExchangeCurrencyRequest $request, Product $product): RedirectResponse
     {
+        $validData = $request->validated();
+        $currency = $validData['currency'];
+
         $amount = $product->price;
-        $currency = $request['currency'];
 
         try {
             $service = new ExchangeRate();
