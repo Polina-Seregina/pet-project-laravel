@@ -145,10 +145,10 @@ class ProductTest extends TestCase
     }
 
     /**
-     * Покупка арта, при недостаточном балансе кошелька у покупателя. 
+     * Покупка арта, при недостаточном балансе кошелька у покупателя.
      */
 
-    public function test_user_cant_buy_product_without_money(): void 
+    public function test_user_cant_buy_product_without_money(): void
     {
         $sellerWallet = Wallet::factory()->create(['balance' => 0]);
         $buyerWallet = Wallet::factory()->create(['balance' => rand(0, 500)]);
@@ -169,8 +169,8 @@ class ProductTest extends TestCase
     /**
      * Проверяет, что невозможно купить Товар, который не находится в статусе for_sale.
      */
-    
-    public function test_product_without_for_sale_status_cannot_be_purchased(): void 
+
+    public function test_product_without_for_sale_status_cannot_be_purchased(): void
     {
         $seller = User::factory()->create();
         $buyer = User::factory()->create();
@@ -201,7 +201,7 @@ class ProductTest extends TestCase
         $response = $this->actingAs($user)->post(route('products.buy', $product));
 
         $response->assertRedirect(route('products.show', ['product' => $product]));
-        $response->assertSessionHas('status',  'Этот арт уже принадлежит тебе.');
+        $response->assertSessionHas('status', 'Этот арт уже принадлежит тебе.');
     }
 
     /**
@@ -211,7 +211,7 @@ class ProductTest extends TestCase
     public function test_purchasing_art_if_wallet_does_not_exist(): void
     {
         $buyer = User::factory()->create();
-        $seller =User::factory()->create();
+        $seller = User::factory()->create();
         $product = Product::factory()->create(['user_id' => $seller->id]);
 
         $response = $this->actingAs($buyer)->post(route('products.buy', $product));
