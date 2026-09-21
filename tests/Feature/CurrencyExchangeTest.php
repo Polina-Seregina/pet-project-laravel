@@ -21,12 +21,11 @@ class CurrencyExchangeTest extends TestCase
         $client = $this->partialMock(Client::class, function (MockInterface $mock) {
             $mock->shouldReceive('request')->once()->andReturn(new Response(500));
         });
-
         $service = new ExchangeRate($client);
         try {
-            $response = $service->getAmountInForeignCurrency('RUB', rand(1, 100));
-            $response->assertSessionHas('Сервис перевода валют недоступен.');
+            $service->getAmountInForeignCurrency('RUB', rand(1, 100));
         } catch (Exception $e) {
+            $this->assertEquals($e->getMessage(), 'Сервис перевода валют недоступен.');
         }
     }
     /**
