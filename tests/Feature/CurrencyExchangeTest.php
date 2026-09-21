@@ -9,8 +9,6 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
 use Mockery\MockInterface;
 use Exception;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class CurrencyExchangeTest extends TestCase
@@ -26,7 +24,7 @@ class CurrencyExchangeTest extends TestCase
 
         $service = new ExchangeRate($client);
         try {
-            $response = $service->getAmountInForeignCurrency('RUB', rand(1,100));
+            $response = $service->getAmountInForeignCurrency('RUB', rand(1, 100));
             $response->assertSessionHas('Сервис перевода валют недоступен.');
         } catch (Exception $e) {
         }
@@ -46,7 +44,7 @@ class CurrencyExchangeTest extends TestCase
             $service->getAmountInForeignCurrency('RUB', 100);
         } catch (Exception $e) {
             $this->assertEquals($e->getMessage(), 'Сервис перевода валют недоступен.');
-        }        
+        }
     }
 
     /**
