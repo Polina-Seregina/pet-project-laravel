@@ -6,6 +6,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use App\Services\ExchangeRate;
 use App\Models\Product;
+use GuzzleHttp\Client;
 use App\Http\Requests\ExchangeCurrencyRequest;
 use Exception;
 
@@ -24,7 +25,11 @@ class CurrencyExchangeController extends Controller
         $currency = $validData['currency'];
 
         try {
-            $service = new ExchangeRate();
+            $client = new Client([
+                'base_uri' => config('services.currate.base-url'),
+                'curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4],
+            ]);
+            $service = new ExchangeRate($client);
             $balanceInNewCurrency = $service->getAmountInForeignCurrency($currency, $amount);
         } catch (Exception $e) {
             $request->session()->flash('status', $e->getMessage());
@@ -50,7 +55,11 @@ class CurrencyExchangeController extends Controller
         $amount = $product->price;
 
         try {
-            $service = new ExchangeRate();
+            $client = new Client([
+                'base_uri' => config('services.currate.base-url'),
+                'curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4],
+            ]);
+            $service = new ExchangeRate($client);
             $priceInNewCurrency = $service->getAmountInForeignCurrency($currency, $amount);
         } catch (Exception $e) {
             $request->session()->flash('status', $e->getMessage());

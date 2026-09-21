@@ -8,6 +8,10 @@ use Exception;
 
 class ExchangeRate
 {
+    public function __construct(
+        private Client $client
+    ) {}
+
     public function getAmountInForeignCurrency(String $preferredCurrency, Float $amount): Float
     {
         return round($this->getRate($preferredCurrency) * $amount, 2);
@@ -19,13 +23,8 @@ class ExchangeRate
             return 1;
         }
 
-        $client = new Client([
-            'base_uri' => config('services.currate.base-url'),
-            'curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4],
-            ]);
-
         $pair = "USD{$preferredCurrency}";
-        $response = $client->request('GET', 'latest', [
+        $response = $this->client->request('GET', 'latest', [
             'query' => [
                 'get' => 'rates',
                 'pairs' => $pair,
