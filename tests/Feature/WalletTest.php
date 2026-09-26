@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\Wallet;
+use App\Models\User;
+use ViewException;
 use Tests\TestCase;
 use ReflectionClass;
 use App\Http\Controllers\WalletController;
@@ -115,5 +117,69 @@ class WalletTest extends TestCase
         $replenishmenService = $reflectionWalletControllerClass->getProperty('replenishmentService');
 
         $this->assertInstanceOf(SimpleTopUpService::class, $replenishmenService->getValue($walletController));
+    }
+
+    /**
+     * Пополнение кошелька на отрицательную сумму или ноль.
+     */
+
+    public function test_top_up_with_negative_amount_or_zero(): void
+    {
+        $user = User::factory()->create();
+        $wallet = Wallet::factory()->create(['user_id' => $user->id]);
+
+        $this->assertEquals(0, $wallet->balance);
+
+        $amount = 100;
+
+        $this->actingAs($user)->patch(route('wallet.replenishment'), ['amount' => $amount]);
+        $this->assertEquals(100, $wallet->fresh()->balance);
+
+        $amount = 0;
+
+        $this->actingAs($user)->patch(route('wallet.replenishment'), ['amount' => $amount]);
+        $this->assertEquals(100, $wallet->fresh()->balance);
+
+        $amount = -100;
+
+        $response = $this->actingAs($user)->patch(route('wallet.replenishment'), ['amount' => $amount]);
+        $response->assertInvalid(['amount']);
+        $this->assertEquals(100, $wallet->fresh()->balance);
+
+    }
+
+    /**
+     * Невалидное значение amount
+     */
+    public function test_invalid_amount_value(): void
+    {
+        $user = User::factory()->create();
+        $wallet = Wallet::factory()->create(['user_id' => $user->id]);
+
+        $amount = 'invalud amount value';
+
+        $response = $this->actingAs($user)->patch(route('wallet.replenishment'), ['amount' => $amount]);
+        $response->assertInvalid(['amount']);
+        $this->assertEquals(0, $wallet->fresh()->balance);
+
+        $amount = null;
+
+        $response = $this->actingAs($user)->patch(route('wallet.replenishment'), ['amount' => $amount]);
+        $response->assertInvalid(['amount']);
+        $this->assertEquals(0, $wallet->fresh()->balance);
+
+        $amount = 10000000000000;
+        $response = $this->actingAs($user)->patch(route('wallet.replenishment'), ['amount' => $amount]);
+        $response->assertSessionHas('status');
+        $this->assertEquals(0, $wallet->fresh()->balance);
+    } 
+
+    /**
+     * Доступ к кошельку без существующего кошелька
+     */
+
+    public function test_access_the_wallet_without_existing_wallet(): void
+    {
+        //
     }
 }
