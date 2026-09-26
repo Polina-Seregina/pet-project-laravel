@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\Wallet;
 use App\Models\User;
-use ViewException;
 use Tests\TestCase;
 use ReflectionClass;
 use App\Http\Controllers\WalletController;
@@ -172,7 +171,7 @@ class WalletTest extends TestCase
         $response = $this->actingAs($user)->patch(route('wallet.replenishment'), ['amount' => $amount]);
         $response->assertSessionHas('status');
         $this->assertEquals(0, $wallet->fresh()->balance);
-    } 
+    }
 
     /**
      * Доступ к кошельку без существующего кошелька
