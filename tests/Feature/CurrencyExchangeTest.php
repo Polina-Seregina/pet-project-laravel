@@ -7,7 +7,11 @@ use App\Models\User;
 use App\Models\Wallet;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
-use Mockery\MockInterface;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\ServerException;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Request;
 use Exception;
 use Tests\TestCase;
 
@@ -18,15 +22,26 @@ class CurrencyExchangeTest extends TestCase
      */
     public function test_service_is_unavailable(): void
     {
-        $client = $this->partialMock(Client::class, function (MockInterface $mock) {
-            $mock->shouldReceive('request')->once()->andReturn(new Response(500));
-        });
+        $mock = new MockHandler([
+            new Response(500),
+            new ConnectException('Connection refused', new Request('GET', 'test')),
+        ]);
+
+        $handlerStack = HandlerStack::create($mock);
+        $client = new Client(['handler' => $handlerStack]);
+
         $service = new ExchangeRate($client);
-        try {
-            $service->getAmountInForeignCurrency('RUB', rand(1, 100));
-        } catch (Exception $e) {
-            $this->assertEquals($e->getMessage(), 'Сервис перевода валют недоступен.');
-        }
+
+        $this->assertThrows(
+            fn () => $service->getAmountInForeignCurrency('RUB', rand(1, 100)),
+             ServerException::class
+        );
+
+        $this->assertThrows(
+            fn () => $service->getAmountInForeignCurrency('RUB', rand(1, 100)),
+            ConnectException::class
+        );
+
     }
     /**
      * Внешний API возвращает не-200 ответ
@@ -34,16 +49,19 @@ class CurrencyExchangeTest extends TestCase
 
     public function test_that_api_returns_not_200_response(): void
     {
-        $client = $this->partialMock(Client::class, function (MockInterface $mock) {
-            $mock->shouldReceive('request')->once()->andReturn(new Response(201));
-        });
+        $mock = new MockHandler([
+            new Response(201),
+        ]);
+
+        $handlerStack = HandlerStack::create($mock);
+        $client = new Client(['handler' => $handlerStack]);
 
         $service = new ExchangeRate($client);
-        try {
-            $service->getAmountInForeignCurrency('RUB', 100);
-        } catch (Exception $e) {
-            $this->assertEquals($e->getMessage(), 'Сервис перевода валют недоступен.');
-        }
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Сервис перевода валют недоступен.');
+
+        $service->getAmountInForeignCurrency('RUB', 100);
+        
     }
 
     /**

@@ -8,6 +8,7 @@ use App\Models\Profile;
 use App\Models\User;
 use App\Models\Wallet;
 use App\Services\BuyProductService;
+use TypeError;
 use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 use Throwable;
@@ -248,19 +249,20 @@ class ProductTest extends TestCase
         $buyerTwo = User::factory()->create();
 
         $product = Product::factory()->create(['user_id' => $seller->id]);
+        $productForOne = Product::find($product->id);
+        $productForTwo = Product::find($product->id);
 
         $sellerWallet = Wallet::factory()->create(['user_id' => $seller->id]);
         Wallet::factory()->create(['user_id' => $buyerOne->id, 'balance' => $product->price + 100]);
         $buyerTwoWallet = Wallet::factory()->create(['user_id' => $buyerTwo->id, 'balance' => $product->price + 100]);
 
         $service = new BuyProductService();
-
-        $service->purchase($product, $buyerOne, $seller);
-
-        try {
-            $service->purchase($product, $buyerTwo, $seller);
-        } catch (Throwable $e) {
-        }
+        $service->purchase($productForOne, $buyerOne, $seller);
+        
+        $this->assertThrows(
+            fn () => $service->purchase($productForTwo, $buyerTwo, $seller),
+            TypeError::class
+        );
 
         $this->assertDatabaseCount('orders', 1);
 
@@ -269,7 +271,7 @@ class ProductTest extends TestCase
             'status' => ProductsStatus::PURCHASED->value,
         ]);
 
-        $this->assertEquals($buyerTwoWallet->balance, $product->price + 100);
+        $this->assertEquals($buyerTwoWallet->refresh()->balance, $product->price + 100);
     }
 
 }
