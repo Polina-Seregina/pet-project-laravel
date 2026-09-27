@@ -11,7 +11,6 @@ use App\Services\BuyProductService;
 use TypeError;
 use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
-use Throwable;
 
 class ProductTest extends TestCase
 {
@@ -258,7 +257,7 @@ class ProductTest extends TestCase
 
         $service = new BuyProductService();
         $service->purchase($productForOne, $buyerOne, $seller);
-        
+
         $this->assertThrows(
             fn () => $service->purchase($productForTwo, $buyerTwo, $seller),
             TypeError::class

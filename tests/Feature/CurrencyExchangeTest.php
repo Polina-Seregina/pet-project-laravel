@@ -34,7 +34,7 @@ class CurrencyExchangeTest extends TestCase
 
         $this->assertThrows(
             fn () => $service->getAmountInForeignCurrency('RUB', rand(1, 100)),
-             ServerException::class
+            ServerException::class
         );
 
         $this->assertThrows(
@@ -61,7 +61,7 @@ class CurrencyExchangeTest extends TestCase
         $this->expectExceptionMessage('Сервис перевода валют недоступен.');
 
         $service->getAmountInForeignCurrency('RUB', 100);
-        
+
     }
 
     /**
