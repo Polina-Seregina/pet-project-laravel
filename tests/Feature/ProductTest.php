@@ -306,7 +306,7 @@ class ProductTest extends TestCase
         $response = $this->actingAs($user)->post(route('products.buy', ['product' => $product]));
         $response->assertRedirect(route('products.index'));
     }
-    
+
     /**
      * Создание товара с невалидными данными. Тест для ProductStoreRequest.
      */
