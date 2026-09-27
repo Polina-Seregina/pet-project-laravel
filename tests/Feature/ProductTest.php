@@ -138,8 +138,9 @@ class ProductTest extends TestCase
             'price' => $product->price,
             'status' => ProductsStatus::FORSALE->value]);
 
-        $updatedProduct = Product::where(['id' => $product->id])->first();
+        $response->assertStatus(302)->assertInvalid(['image' => 'Изображение может менять только автор.']);
 
+        $updatedProduct = Product::where(['id' => $product->id])->first();
         $this->assertEquals($oldImage, $updatedProduct->image);
 
     }
@@ -271,6 +272,84 @@ class ProductTest extends TestCase
         ]);
 
         $this->assertEquals($buyerTwoWallet->refresh()->balance, $product->price + 100);
+    }
+    /**
+     * Редактирование или удаление чужого товара.
+     */
+
+    public function test_that_user_cant_edit_or_delete_someone_elses_product(): void
+    {
+        $owner = User::factory()->create();
+        $product = Product::factory()->create(['user_id' => $owner->id]);
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->delete(route('products.destroy', ['product' => $product]));
+        $response->assertStatus(403);
+
+        $response = $this->actingAs($user)->patch(route('products.update', ['product' => $product, 'status' => ProductsStatus::DRAFT->value]));
+        $response->assertStatus(403);
+    }
+
+    /**
+     * Просмотр/покупка черновика чужого товара. Тест мидлвары RedirectIfProductDraft.
+     */
+
+    public function test_that_user_cant_see_or_buy_draft_someone_elses_product(): void
+    {
+        $owner = User::factory()->create();
+        $product = Product::factory()->create(['user_id' => $owner->id, 'status' => ProductsStatus::DRAFT->value]);
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get(route('products.show', ['product' => $product]));
+        $response->assertRedirect(route('products.index'));
+
+        $response = $this->actingAs($user)->post(route('products.buy', ['product' => $product]));
+        $response->assertRedirect(route('products.index'));
+    }
+    
+    /**
+     * Создание товара с невалидными данными. Тест для ProductStoreRequest.
+     */
+
+    public function test_create_product_with_invalid_data(): void
+    {
+        $user = User::factory()->create();
+
+        $image = UploadedFile::fake()->create('image.pdf', 100);
+
+        $response = $this->actingAs($user)->post(route('products.store'), [
+            'name' => 'test',
+            'description' => 'testtest',
+            'price' => -1,
+            'status' => ProductsStatus::FORSALE->value,
+            'image' => '',
+        ]);
+
+        $response->assertInvalid(['price', 'image']);
+
+        $response = $this->actingAs($user)->post(route('products.store'), [
+            'name' => fake()->realTextBetween(256, 300),
+            'description' => fake()->realTextBetween(256, 300),
+            'price' => fake()->numberBetween(0, 100000),
+            'status' => 'test',
+            'image' => $image,
+        ]);
+
+        $response->assertInvalid(['name', 'description', 'status', 'image']);
+    }
+
+    /**
+     * Обновление товара с невалидным status. Тест для ProductUpdateRequest.
+     */
+
+    public function test_update_product_with_invalid_status(): void
+    {
+        $user = User::factory()->create();
+        $product = Product::factory()->create(['user_id' => $user->id]);
+        $response = $this->actingAs($user)->patch(route('products.update', ['product' => $product]), [
+            'status' => 'test',
+        ]);
+        $response->assertInvalid('status');
     }
 
 }
