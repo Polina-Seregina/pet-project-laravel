@@ -27,7 +27,7 @@ class WalletController extends Controller
     {
         $wallet = $request->user()->wallet;
         // а вот тут уже приходит кошелёк, и юзер с другим id. Т.е. где-то подменяется юзер.
-        dd(['user_id' => $request->user()->id, 'wallet' => $wallet]); 
+        dd(['user_id' => $request->user()->id, 'wallet' => $wallet]);
 
         $balanceInNewCurrency = $request['balanceInNewCurrency'];
         $currency = $request['currency'];
