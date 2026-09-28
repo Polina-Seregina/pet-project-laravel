@@ -179,6 +179,10 @@ class WalletTest extends TestCase
 
     public function test_access_the_wallet_without_existing_wallet(): void
     {
-        //
+        $user = User::factory()->create(['id' => 11]); // специально создаю с id, чтобы посмотреть что приходит в контроллер
+        $this->assertNull($user->wallet);
+        //dd($user->wallet); //тут приходит null, все ок
+        $this->actingAs($user)->get(route('wallet.show'));
+        //но в контроллере получаю уже реальный кошелёк и другого юзера
     }
 }
