@@ -6,7 +6,6 @@ use App\Models\Wallet;
 use App\Models\User;
 use Tests\TestCase;
 use ReflectionClass;
-use ErrorException;
 use App\Http\Controllers\WalletController;
 use App\Services\SimpleTopUpService;
 use Illuminate\Support\Facades\Auth;
@@ -185,12 +184,12 @@ class WalletTest extends TestCase
 
         $response = $this->actingAs($user)->get(route('wallet.show'));
         $response->assertInternalServerError();
-    
+
         $response = $this->actingAs($user)->get(route('wallet.replenishment.form'));
         $response->assertInternalServerError();
 
         $response = $this->actingAs($user)->get(route('transaction.history'));
         $response->assertInternalServerError();
-        
+
     }
 }
