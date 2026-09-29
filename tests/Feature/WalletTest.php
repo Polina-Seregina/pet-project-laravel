@@ -6,6 +6,7 @@ use App\Models\Wallet;
 use App\Models\User;
 use Tests\TestCase;
 use ReflectionClass;
+use ErrorException;
 use App\Http\Controllers\WalletController;
 use App\Services\SimpleTopUpService;
 use Illuminate\Support\Facades\Auth;
@@ -179,10 +180,17 @@ class WalletTest extends TestCase
 
     public function test_access_the_wallet_without_existing_wallet(): void
     {
-        $user = User::factory()->create(['id' => 11]); // специально создаю с id, чтобы посмотреть что приходит в контроллер
+        $user = User::factory()->create(['id' => 11]);
         $this->assertNull($user->wallet);
-        //dd($user->wallet); //тут приходит null, все ок
-        $this->actingAs($user)->get(route('wallet.show'));
-        //но в контроллере получаю уже реальный кошелёк и другого юзера
+
+        $response = $this->actingAs($user)->get(route('wallet.show'));
+        $response->assertInternalServerError();
+    
+        $response = $this->actingAs($user)->get(route('wallet.replenishment.form'));
+        $response->assertInternalServerError();
+
+        $response = $this->actingAs($user)->get(route('transaction.history'));
+        $response->assertInternalServerError();
+        
     }
 }
