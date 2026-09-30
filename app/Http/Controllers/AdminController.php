@@ -24,7 +24,7 @@ class AdminController extends Controller
 
     /**
      * Возвращает страницу конкретного Пользователя с формой для изменения роли.
-     */ 
+     */
 
     public function show(Request $request, User $user): View
     {
@@ -45,7 +45,7 @@ class AdminController extends Controller
     public function update(Request $request, User $user)
     {
         $rolesArray = DB::table('roles')->get('name')->toArray();
-        $roles = array_map(fn($role) => $role->name, $rolesArray);
+        $roles = array_map(fn ($role) => $role->name, $rolesArray);
         $request->validate(['role' => [Rule::in($roles)]]);
 
         if ($user->email !== config('app.admin-email')) {

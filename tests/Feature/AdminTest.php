@@ -84,5 +84,5 @@ class AdminTest extends TestCase
         $response = $this->actingAs($admin)->patch(route('admin.update', $user), ['role' => 'manager']);
         $response->assertInvalid(['role']);
     }
-    
+
 }
