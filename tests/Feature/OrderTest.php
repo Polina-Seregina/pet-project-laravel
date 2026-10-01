@@ -63,12 +63,12 @@ class OrderTest extends TestCase
         Order::factory()->create(['status' => OrderStatus::CREATED->value, 'seller_id' => $user->id]);
         Order::factory()->create(['seller_id' => $user->id]);
         Order::factory()->create(['seller_id' => $user->id]);
-        
+
         $response = $this->actingAs($user)->get(route('orders.sold'));
         $this->assertEquals(2, $response['orders']->toArray()['total']);
 
         Order::factory()->create(['status' => OrderStatus::CREATED->value, 'seller_id' => $user->id]);
-        
+
         $response = $this->actingAs($user)->get(route('orders.sold'));
         $this->assertEquals(2, $response['orders']->toArray()['total']);
     }
@@ -86,12 +86,12 @@ class OrderTest extends TestCase
         Order::factory()->create(['status' => OrderStatus::CREATED->value, 'buyer_id' => $user->id]);
         Order::factory()->create(['buyer_id' => $user->id]);
         Order::factory()->create(['buyer_id' => $user->id]);
-        
+
         $response = $this->actingAs($user)->get(route('orders.purchased'));
         $this->assertEquals(2, $response['orders']->toArray()['total']);
 
         Order::factory()->create(['status' => OrderStatus::CREATED->value, 'buyer_id' => $user->id]);
-        
+
         $response = $this->actingAs($user)->get(route('orders.purchased'));
         $this->assertEquals(2, $response['orders']->toArray()['total']);
     }
