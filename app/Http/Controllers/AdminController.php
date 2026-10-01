@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 
 class AdminController extends Controller
@@ -41,6 +44,10 @@ class AdminController extends Controller
 
     public function update(Request $request, User $user)
     {
+        $rolesArray = DB::table('roles')->get('name')->toArray();
+        $roles = array_map(fn ($role) => $role->name, $rolesArray);
+        $request->validate(['role' => [Rule::in($roles)]]);
+
         if ($user->email !== config('app.admin-email')) {
             $user->removeRole($user->getRoleNames());
             $user->assignRole($request['role']);

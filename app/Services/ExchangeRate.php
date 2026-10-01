@@ -3,9 +3,16 @@
 namespace App\Services;
 
 use GuzzleHttp\Client;
+use App\Enums\CurrencyEnum;
+use Exception;
 
 class ExchangeRate
 {
+    public function __construct(
+        private Client $client
+    ) {
+    }
+
     public function getAmountInForeignCurrency(String $preferredCurrency, Float $amount): Float
     {
         return round($this->getRate($preferredCurrency) * $amount, 2);
@@ -13,17 +20,12 @@ class ExchangeRate
 
     private function getRate(String $preferredCurrency)
     {
-        if ($preferredCurrency === "USD") {
+        if ($preferredCurrency === CurrencyEnum::USD->value) {
             return 1;
         }
 
-        $client = new Client([
-            'base_uri' => config('services.currate.base-url'),
-            'curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4],
-            ]);
-
         $pair = "USD{$preferredCurrency}";
-        $response = $client->request('GET', 'latest', [
+        $response = $this->client->request('GET', 'latest', [
             'query' => [
                 'get' => 'rates',
                 'pairs' => $pair,
@@ -31,11 +33,13 @@ class ExchangeRate
                 ]
         ]);
 
-        if ($response->getStatusCode() == 200) {
-            $body = $response->getBody();
-            $arrayBody = json_decode($body);
-            return $arrayBody->data->{$pair};
+        if ($response->getStatusCode() !== 200) {
+            throw new Exception('Сервис перевода валют недоступен.');
         }
+
+        $body = $response->getBody();
+        $arrayBody = json_decode($body);
+        return $arrayBody->data->{$pair};
 
     }
 }

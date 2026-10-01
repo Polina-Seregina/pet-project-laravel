@@ -7,4 +7,5 @@ enum CurrencyEnum: string
     case EUR = 'EUR';
     case CNY = 'CNY';
     case RUB = 'RUB';
+    case USD = 'USD';
 }

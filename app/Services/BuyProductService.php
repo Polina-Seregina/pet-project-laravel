@@ -26,10 +26,10 @@ class BuyProductService
             $sellerWallet = Wallet::where('user_id', $seller->id)->lockForUpdate()->first();
             $buyerWallet = Wallet::where('user_id', $buyer->id)->lockForUpdate()->first();
 
-            $order = $this->createOrder($product, $seller, $buyer);
-
             $this->checkThatBuyerHaveMoney($product, $buyerWallet);
             $this->checkProductStatus($product);
+
+            $order = $this->createOrder($product, $seller, $buyer);
 
             $this->writeOffMoney($buyerWallet, $product->price);
             $this->topUpWallet($sellerWallet, $product->price);
@@ -84,7 +84,7 @@ class BuyProductService
     /**
      * Приватная функция,проверяющая базовое условие для покупки - наличие необходимого количества денег на счету.
      */
-    private function checkThatBuyerHaveMoney(Product $product, Wallet $buyerWallet)
+    private function checkThatBuyerHaveMoney(Product $product, Wallet $buyerWallet): void
     {
         if (!($product->price <= $buyerWallet->balance)) {
             throw new Exception('Недостаточно средств на балансе кошелька для покупки арта.');
@@ -94,7 +94,7 @@ class BuyProductService
     /**
      * Приватная функция, реализующая проверку статуса продукта.
      */
-    private function checkProductStatus(Product $product)
+    private function checkProductStatus(Product $product): void
     {
         if (!($product->status->value === ProductsStatus::FORSALE->value)) {
             throw new Exception('Арт не продается.');
