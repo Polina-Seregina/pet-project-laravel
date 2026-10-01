@@ -5,9 +5,7 @@ namespace Tests\Feature;
 use App\Models\Profile;
 use App\Models\User;
 use Tests\TestCase;
-use Exception;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Validation\ValidationException;
 
 class ProfileTest extends TestCase
 {
@@ -89,7 +87,7 @@ class ProfileTest extends TestCase
             'nickname' => fake()->unique()->firstName(),
             'email' => 'base@gmail.com',
         ]);
-        
+
         $response->assertRedirect(route('profile.edit'))->assertSessionHas('status', 'profile-updated');
     }
     /**
@@ -123,7 +121,7 @@ class ProfileTest extends TestCase
                 'nickname' => 'firstNickname',
             ]);
         });
-        
+
         $response = $this->actingAs($profile->user)->patch(route('profile.update'), [
             'name' => fake()->unique()->name(),
             'nickname' => 'firstNickname',
@@ -150,7 +148,7 @@ class ProfileTest extends TestCase
             'name' => fake()->unique()->name(),
             'nickname' => fake()->unique()->firstName(),
         ]);
-        
+
         $this->assertNull($user->email_verified_at);
     }
 
@@ -170,14 +168,14 @@ class ProfileTest extends TestCase
             'nickname' => fake()->unique()->firstName(),
             'avatar' => $avatar,
         ]);
-        
+
         $response->assertInvalid('avatar');
     }
 
     /**
-     * У пользователя отсутствует Profile — граничный случай. В ProfileUpdateRequest::rules() 
-     * вызывается $this->user()->profile()->first()->id, поэтому при отсутствии профиля произойдёт 
-     * обращение к id у null. Необходимо либо зафиксировать текущее поведение тестом, либо 
+     * У пользователя отсутствует Profile — граничный случай. В ProfileUpdateRequest::rules()
+     * вызывается $this->user()->profile()->first()->id, поэтому при отсутствии профиля произойдёт
+     * обращение к id у null. Необходимо либо зафиксировать текущее поведение тестом, либо
      * предусмотреть корректную обработку.
      */
 
