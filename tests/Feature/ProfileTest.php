@@ -173,10 +173,7 @@ class ProfileTest extends TestCase
     }
 
     /**
-     * У пользователя отсутствует Profile — граничный случай. В ProfileUpdateRequest::rules()
-     * вызывается $this->user()->profile()->first()->id, поэтому при отсутствии профиля произойдёт
-     * обращение к id у null. Необходимо либо зафиксировать текущее поведение тестом, либо
-     * предусмотреть корректную обработку.
+     * Обновление данных юзера без существующего профиля. 
      */
 
     public function test_update_user_without_profile(): void
@@ -191,6 +188,6 @@ class ProfileTest extends TestCase
             'nickname' => fake()->unique()->firstName(),
         ]);
 
-        $response->assertInternalServerError();
+        $response->assertNotFound();
     }
 }

@@ -54,9 +54,10 @@ class ProfileController extends Controller
 
         $userValidData = Arr::only($request->validated(), $user->getFillable());
         $profileValidData = Arr::only($request->validated(), $profile->getFillable());
+        $profileValidDataWithoutAvatar = Arr::except($profileValidData, ['avatar']);
 
         $user->fill($userValidData);
-        $profile->fill($profileValidData);
+        $profile->fill($profileValidDataWithoutAvatar);
 
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;

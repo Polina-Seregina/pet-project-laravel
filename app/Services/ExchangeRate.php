@@ -33,13 +33,11 @@ class ExchangeRate
                 ]
         ]);
 
-        if ($response->getStatusCode() !== 200) {
+        $rate = json_decode($response->getBody(), true)['data'][$pair] ?? null;
+        
+        if (!is_numeric($rate) || $rate <= 0) {
             throw new Exception('Сервис перевода валют недоступен.');
         }
-
-        $body = $response->getBody();
-        $arrayBody = json_decode($body);
-        return $arrayBody->data->{$pair};
-
+        return (float) $rate;
     }
 }

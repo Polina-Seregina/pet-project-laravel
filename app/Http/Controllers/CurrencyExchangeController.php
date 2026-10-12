@@ -23,7 +23,7 @@ class CurrencyExchangeController extends Controller
 
         $validData = $request->validated();
         $currency = $validData['currency'];
-
+ 
         try {
             $client = new Client([
                 'base_uri' => config('services.currate.base-url'),
@@ -32,7 +32,8 @@ class CurrencyExchangeController extends Controller
             $service = new ExchangeRate($client);
             $balanceInNewCurrency = $service->getAmountInForeignCurrency($currency, $amount);
         } catch (Exception $e) {
-            $request->session()->flash('status', $e->getMessage());
+            report($e);
+            $request->session()->flash('status', 'Сервис перевода валют недоступен.');
             $balanceInNewCurrency = 'Сервис не доступен';
             $currency = '';
         }
@@ -62,7 +63,9 @@ class CurrencyExchangeController extends Controller
             $service = new ExchangeRate($client);
             $priceInNewCurrency = $service->getAmountInForeignCurrency($currency, $amount);
         } catch (Exception $e) {
-            $request->session()->flash('status', $e->getMessage());
+
+            report($e);
+            $request->session()->flash('status', 'Сервис перевода валют недоступен.');
             $priceInNewCurrency = 'Сервис не доступен';
             $currency = '';
         }

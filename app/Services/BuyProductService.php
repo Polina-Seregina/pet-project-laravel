@@ -26,6 +26,7 @@ class BuyProductService
             $sellerWallet = Wallet::where('user_id', $seller->id)->lockForUpdate()->first();
             $buyerWallet = Wallet::where('user_id', $buyer->id)->lockForUpdate()->first();
 
+            $this->checkThatWalletsExists($sellerWallet, $buyerWallet);
             $this->checkThatBuyerHaveMoney($product, $buyerWallet);
             $this->checkProductStatus($product);
 
@@ -45,6 +46,21 @@ class BuyProductService
             return $newProduct;
 
         }, 3);
+    }
+
+    /**
+     * Проверка, что у продавца и у покупателя существуют кошельки.
+     */
+
+    private function checkThatWalletsExists(null|Wallet $sellerWallet, null|Wallet $buyerWallet): void 
+    {
+        if (!($buyerWallet)) {
+                throw new Exception('Кошелёк покупателя не найден.');
+        }
+
+        if (!($sellerWallet)) {
+            throw new Exception('Кошелёк продавца не найден.');
+        }
     }
 
     /**
