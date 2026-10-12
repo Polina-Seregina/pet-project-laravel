@@ -34,7 +34,7 @@ class ExchangeRate
         ]);
 
         $rate = json_decode($response->getBody(), true)['data'][$pair] ?? null;
-        
+
         if (!is_numeric($rate) || $rate <= 0) {
             throw new Exception('Сервис перевода валют недоступен.');
         }

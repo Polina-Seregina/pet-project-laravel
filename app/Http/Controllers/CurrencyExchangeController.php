@@ -23,7 +23,7 @@ class CurrencyExchangeController extends Controller
 
         $validData = $request->validated();
         $currency = $validData['currency'];
- 
+
         try {
             $client = new Client([
                 'base_uri' => config('services.currate.base-url'),

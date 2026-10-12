@@ -7,9 +7,6 @@ use App\Enums\ProductsStatus;
 use App\Models\Profile;
 use App\Models\User;
 use App\Models\Wallet;
-use App\Services\BuyProductService;
-use TypeError;
-use Exception;
 use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 

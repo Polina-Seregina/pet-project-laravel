@@ -50,10 +50,10 @@ class BuyProductTest extends TestCase
     }
 
     /**
-     * Покупка продукта, если у покупателя/продавца нет кошелька. 
+     * Покупка продукта, если у покупателя/продавца нет кошелька.
      */
 
-    public function test_buy_product_without_wallets(): void 
+    public function test_buy_product_without_wallets(): void
     {
         $seller = User::factory()->has(Wallet::factory())->create();
         $buyer = User::factory()->create();
@@ -65,7 +65,7 @@ class BuyProductTest extends TestCase
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Кошелёк покупателя не найден.');
-        
+
         $service->purchase($product, $buyer, $seller);
     }
 }

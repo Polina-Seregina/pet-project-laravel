@@ -173,7 +173,7 @@ class ProfileTest extends TestCase
     }
 
     /**
-     * Обновление данных юзера без существующего профиля. 
+     * Обновление данных юзера без существующего профиля.
      */
 
     public function test_update_user_without_profile(): void

@@ -52,10 +52,10 @@ class BuyProductService
      * Проверка, что у продавца и у покупателя существуют кошельки.
      */
 
-    private function checkThatWalletsExists(null|Wallet $sellerWallet, null|Wallet $buyerWallet): void 
+    private function checkThatWalletsExists(null|Wallet $sellerWallet, null|Wallet $buyerWallet): void
     {
         if (!($buyerWallet)) {
-                throw new Exception('Кошелёк покупателя не найден.');
+            throw new Exception('Кошелёк покупателя не найден.');
         }
 
         if (!($sellerWallet)) {
