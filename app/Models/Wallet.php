@@ -26,7 +26,7 @@ class Wallet extends Model
      * Получить операции пополнения/списания денежных средств.
      */
 
-    public function transactions(): hasMany
+    public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
     }

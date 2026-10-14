@@ -10,6 +10,7 @@ use App\Models\Wallet;
 use App\Models\Order;
 use App\Models\User;
 use App\Models\Transaction;
+use App\Exceptions\WalletNotFoundException;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -26,10 +27,11 @@ class BuyProductService
             $sellerWallet = Wallet::where('user_id', $seller->id)->lockForUpdate()->first();
             $buyerWallet = Wallet::where('user_id', $buyer->id)->lockForUpdate()->first();
 
-            $order = $this->createOrder($product, $seller, $buyer);
-
+            $this->checkThatWalletsExists($sellerWallet, $buyerWallet);
             $this->checkThatBuyerHaveMoney($product, $buyerWallet);
             $this->checkProductStatus($product);
+
+            $order = $this->createOrder($product, $seller, $buyer);
 
             $this->writeOffMoney($buyerWallet, $product->price);
             $this->topUpWallet($sellerWallet, $product->price);
@@ -45,6 +47,21 @@ class BuyProductService
             return $newProduct;
 
         }, 3);
+    }
+
+    /**
+     * Проверка, что у продавца и у покупателя существуют кошельки.
+     */
+
+    private function checkThatWalletsExists(null|Wallet $sellerWallet, null|Wallet $buyerWallet): void
+    {
+        if (!($buyerWallet)) {
+            throw new WalletNotFoundException('Кошелёк покупателя не найден.');
+        }
+
+        if (!($sellerWallet)) {
+            throw new WalletNotFoundException('Кошелёк продавца не найден.');
+        }
     }
 
     /**
@@ -84,7 +101,7 @@ class BuyProductService
     /**
      * Приватная функция,проверяющая базовое условие для покупки - наличие необходимого количества денег на счету.
      */
-    private function checkThatBuyerHaveMoney(Product $product, Wallet $buyerWallet)
+    private function checkThatBuyerHaveMoney(Product $product, Wallet $buyerWallet): void
     {
         if (!($product->price <= $buyerWallet->balance)) {
             throw new Exception('Недостаточно средств на балансе кошелька для покупки арта.');
@@ -94,7 +111,7 @@ class BuyProductService
     /**
      * Приватная функция, реализующая проверку статуса продукта.
      */
-    private function checkProductStatus(Product $product)
+    private function checkProductStatus(Product $product): void
     {
         if (!($product->status->value === ProductsStatus::FORSALE->value)) {
             throw new Exception('Арт не продается.');

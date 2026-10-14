@@ -15,6 +15,8 @@ class ProfileUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        $profile = Profile::where(['user_id' => $this->user()->id])->firstOrFail();
+
         return [
             'name' => ['required', 'string', 'max:255'],
             'nickname' => ['required', 'string', 'max:255', Rule::unique(Profile::class)->ignore($this->user()->profile()->first()->id)],
