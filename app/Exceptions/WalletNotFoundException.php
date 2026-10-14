@@ -7,4 +7,4 @@ use Exception;
 class WalletNotFoundException extends Exception
 {
     //
-} 
+}

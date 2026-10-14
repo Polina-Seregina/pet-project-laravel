@@ -6,7 +6,6 @@ use App\Models\Product;
 use App\Enums\ProductsStatus;
 use App\Models\Profile;
 use App\Models\User;
-use Exception;
 use App\Models\Wallet;
 use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
