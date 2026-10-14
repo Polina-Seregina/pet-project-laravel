@@ -10,6 +10,7 @@ use App\Models\Wallet;
 use App\Models\Order;
 use App\Models\User;
 use App\Models\Transaction;
+use App\Exceptions\WalletNotFoundException;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -55,11 +56,11 @@ class BuyProductService
     private function checkThatWalletsExists(null|Wallet $sellerWallet, null|Wallet $buyerWallet): void
     {
         if (!($buyerWallet)) {
-            throw new Exception('Кошелёк покупателя не найден.');
+            throw new WalletNotFoundException('Кошелёк покупателя не найден.');
         }
 
         if (!($sellerWallet)) {
-            throw new Exception('Кошелёк продавца не найден.');
+            throw new WalletNotFoundException('Кошелёк продавца не найден.');
         }
     }
 

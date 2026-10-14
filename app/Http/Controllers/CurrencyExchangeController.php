@@ -34,11 +34,11 @@ class CurrencyExchangeController extends Controller
         } catch (Exception $e) {
             report($e);
             $request->session()->flash('status', 'Сервис перевода валют недоступен.');
-            $balanceInNewCurrency = 'Сервис не доступен';
-            $currency = '';
+            $balanceInNewCurrency = null;
+            $currency = null;
         }
 
-        return Redirect::route('wallet.show', [
+        return Redirect::route('wallet.show')->with([
             'balanceInNewCurrency' => $balanceInNewCurrency,
             'currency' => $currency,
         ]);
@@ -63,15 +63,13 @@ class CurrencyExchangeController extends Controller
             $service = new ExchangeRate($client);
             $priceInNewCurrency = $service->getAmountInForeignCurrency($currency, $amount);
         } catch (Exception $e) {
-
             report($e);
             $request->session()->flash('status', 'Сервис перевода валют недоступен.');
-            $priceInNewCurrency = 'Сервис не доступен';
-            $currency = '';
+            $priceInNewCurrency = null;
+            $currency = null;
         }
 
-        return Redirect::route('products.show', [
-            'product' => $product,
+        return Redirect::route('products.show', $product)->with([
             'priceInNewCurrency' => $priceInNewCurrency,
             'currency' => $currency,
         ]);

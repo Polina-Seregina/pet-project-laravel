@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Enums\ProductsStatus;
 use App\Models\Profile;
 use App\Models\User;
+use Exception;
 use App\Models\Wallet;
 use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
@@ -315,4 +316,20 @@ class ProductTest extends TestCase
         $response->assertInvalid('status');
     }
 
+    /**
+     * Покупка продукта, если у покупателя/продавца нет кошелька.
+     */
+
+    public function test_buy_product_without_wallets(): void
+    {
+        $seller = User::factory()->has(Wallet::factory())->create();
+        $buyer = User::factory()->create();
+        $product = Product::factory()->create(['user_id' => $seller->id]);
+
+        $this->assertNull($buyer->wallet);
+
+        $response = $this->actingAs($buyer)->post(route('products.buy', $product));
+        $response->assertRedirect()->assertSessionHas('status', 'Кошелёк покупателя не найден.');
+
+    }
 }

@@ -28,7 +28,7 @@
                     <div>
                         <x-input-label for="amount" :value="__('Введите сумму, USD')" />
                         <div style="display: flex; align-items: center; gap: 1px;">
-                            <input id="amount" name="amount" type="number" min="5" step="5" style="display: block; margin: 0 auto;"/>
+                            <input id="amount" name="amount" type="number" min="5" step="0.01" style="display: block; margin: 0 auto;"/>
                         </div>
                     </div>
 
