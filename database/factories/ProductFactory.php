@@ -21,7 +21,7 @@ class ProductFactory extends Factory
     {
         return [
             'name' => fake()->name(),
-            'description' => fake()->realTextBetween(),
+            'description' => fake()->paragraph(),
             'price' => fake()->numberBetween(0, 100000),
             'image' => fake()->unique()->filePath(),
             'author_id' => User::factory(),
