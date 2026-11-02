@@ -11,6 +11,8 @@ use App\Models\Order;
 use App\Models\User;
 use App\Models\Transaction;
 use App\Exceptions\WalletNotFoundException;
+use App\Exceptions\NotEnoughMoneyException;
+use App\Exceptions\ArtIsNotForSaleException;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -104,7 +106,7 @@ class BuyProductService
     private function checkThatBuyerHaveMoney(Product $product, Wallet $buyerWallet): void
     {
         if (!($product->price <= $buyerWallet->balance)) {
-            throw new Exception('Недостаточно средств на балансе кошелька для покупки арта.');
+            throw new NotEnoughMoneyException('Недостаточно средств на балансе кошелька для покупки арта.');
         }
     }
 
@@ -114,7 +116,7 @@ class BuyProductService
     private function checkProductStatus(Product $product): void
     {
         if (!($product->status->value === ProductsStatus::FORSALE->value)) {
-            throw new Exception('Арт не продается.');
+            throw new ArtIsNotForSaleException('Арт не продается.');
         }
     }
 
