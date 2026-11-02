@@ -13,7 +13,6 @@ use App\Models\Transaction;
 use App\Exceptions\WalletNotFoundException;
 use App\Exceptions\NotEnoughMoneyException;
 use App\Exceptions\ArtIsNotForSaleException;
-use Exception;
 use Illuminate\Support\Facades\DB;
 
 class BuyProductService

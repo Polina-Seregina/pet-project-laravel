@@ -5,7 +5,6 @@ namespace App\Http\Requests;
 use App\Enums\ProductsStatus;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Enum;
 use App\Rules\Authorship;
 use Illuminate\Validation\Rule;
 

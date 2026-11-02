@@ -27,7 +27,7 @@ class WalletController extends Controller
     {
         $wallet = $request->user()->wallet;
         $balanceInNewCurrency = session('balanceInNewCurrency');
-        $currency = $request['currency']; 
+        $currency = $request['currency'];
 
         return view('wallet.show', [
             'user' => $request->user(),

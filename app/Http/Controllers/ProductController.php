@@ -118,7 +118,7 @@ class ProductController extends Controller
         $product->fill($validData);
 
         if ($file) {
-            $path = $file->store("products/{$user->id}",'s3');
+            $path = $file->store("products/{$user->id}", 's3');
             $product->image = $path;
         }
 
