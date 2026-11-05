@@ -49,4 +49,9 @@ return [
         'base-url' => 'https://currate.ru/api/',
     ],
 
+    'exchange-rate-api' => [
+        'api-key' => env('EXCHANGE_RATE_API'),
+        'base-url' => env('EXCHANGE_RATE_URL','https://v6.exchangerate-api.com/v6/'),
+    ],
+
 ];

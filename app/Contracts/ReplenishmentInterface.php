@@ -6,5 +6,5 @@ use App\Models\Wallet;
 
 interface ReplenishmentInterface
 {
-    public function topUp(Wallet $wallet, Float $amount);
+    public function topUp(Wallet $wallet, float $amount);
 }

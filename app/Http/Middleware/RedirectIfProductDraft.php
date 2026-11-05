@@ -20,7 +20,7 @@ class RedirectIfProductDraft
         $product = $request->product;
         $user = $request->user();
 
-        if (!$user->is($product->user) && ($product->status->value !== ProductsStatus::FORSALE->value)) {
+        if (!$user->is($product->user) && ($product->status !== ProductsStatus::FORSALE)) {
             return Redirect::route('products.index');
         }
 

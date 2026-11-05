@@ -114,7 +114,7 @@ class BuyProductService
      */
     private function checkProductStatus(Product $product): void
     {
-        if (!($product->status->value === ProductsStatus::FORSALE->value)) {
+        if (!($product->status === ProductsStatus::FORSALE)) {
             throw new ArtIsNotForSaleException('Арт не продается.');
         }
     }

@@ -26,9 +26,7 @@ class UserController extends Controller
 
     public function show(User $user): View
     {
-        $avatar = $user->profile->avatar
-            ? Storage::disk('s3')->url($user->profile->avatar)
-            : asset(config('filesystems.default_avatar'));
+        $avatar = $user->profile->get_avatar_url();
 
         return view('admin.show', [
             'user' => $user,
@@ -45,8 +43,7 @@ class UserController extends Controller
         $validData = $request->validated();
 
         if ($user->email !== config('app.admin-email')) {
-            $user->removeRole($user->getRoleNames());
-            $user->assignRole($validData['role']);
+            $user->syncRoles([$validData['role']]);
             return Redirect::route('admin.show', ['user' => $user])->with('status', 'Роль пользователя изменена успешно.');
         }
 

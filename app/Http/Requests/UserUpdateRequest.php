@@ -6,6 +6,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 
 class UserUpdateRequest extends FormRequest
 {
@@ -16,8 +17,7 @@ class UserUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rolesArray = DB::table('roles')->get('name')->toArray();
-        $roles = array_map(fn ($role) => $role->name, $rolesArray);
+        $roles = Role::pluck('name');
 
         return [
             'role' => ['required', Rule::in($roles)],
