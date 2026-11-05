@@ -31,7 +31,7 @@ class ExchangeRate
 
         $response = $this->client->request('GET', config('services.exchange-rate-api.base-url') . config('services.exchange-rate-api.api-key') . '/' . 'latest/USD');
         $rate = json_decode($response->getBody(), true)['conversion_rates'][$preferredCurrency] ?? null;
-        
+
         if (!is_numeric($rate) || $rate <= 0) {
             throw new Exception('Сервис перевода валют недоступен.');
         }
