@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class SimpleTopUpService implements ReplenishmentInterface
 {
-    public function topUp(Wallet $wallet, Float $amount): Void
+    public function topUp(Wallet $wallet, float $amount): void
     {
         DB::transaction(function () use ($wallet, $amount) {
             $wallet->increment('balance', $amount);

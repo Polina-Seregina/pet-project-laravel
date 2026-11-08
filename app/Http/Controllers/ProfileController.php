@@ -19,9 +19,7 @@ class ProfileController extends Controller
 
     public function show(Request $request): View
     {
-        $avatar = $request->user()->profile->avatar
-            ? Storage::disk('s3')->url($request->user()->profile->avatar)
-            : asset(config('filesystems.default_avatar'));
+        $avatar = $request->user()->profile->get_avatar_url();
 
         return view('profile.show', [
             'user' => $request->user(),
@@ -34,9 +32,7 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
-        $avatar = $request->user()->profile->avatar
-            ? Storage::disk('s3')->url($request->user()->profile->avatar)
-            : asset(config('filesystems.default_avatar'));
+        $avatar = $request->user()->profile->get_avatar_url();
 
         return view('profile.edit', [
             'user' => $request->user(),
@@ -50,7 +46,7 @@ class ProfileController extends Controller
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $user = $request->user();
-        $profile = $request->user()->profile;
+        $profile = $user->profile;
 
         $userValidData = Arr::only($request->validated(), $user->getFillable());
         $profileValidData = Arr::only($request->validated(), $profile->getFillable());
@@ -59,19 +55,19 @@ class ProfileController extends Controller
         $user->fill($userValidData);
         $profile->fill($profileValidDataWithoutAvatar);
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
 
         if ($request->hasFile('avatar')) {
             $file = $request->file('avatar');
             $name = $file->getClientOriginalName();
-            $path = Storage::disk('s3')->putFile("avatars/{$request->user()->id}/{$name}", $file);
-            $request->user()->profile->avatar = $path;
+            $path = Storage::disk('s3')->putFile("avatars/{$user->id}", $file);
+            $profile->avatar = $path;
         }
 
-        $request->user()->save();
-        $request->user()->profile->save();
+        $user->save();
+        $profile->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }

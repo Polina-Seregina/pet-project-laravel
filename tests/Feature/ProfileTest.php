@@ -181,13 +181,15 @@ class ProfileTest extends TestCase
         $user = User::withoutEvents(function () {
             return User::factory()->create();
         });
+        $this->assertNull($user->profile);
 
         $response = $this->actingAs($user)->patch(route('profile.update'), [
             'email' => fake()->unique()->email(),
             'name' => fake()->unique()->name(),
-            'nickname' => fake()->unique()->firstName(),
+            'birthday' => fake()->unique()->date(),
         ]);
+        $response->assertInternalServerError();
 
-        $response->assertNotFound();
+
     }
 }

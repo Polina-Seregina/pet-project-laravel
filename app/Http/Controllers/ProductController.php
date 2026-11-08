@@ -14,6 +14,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
+use App\Exceptions\WalletNotFoundException;
+use App\Exceptions\NotEnoughMoneyException;
+use App\Exceptions\ArtIsNotForSaleException;
 use Illuminate\View\View;
 use Exception;
 
@@ -44,7 +47,7 @@ class ProductController extends Controller
      */
     public function show(Request $request, Product $product): View
     {
-        $priceInNewCurrency = $request['priceInNewCurrency'];
+        $priceInNewCurrency = session('priceInNewCurrency');
         $currency = $request['currency'];
 
         return view('product.show', [
@@ -86,8 +89,7 @@ class ProductController extends Controller
         $user = $request->user();
 
         $file = $request->file('image');
-        $name = $file->getClientOriginalName();
-        $path = $file->storeAs("products/{$user->id}/products", $name, 's3');
+        $path = $file->store("products/{$user->id}", 's3');
 
         $product = Product::create([
             'name' => $validData['name'],
@@ -116,8 +118,7 @@ class ProductController extends Controller
         $product->fill($validData);
 
         if ($file) {
-            $name = $file->getClientOriginalName();
-            $path = $file->storeAs("products/{$user->id}/products", $name, 's3');
+            $path = $file->store("products/{$user->id}", 's3');
             $product->image = $path;
         }
 
@@ -152,15 +153,20 @@ class ProductController extends Controller
         try {
             $newProduct = $buyProductService->purchase($product, $buyer, $seller);
             $request->session()->flash('status', 'success');
-
+        } catch (ArtIsNotForSaleException $e) {
+            $request->session()->flash('status', $e->getMessage());
+        } catch (NotEnoughMoneyException $e) {
+            $request->session()->flash('status', $e->getMessage());
+        } catch (WalletNotFoundException $e) {
+            $request->session()->flash('status', $e->getMessage());
         } catch (Exception $e) {
-            $exception = $e->getMessage() ?: "Что-то пошло не так, попробуйте позже.";
-            $request->session()->flash('status', $exception);
+            report($e);
+            $request->session()->flash('status', 'Что-то пошло не так');
         }
 
         if (isset($newProduct)) {
             Mail::to($seller)->send(new ProductSold($product, $seller, $buyer));
-            Notification::route('slack', env('SLACK_BOT_USER_DEFAULT_CHANNEL'))->notify(new OrderCompleted($product, $seller, $buyer));
+            Notification::route('slack', config('services.slack.notifications.channel'))->notify(new OrderCompleted($product, $seller, $buyer));
         }
 
         return Redirect::route('products.show', ['product' => $newProduct ?? $product]);

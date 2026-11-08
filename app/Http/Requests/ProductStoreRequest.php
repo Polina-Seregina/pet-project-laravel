@@ -21,7 +21,7 @@ class ProductStoreRequest extends FormRequest
             'description' => ['required', 'max:255'],
             'price' => ['required', 'numeric', 'min:0.01'],
             'image' => ['required', 'image'],
-            'status' => ['string', Rule::in([ProductsStatus::FORSALE->value, ProductsStatus::DRAFT->value])],
+            'status' => ['required', 'string', Rule::in([ProductsStatus::FORSALE->value, ProductsStatus::DRAFT->value])],
         ];
     }
 }

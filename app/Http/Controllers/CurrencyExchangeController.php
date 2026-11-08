@@ -6,14 +6,21 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use App\Services\ExchangeRate;
 use App\Models\Product;
-use GuzzleHttp\Client;
 use App\Http\Requests\ExchangeCurrencyRequest;
 use Exception;
 
 class CurrencyExchangeController extends Controller
 {
     /**
-     * Метод для перевода суммы на балансе кошелька из USD в выбранную валюту - CNY, RUB, EUR.
+     * Создать новый экземпляр контроллера.
+     */
+    public function __construct(
+        protected ExchangeRate $exchangeRate,
+    ) {
+    }
+
+    /**
+     * Метод для перевода суммы на балансе кошелька из USD в выбранную валюту. Выбор валюты из енама App\Enums\CurrencyEnum..
      */
 
     public function exchangeWalletBalance(ExchangeCurrencyRequest $request): RedirectResponse
@@ -25,12 +32,9 @@ class CurrencyExchangeController extends Controller
         $currency = $validData['currency'];
 
         try {
-            $client = new Client([
-                'base_uri' => config('services.currate.base-url'),
-                'curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4],
-            ]);
-            $service = new ExchangeRate($client);
+            $service = $this->exchangeRate;
             $balanceInNewCurrency = $service->getAmountInForeignCurrency($currency, $amount);
+
         } catch (Exception $e) {
             report($e);
             $request->session()->flash('status', 'Сервис перевода валют недоступен.');
@@ -45,7 +49,7 @@ class CurrencyExchangeController extends Controller
     }
 
     /**
-     * Метод для перевода стоимости Арта из USD в выбранную валюту - CNY, RUB, EUR.
+     * Метод для перевода стоимости Арта из USD в выбранную валюту. Выбор валюты из енама App\Enums\CurrencyEnum.
      */
 
     public function exchangeProductPrice(ExchangeCurrencyRequest $request, Product $product): RedirectResponse
@@ -56,11 +60,7 @@ class CurrencyExchangeController extends Controller
         $amount = $product->price;
 
         try {
-            $client = new Client([
-                'base_uri' => config('services.currate.base-url'),
-                'curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4],
-            ]);
-            $service = new ExchangeRate($client);
+            $service = $this->exchangeRate;
             $priceInNewCurrency = $service->getAmountInForeignCurrency($currency, $amount);
         } catch (Exception $e) {
             report($e);

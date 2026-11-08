@@ -11,7 +11,8 @@ use App\Models\Order;
 use App\Models\User;
 use App\Models\Transaction;
 use App\Exceptions\WalletNotFoundException;
-use Exception;
+use App\Exceptions\NotEnoughMoneyException;
+use App\Exceptions\ArtIsNotForSaleException;
 use Illuminate\Support\Facades\DB;
 
 class BuyProductService
@@ -24,8 +25,9 @@ class BuyProductService
         return DB::transaction(function () use ($product, $buyer, $seller) {
 
             $product = Product::where('id', $product->id)->lockForUpdate()->first();
-            $sellerWallet = Wallet::where('user_id', $seller->id)->lockForUpdate()->first();
-            $buyerWallet = Wallet::where('user_id', $buyer->id)->lockForUpdate()->first();
+            $wallets = Wallet::where('user_id', $seller->id)->orWhere('user_id', $buyer->id)->orderBy('id')->lockForUpdate()->get();
+            $buyerWallet = $wallets->where('user_id', $buyer->id)->first();
+            $sellerWallet = $wallets->where('user_id', $seller->id)->first();
 
             $this->checkThatWalletsExists($sellerWallet, $buyerWallet);
             $this->checkThatBuyerHaveMoney($product, $buyerWallet);
@@ -104,7 +106,7 @@ class BuyProductService
     private function checkThatBuyerHaveMoney(Product $product, Wallet $buyerWallet): void
     {
         if (!($product->price <= $buyerWallet->balance)) {
-            throw new Exception('Недостаточно средств на балансе кошелька для покупки арта.');
+            throw new NotEnoughMoneyException('Недостаточно средств на балансе кошелька для покупки арта.');
         }
     }
 
@@ -113,8 +115,8 @@ class BuyProductService
      */
     private function checkProductStatus(Product $product): void
     {
-        if (!($product->status->value === ProductsStatus::FORSALE->value)) {
-            throw new Exception('Арт не продается.');
+        if (!($product->status === ProductsStatus::FORSALE)) {
+            throw new ArtIsNotForSaleException('Арт не продается.');
         }
     }
 
