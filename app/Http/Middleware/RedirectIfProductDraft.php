@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 class RedirectIfProductDraft
 {
     /**
-     * Handle an incoming request.
+     * Редирект при условии, что арт не принадлежит пользователю и арт не в продаже. 
      *
      * @param  Closure(Request): (Response)  $next
      */

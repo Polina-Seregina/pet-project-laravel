@@ -59,15 +59,15 @@ class AdminTest extends TestCase
 
     public function test_change_the_role_of_the_main_admin(): void
     {
-        $user = User::factory()->create(['email' => config('app.admin-email')]);
-        $user->assignRole('admin');
+        $mainAdmin = User::factory()->create(['email' => config('app.admin-email')]);
+        $mainAdmin->assignRole('admin');
 
         $admin = User::factory()->create();
         $admin->assignRole('admin');
 
-        $response = $this->actingAs($admin)->patch(route('admin.update', $user));
-        $response->assertRedirect(route('admin.show', $user))->assertSessionHas('status', "Роль пользователя не может быть изменена.");
-        $this->assertEquals(collect(['admin']), $user->getRoleNames());
+        $response = $this->actingAs($admin)->patch(route('admin.update', ['user' => $mainAdmin, 'role' => 'user']));
+        $response->assertRedirect(route('admin.show', $mainAdmin))->assertSessionHas('status', "Роль пользователя не может быть изменена.");
+        $this->assertEquals(collect(['admin']), $mainAdmin->getRoleNames());
     }
 
     /**

@@ -25,9 +25,10 @@ class BuyProductService
         return DB::transaction(function () use ($product, $buyer, $seller) {
 
             $product = Product::where('id', $product->id)->lockForUpdate()->first();
-            $sellerWallet = Wallet::where('user_id', $seller->id)->lockForUpdate()->first();
-            $buyerWallet = Wallet::where('user_id', $buyer->id)->lockForUpdate()->first();
-
+            $wallets = Wallet::where('user_id', $seller->id)->orWhere('user_id', $buyer->id)->orderBy('id')->lockForUpdate()->get();
+            $buyerWallet = $wallets->where('user_id', $buyer->id)->first();
+            $sellerWallet = $wallets->where('user_id', $seller->id)->first();
+            
             $this->checkThatWalletsExists($sellerWallet, $buyerWallet);
             $this->checkThatBuyerHaveMoney($product, $buyerWallet);
             $this->checkProductStatus($product);

@@ -20,7 +20,7 @@ class CurrencyExchangeController extends Controller
     }
 
     /**
-     * Метод для перевода суммы на балансе кошелька из USD в выбранную валюту - CNY, RUB, EUR.
+     * Метод для перевода суммы на балансе кошелька из USD в выбранную валюту. Выбор валюты из енама App\Enums\CurrencyEnum..
      */
 
     public function exchangeWalletBalance(ExchangeCurrencyRequest $request): RedirectResponse
@@ -49,7 +49,7 @@ class CurrencyExchangeController extends Controller
     }
 
     /**
-     * Метод для перевода стоимости Арта из USD в выбранную валюту - CNY, RUB, EUR.
+     * Метод для перевода стоимости Арта из USD в выбранную валюту. Выбор валюты из енама App\Enums\CurrencyEnum. 
      */
 
     public function exchangeProductPrice(ExchangeCurrencyRequest $request, Product $product): RedirectResponse

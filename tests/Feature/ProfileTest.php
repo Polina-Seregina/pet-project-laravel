@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Profile;
 use App\Models\User;
 use Tests\TestCase;
+use Throwable;
 use Illuminate\Http\UploadedFile;
 
 class ProfileTest extends TestCase
@@ -181,13 +182,15 @@ class ProfileTest extends TestCase
         $user = User::withoutEvents(function () {
             return User::factory()->create();
         });
+        $this->assertNull($user->profile);
 
         $response = $this->actingAs($user)->patch(route('profile.update'), [
             'email' => fake()->unique()->email(),
             'name' => fake()->unique()->name(),
-            'nickname' => fake()->unique()->firstName(),
+            'birthday' => fake()->unique()->date(),
         ]);
+        $response->assertInternalServerError();
 
-        $response->assertNotFound();
+
     }
 }

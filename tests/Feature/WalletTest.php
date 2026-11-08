@@ -4,6 +4,8 @@ namespace Tests\Feature;
 
 use App\Models\Wallet;
 use App\Models\User;
+use App\Models\Product;
+use App\Enums\ProductsStatus;
 use Tests\TestCase;
 use ReflectionClass;
 use App\Http\Controllers\WalletController;
@@ -169,7 +171,7 @@ class WalletTest extends TestCase
 
         $amount = 10000000000000;
         $response = $this->actingAs($user)->patch(route('wallet.replenishment'), ['amount' => $amount]);
-        $response->assertSessionHas('status');
+        $response->assertInvalid(['amount']);
         $this->assertEquals(0, $wallet->fresh()->balance);
     }
 
@@ -192,4 +194,28 @@ class WalletTest extends TestCase
         $response->assertInternalServerError();
 
     }
+
+    /**
+     * Проверяет, что при покупке арта с кошелька покупателя списываются деньги, 
+     * а баланс кошелька продавца увеличивается.
+     */
+
+    public function test_that_wallet_balances_change_when_art_is_purchased(): void
+    {
+        $seller = User::factory()->create();
+        Wallet::factory()->create(['user_id' => $seller->id]);
+        $balanceSellerBefore = $seller->wallet->balance;
+        
+        $product = Product::factory()->for($seller)->create();
+
+        $buyer = User::factory()->create();
+        Wallet::factory()->create(['user_id' => $buyer->id, 'balance' => $product->price + 1]);
+        $balanceBuyerBefore = $buyer->wallet->balance;
+
+        $this->actingAs($buyer)->post(route('products.buy', $product));
+
+        $this->assertEquals($balanceBuyerBefore - $product->price, $buyer->wallet->fresh()->balance);
+        $this->assertEquals($balanceSellerBefore + $product->price, $seller->wallet->fresh()->balance);
+    }
+
 }
