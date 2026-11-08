@@ -28,7 +28,7 @@ class BuyProductService
             $wallets = Wallet::where('user_id', $seller->id)->orWhere('user_id', $buyer->id)->orderBy('id')->lockForUpdate()->get();
             $buyerWallet = $wallets->where('user_id', $buyer->id)->first();
             $sellerWallet = $wallets->where('user_id', $seller->id)->first();
-            
+
             $this->checkThatWalletsExists($sellerWallet, $buyerWallet);
             $this->checkThatBuyerHaveMoney($product, $buyerWallet);
             $this->checkProductStatus($product);

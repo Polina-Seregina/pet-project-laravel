@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Models\Profile;
 use App\Models\User;
 use Tests\TestCase;
-use Throwable;
 use Illuminate\Http\UploadedFile;
 
 class ProfileTest extends TestCase

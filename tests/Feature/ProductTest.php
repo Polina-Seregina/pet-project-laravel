@@ -111,7 +111,7 @@ class ProductTest extends TestCase
             'name' => $product->name,
             'description' => $product->description,
             'price' => $product->price,
-            'status' => ProductsStatus::FORSALE->value]); 
+            'status' => ProductsStatus::FORSALE->value]);
 
         $newImage = $product->fresh()->image;
 
@@ -325,7 +325,7 @@ class ProductTest extends TestCase
     /**
      * Проверяет, что при покупке арт мягко удаляется, статус меняется на sold.
      */
-       
+
     public function test_that_art_is_soft_deleted_with_sold_status(): void
     {
         $seller = User::factory()->create();
@@ -338,7 +338,7 @@ class ProductTest extends TestCase
 
         $this->actingAs($buyer)->post(route('products.buy', $product));
 
-        $this->assertSoftDeleted($product); 
+        $this->assertSoftDeleted($product);
         $this->assertEquals($product->fresh()->status, ProductsStatus::SOLD);
     }
 
@@ -371,7 +371,7 @@ class ProductTest extends TestCase
     }
 
     /**
-     * Проверяет, что при покупке продукта отправляется уведомление на почту и slack уведомление. 
+     * Проверяет, что при покупке продукта отправляется уведомление на почту и slack уведомление.
      */
 
     public function test_that_mail_and_notifications_send(): void

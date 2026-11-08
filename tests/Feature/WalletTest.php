@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Models\Wallet;
 use App\Models\User;
 use App\Models\Product;
-use App\Enums\ProductsStatus;
 use Tests\TestCase;
 use ReflectionClass;
 use App\Http\Controllers\WalletController;
@@ -196,7 +195,7 @@ class WalletTest extends TestCase
     }
 
     /**
-     * Проверяет, что при покупке арта с кошелька покупателя списываются деньги, 
+     * Проверяет, что при покупке арта с кошелька покупателя списываются деньги,
      * а баланс кошелька продавца увеличивается.
      */
 
@@ -205,7 +204,7 @@ class WalletTest extends TestCase
         $seller = User::factory()->create();
         Wallet::factory()->create(['user_id' => $seller->id]);
         $balanceSellerBefore = $seller->wallet->balance;
-        
+
         $product = Product::factory()->for($seller)->create();
 
         $buyer = User::factory()->create();

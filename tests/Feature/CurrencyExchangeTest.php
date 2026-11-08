@@ -98,6 +98,6 @@ class CurrencyExchangeTest extends TestCase
 
         $response = $this->get(route('wallet.show'));
         $response->assertViewHas('balanceInNewCurrency');
-        
+
     }
 }
