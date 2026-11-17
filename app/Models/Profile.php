@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Storage;
 
 #[Fillable([
@@ -24,8 +25,10 @@ class Profile extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function get_avatar_url()
+    public function avatarUrl(): Attribute
     {
-        return $this->avatar ? Storage::disk('s3')->url($this->avatar) : asset(config('filesystems.default_avatar'));
+        return Attribute::make(
+            get: fn () => $this->avatar ? Storage::disk('s3')->url($this->avatar) : asset(config('filesystems.default_avatar')),
+        );
     }
 }

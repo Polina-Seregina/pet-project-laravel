@@ -25,7 +25,7 @@ class UserController extends Controller
 
     public function show(User $user): View
     {
-        $avatar = $user->profile->get_avatar_url();
+        $avatar = $user->profile->avatar_url;
 
         return view('admin.show', [
             'user' => $user,

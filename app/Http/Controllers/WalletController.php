@@ -61,6 +61,7 @@ class WalletController extends Controller
             $this->replenishmentService->topUp($wallet, $amount);
             $request->session()->flash('status', 'success');
         } catch (Exception $e) {
+            report($e);
             $request->session()->flash('status', 'Что-то пошло не так');
         }
 

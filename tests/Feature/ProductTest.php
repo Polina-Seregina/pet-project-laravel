@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Product;
 use App\Enums\ProductsStatus;
+use App\Enums\TransactionType;
 use App\Models\Profile;
 use App\Models\User;
 use App\Models\Wallet;
@@ -81,7 +82,7 @@ class ProductTest extends TestCase
         $response = $this->actingAs($user)->post('/products', [
             'name' => $name,
             'description' => fake()->realTextBetween(),
-            'price' => fake()->numberBetween(0, 100000),
+            'price' => 100,
             'status' => ProductsStatus::FORSALE->value,
             'image' => $image,
         ]);
@@ -283,10 +284,11 @@ class ProductTest extends TestCase
         $response = $this->actingAs($user)->post(route('products.store'), [
             'name' => fake()->realTextBetween(256, 300),
             'description' => fake()->realTextBetween(256, 300),
-            'price' => fake()->numberBetween(0, 100000),
+            'price' => 100,
             'status' => 'test',
             'image' => $image,
         ]);
+
 
         $response->assertInvalid(['name', 'description', 'status', 'image']);
     }
@@ -368,6 +370,28 @@ class ProductTest extends TestCase
             ->first();
 
         $this->assertEquals($newProduct->status, ProductsStatus::PURCHASED);
+
+        $this->assertDatabaseHas('wallets', [
+            'user_id' => $seller->id,
+            'balance' => $product->price,
+        ]);
+
+        $this->assertDatabaseHas('wallets', [
+            'user_id' => $buyer->id,
+            'balance' => 1,
+        ]);
+
+        $this->assertDatabaseHas('transactions', [
+            'wallet_id' => $seller->wallet->id,
+            'type' => TransactionType::REPLENISHMENT->value,
+            'amount' => $product->price,
+        ]);
+
+        $this->assertDatabaseHas('transactions', [
+            'wallet_id' => $buyer->wallet->id,
+            'type' => TransactionType::SPENDING->value,
+            'amount' => $product->price,
+        ]);
     }
 
     /**

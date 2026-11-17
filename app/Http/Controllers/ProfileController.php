@@ -19,7 +19,7 @@ class ProfileController extends Controller
 
     public function show(Request $request): View
     {
-        $avatar = $request->user()->profile->get_avatar_url();
+        $avatar = $request->user()->profile->avatar_url;
 
         return view('profile.show', [
             'user' => $request->user(),
@@ -32,7 +32,7 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
-        $avatar = $request->user()->profile->get_avatar_url();
+        $avatar = $request->user()->profile->avatar_url;
 
         return view('profile.edit', [
             'user' => $request->user(),
