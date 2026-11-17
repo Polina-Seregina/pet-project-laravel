@@ -18,7 +18,6 @@ use Tests\TestCase;
 
 class ProductTest extends TestCase
 {
-
     protected function setUp(): void
     {
         parent::setUp();
