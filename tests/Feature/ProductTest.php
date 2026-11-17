@@ -13,10 +13,18 @@ use App\Notifications\OrderCompleted;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ProductTest extends TestCase
 {
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Storage::fake('s3');
+    }
+
     /**
      * Проверяет отображение страницы магазина.
      * @return void
