@@ -48,7 +48,7 @@ class ProductController extends Controller
     public function show(Request $request, Product $product): View
     {
         $priceInNewCurrency = session('priceInNewCurrency');
-        $currency = $request['currency'];
+        $currency = session('currency');
 
         return view('product.show', [
             'product' => $product,

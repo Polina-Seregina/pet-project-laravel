@@ -6,6 +6,7 @@ use App\Services\ExchangeRate;
 use App\Models\User;
 use App\Models\Wallet;
 use App\Models\Product;
+use App\Enums\CurrencyEnum;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Handler\MockHandler;
@@ -87,17 +88,17 @@ class CurrencyExchangeTest extends TestCase
         $product = Product::factory()->create(['price' => 11]);
         Wallet::factory()->create(['user_id' => $user->id]);
 
-        $response = $this->actingAs($user)->post(route('products.currency', ['product' => $product, 'currency' => 'RUB']));
-        $response->assertSessionHas('currency', 'RUB');
+        $this->actingAs($user)->post(route('products.currency', ['product' => $product, 'currency' => CurrencyEnum::RUB->value]));
 
         $response = $this->get(route('products.show', $product));
         $response->assertViewHas('priceInNewCurrency');
+        $response->assertViewHas('currency', CurrencyEnum::RUB->value);
 
-        $response = $this->actingAs($user)->post(route('wallet.currency', ['currency' => 'RUB']));
-        $response->assertSessionHas('currency', 'RUB');
+        $this->actingAs($user)->post(route('wallet.currency', ['currency' => CurrencyEnum::RUB->value]));
 
         $response = $this->get(route('wallet.show'));
         $response->assertViewHas('balanceInNewCurrency');
+        $response->assertViewHas('currency', CurrencyEnum::RUB->value);
 
     }
 }

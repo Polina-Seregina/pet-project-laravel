@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Contracts\ReplenishmentInterface;
+use App\Services\ExchangeRate;
 use GuzzleHttp\Client;
 use App\Services\SimpleTopUpService;
 
