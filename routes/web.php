@@ -40,7 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
     Route::get('/my/products', [ProductController::class, 'usersIndex'])->name('user.products.index');
     Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show')->middleware('onlyPublic');
-    Route::post('/products/{product}', [CurrencyExchangeController::class, 'exchangeProductPrice'])->name('products.currency');
+    Route::post('/products/{product}', [CurrencyExchangeController::class, 'exchangeProductPrice'])->name('products.currency')->middleware('onlyPublic');
     Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
     Route::patch('/products/{product}', [ProductController::class, 'update'])->name('products.update');
     Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');

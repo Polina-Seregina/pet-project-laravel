@@ -104,7 +104,7 @@
                     </section>
                 </div>
                 <div class="title-one text-center ">
-                    @if ($user->id === $product->user->id)
+                    @if ($user->id === $product->user_id)
                     <div class="title-one text-center"> 
                         Статус
                     </div>

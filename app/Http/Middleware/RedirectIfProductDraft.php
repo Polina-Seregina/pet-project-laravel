@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 class RedirectIfProductDraft
 {
     /**
-     * Handle an incoming request.
+     * Редирект при условии, что арт не принадлежит пользователю и арт не в продаже.
      *
      * @param  Closure(Request): (Response)  $next
      */
@@ -20,7 +20,7 @@ class RedirectIfProductDraft
         $product = $request->product;
         $user = $request->user();
 
-        if (!$user->is($product->user) && ($product->status->value !== ProductsStatus::FORSALE->value)) {
+        if (!$user->is($product->user) && ($product->status !== ProductsStatus::FORSALE)) {
             return Redirect::route('products.index');
         }
 

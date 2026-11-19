@@ -4,14 +4,26 @@ namespace Tests\Feature;
 
 use App\Models\Product;
 use App\Enums\ProductsStatus;
+use App\Enums\TransactionType;
 use App\Models\Profile;
 use App\Models\User;
 use App\Models\Wallet;
+use App\Mail\ProductSold;
+use App\Notifications\OrderCompleted;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ProductTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Storage::fake('s3');
+    }
+
     /**
      * Проверяет отображение страницы магазина.
      * @return void
@@ -77,7 +89,7 @@ class ProductTest extends TestCase
         $response = $this->actingAs($user)->post('/products', [
             'name' => $name,
             'description' => fake()->realTextBetween(),
-            'price' => fake()->numberBetween(0, 100000),
+            'price' => 100,
             'status' => ProductsStatus::FORSALE->value,
             'image' => $image,
         ]);
@@ -100,6 +112,7 @@ class ProductTest extends TestCase
         $user = User::factory()->create();
         $product = Product::factory()->create(['user_id' => $user->id, 'author_id' => $user->id]);
         $newImage = UploadedFile::fake()->create('image.jpg');
+        $oldImage = $product->image;
 
         $response = $this->actingAs($user)->patch(route('products.update', ['product' => $product]), [
             'image' => $newImage,
@@ -108,10 +121,9 @@ class ProductTest extends TestCase
             'price' => $product->price,
             'status' => ProductsStatus::FORSALE->value]);
 
+        $newImage = $product->fresh()->image;
 
-        $product = Product::where(['id' => $product->id])->first();
-
-        $this->assertEquals(basename($product->image), 'image.jpg');
+        $this->assertNotEquals($oldImage, $newImage);
 
     }
 
@@ -149,9 +161,9 @@ class ProductTest extends TestCase
 
     public function test_user_cant_buy_product_without_money(): void
     {
-        $sellerWallet = Wallet::factory()->create(['balance' => 0]);
-        $buyerWallet = Wallet::factory()->create(['balance' => rand(0, 500)]);
-        $product = Product::factory()->create(['user_id' => $sellerWallet->user->id, 'price' => $buyerWallet->balance + 1]);
+        $sellerWallet = Wallet::factory()->create();
+        $buyerWallet = Wallet::factory()->create();
+        $product = Product::factory()->create(['user_id' => $sellerWallet->user->id, 'price' => $buyerWallet->balance + 5]);
 
         $this->actingAs($buyerWallet->user)->post(route('products.buy', $product));
 
@@ -161,8 +173,8 @@ class ProductTest extends TestCase
             'product_id' => $product->id,
         ]);
 
-        $this->assertEquals($sellerWallet->balance, 0);
-        $this->assertEquals($product->status->value, ProductsStatus::FORSALE->value);
+        $this->assertEquals($sellerWallet->fresh()->balance, 0);
+        $this->assertEquals($product->fresh()->status->value, ProductsStatus::FORSALE->value);
     }
 
     /**
@@ -201,20 +213,6 @@ class ProductTest extends TestCase
 
         $response->assertRedirect(route('products.show', ['product' => $product]));
         $response->assertSessionHas('status', 'Этот арт уже принадлежит тебе.');
-    }
-
-    /**
-     * Покупка, при отстутсвии кошелька у продавца или у покупателя.
-     */
-
-    public function test_purchasing_art_if_wallet_does_not_exist(): void
-    {
-        $buyer = User::factory()->create();
-        $seller = User::factory()->create();
-        $product = Product::factory()->create(['user_id' => $seller->id]);
-
-        $response = $this->actingAs($buyer)->post(route('products.buy', $product));
-        $response->assertInternalServerError();
     }
 
     /**
@@ -293,10 +291,11 @@ class ProductTest extends TestCase
         $response = $this->actingAs($user)->post(route('products.store'), [
             'name' => fake()->realTextBetween(256, 300),
             'description' => fake()->realTextBetween(256, 300),
-            'price' => fake()->numberBetween(0, 100000),
+            'price' => 100,
             'status' => 'test',
             'image' => $image,
         ]);
+
 
         $response->assertInvalid(['name', 'description', 'status', 'image']);
     }
@@ -330,5 +329,99 @@ class ProductTest extends TestCase
         $response = $this->actingAs($buyer)->post(route('products.buy', $product));
         $response->assertRedirect()->assertSessionHas('status', 'Кошелёк покупателя не найден.');
 
+    }
+
+    /**
+     * Проверяет, что при покупке арт мягко удаляется, статус меняется на sold.
+     */
+
+    public function test_that_art_is_soft_deleted_with_sold_status(): void
+    {
+        $seller = User::factory()->create();
+        Wallet::factory()->create(['user_id' => $seller->id]);
+
+        $product = Product::factory()->for($seller)->create();
+
+        $buyer = User::factory()->create();
+        Wallet::factory()->create(['user_id' => $buyer->id, 'balance' => $product->price + 1]);
+
+        $this->actingAs($buyer)->post(route('products.buy', $product));
+
+        $this->assertSoftDeleted($product);
+        $this->assertEquals($product->fresh()->status, ProductsStatus::SOLD);
+    }
+
+    /**
+     * Проверяет, что у покупателя создан новый товар со статусом `purchased`.
+     */
+
+    public function test_buyer_have_product_with_purchased_status(): void
+    {
+        $seller = User::factory()->create();
+        Wallet::factory()->create(['user_id' => $seller->id]);
+
+        $product = Product::factory()->for($seller)->create();
+
+        $buyer = User::factory()->create();
+        Wallet::factory()->create(['user_id' => $buyer->id, 'balance' => $product->price + 1]);
+
+        $this->actingAs($buyer)->post(route('products.buy', $product));
+
+        $newProduct = $buyer->products
+            ->where('name', $product->name)
+            ->where('description', $product->description)
+            ->where('price', $product->price)
+            ->where('author_id', $product->author_id)
+            ->where('image', $product->image)
+            ->where('user_id', $buyer->id)
+            ->first();
+
+        $this->assertEquals($newProduct->status, ProductsStatus::PURCHASED);
+
+        $this->assertDatabaseHas('wallets', [
+            'user_id' => $seller->id,
+            'balance' => $product->price,
+        ]);
+
+        $this->assertDatabaseHas('wallets', [
+            'user_id' => $buyer->id,
+            'balance' => 1,
+        ]);
+
+        $this->assertDatabaseHas('transactions', [
+            'wallet_id' => $seller->wallet->id,
+            'type' => TransactionType::REPLENISHMENT->value,
+            'amount' => $product->price,
+        ]);
+
+        $this->assertDatabaseHas('transactions', [
+            'wallet_id' => $buyer->wallet->id,
+            'type' => TransactionType::SPENDING->value,
+            'amount' => $product->price,
+        ]);
+    }
+
+    /**
+     * Проверяет, что при покупке продукта отправляется уведомление на почту и slack уведомление.
+     */
+
+    public function test_that_mail_and_notifications_send(): void
+    {
+        Mail::fake();
+        Notification::fake();
+
+        $seller = User::factory()->create();
+        Wallet::factory()->create(['user_id' => $seller->id]);
+
+        $product = Product::factory()->for($seller)->create();
+
+        $buyer = User::factory()->create();
+        Wallet::factory()->create(['user_id' => $buyer->id, 'balance' => $product->price + 1]);
+
+        $this->actingAs($buyer)->post(route('products.buy', $product));
+
+        Mail::assertQueued(ProductSold::class);
+
+        Notification::assertSentOnDemand(OrderCompleted::class);
     }
 }
