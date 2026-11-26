@@ -99,18 +99,18 @@ class CurrencyExchangeTest extends TestCase
 
         $user = User::factory()->create();
         $product = Product::factory()->create(['price' => 11]);
-        Wallet::factory()->create(['user_id' => $user->id]);
+        Wallet::factory()->create(['user_id' => $user->id, 'balance' => 11]);
 
         $this->actingAs($user)->post(route('products.currency', ['product' => $product, 'currency' => CurrencyEnum::RUB->value]));
 
         $response = $this->get(route('products.show', $product));
-        $response->assertViewHas('priceInNewCurrency');
+        $response->assertViewHas('priceInNewCurrency', 990.0);
         $response->assertViewHas('currency', CurrencyEnum::RUB->value);
 
         $this->actingAs($user)->post(route('wallet.currency', ['currency' => CurrencyEnum::RUB->value]));
 
         $response = $this->get(route('wallet.show'));
-        $response->assertViewHas('balanceInNewCurrency');
+        $response->assertViewHas('balanceInNewCurrency', 990.0);
         $response->assertViewHas('currency', CurrencyEnum::RUB->value);
 
     }
