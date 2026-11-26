@@ -19,7 +19,6 @@ use Tests\TestCase;
 
 class CurrencyExchangeTest extends TestCase
 {
-
     private function mockExchangeRate(): void
     {
         $mock = new MockHandler([
@@ -30,7 +29,7 @@ class CurrencyExchangeTest extends TestCase
         $client = new Client(['handler' => HandlerStack::create($mock)]);
         $this->app->instance(ExchangeRate::class, new ExchangeRate($client));
     }
-    
+
     /**
      * Внешний сервис недоступен или выбрасывает исключение.
      */
