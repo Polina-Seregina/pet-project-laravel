@@ -62,7 +62,7 @@ services:
     depends_on:
       - mysql_testing
   minio:
-    image: minio/minio
+    image: pgsty/silo:latest
     command: server /data --console-address ":9001"
     ports: 
       - "9000:9000"

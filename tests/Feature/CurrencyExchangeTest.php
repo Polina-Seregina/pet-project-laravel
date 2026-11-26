@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use App\Services\ExchangeRate;
 use App\Models\User;
 use App\Models\Wallet;
+use App\Models\Product;
+use App\Enums\CurrencyEnum;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Handler\MockHandler;
@@ -17,6 +19,17 @@ use Tests\TestCase;
 
 class CurrencyExchangeTest extends TestCase
 {
+    private function mockExchangeRate(): void
+    {
+        $mock = new MockHandler([
+            new Response(200, [], json_encode(['conversion_rates' => ['RUB' => 90.0]])),
+            new Response(200, [], json_encode(['conversion_rates' => ['RUB' => 90.0]])),
+        ]);
+
+        $client = new Client(['handler' => HandlerStack::create($mock)]);
+        $this->app->instance(ExchangeRate::class, new ExchangeRate($client));
+    }
+
     /**
      * Внешний сервис недоступен или выбрасывает исключение.
      */
@@ -33,12 +46,12 @@ class CurrencyExchangeTest extends TestCase
         $service = new ExchangeRate($client);
 
         $this->assertThrows(
-            fn () => $service->getAmountInForeignCurrency('RUB', rand(1, 100)),
+            fn () => $service->getAmountInForeignCurrency('RUB', 100),
             ServerException::class
         );
 
         $this->assertThrows(
-            fn () => $service->getAmountInForeignCurrency('RUB', rand(1, 100)),
+            fn () => $service->getAmountInForeignCurrency('RUB', 100),
             ConnectException::class
         );
 
@@ -74,5 +87,31 @@ class CurrencyExchangeTest extends TestCase
         Wallet::factory()->create(['balance' => 100, 'user_id' => $user->id ]);
         $response = $this->actingAs($user)->post(route('wallet.currency', ['currency' => 'JPY']));
         $response->assertInvalid(['currency']);
+    }
+
+    /**
+     * Проверяет, что конвертация валюты происходит успешно.
+     */
+
+    public function test_that_currency_exchange_successful(): void
+    {
+        $this->mockExchangeRate();
+
+        $user = User::factory()->create();
+        $product = Product::factory()->create(['price' => 11]);
+        Wallet::factory()->create(['user_id' => $user->id, 'balance' => 11]);
+
+        $this->actingAs($user)->post(route('products.currency', ['product' => $product, 'currency' => CurrencyEnum::RUB->value]));
+
+        $response = $this->get(route('products.show', $product));
+        $response->assertViewHas('priceInNewCurrency', 990.0);
+        $response->assertViewHas('currency', CurrencyEnum::RUB->value);
+
+        $this->actingAs($user)->post(route('wallet.currency', ['currency' => CurrencyEnum::RUB->value]));
+
+        $response = $this->get(route('wallet.show'));
+        $response->assertViewHas('balanceInNewCurrency', 990.0);
+        $response->assertViewHas('currency', CurrencyEnum::RUB->value);
+
     }
 }

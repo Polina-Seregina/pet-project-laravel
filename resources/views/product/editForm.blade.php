@@ -41,12 +41,12 @@
                     <x-input-label for="status" :value="__('Статус')" />
                     <select name="status" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('status', $product->status)">
                         <option value="{{ $status::FORSALE->value }}"
-                        @if ($product->status->value === $status::FORSALE->value)
+                        @if ($product->status === $status::FORSALE)
                             selected
                         @endif
                         > {{ $status::FORSALE->label() }}  </option>
                         <option value="{{ $status::DRAFT->value }}" 
-                        @if ($product->status->value === $status::DRAFT->value)
+                        @if ($product->status=== $status::DRAFT)
                             selected
                         @endif> {{ $status::DRAFT->label() }} </option>
                     </select>

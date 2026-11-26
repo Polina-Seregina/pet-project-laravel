@@ -5,19 +5,19 @@
             <option value="{{ App\Enums\CurrencyEnum::USD }}" selected> {{ App\Enums\CurrencyEnum::USD }} </option>
 
             <option value="{{ App\Enums\CurrencyEnum::RUB }}"
-                @if ($currency === App\Enums\CurrencyEnum::RUB->value)
+                @if (session('currency') === App\Enums\CurrencyEnum::RUB->value)
                     selected
                 @endif
             > {{ App\Enums\CurrencyEnum::RUB }} </option>
 
             <option value="{{ App\Enums\CurrencyEnum::EUR }}"
-                @if ($currency  === App\Enums\CurrencyEnum::EUR->value)
+                @if (session('currency') === App\Enums\CurrencyEnum::EUR->value)
                     selected
                 @endif
             > {{ App\Enums\CurrencyEnum::EUR }} </option>
 
             <option value="{{ App\Enums\CurrencyEnum::CNY }}"
-                @if ($currency  === App\Enums\CurrencyEnum::CNY->value)
+                @if (session('currency') === App\Enums\CurrencyEnum::CNY->value)
                     selected
                 @endif
             > {{ App\Enums\CurrencyEnum::CNY }} </option>

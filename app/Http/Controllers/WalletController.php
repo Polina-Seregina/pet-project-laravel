@@ -26,8 +26,8 @@ class WalletController extends Controller
     public function show(Request $request): View
     {
         $wallet = $request->user()->wallet;
-        $balanceInNewCurrency = $request['balanceInNewCurrency'];
-        $currency = $request['currency'];
+        $balanceInNewCurrency = session('balanceInNewCurrency');
+        $currency = session('currency');
 
         return view('wallet.show', [
             'user' => $request->user(),
@@ -61,7 +61,8 @@ class WalletController extends Controller
             $this->replenishmentService->topUp($wallet, $amount);
             $request->session()->flash('status', 'success');
         } catch (Exception $e) {
-            $request->session()->flash('status', $e->getMessage());
+            report($e);
+            $request->session()->flash('status', 'Что-то пошло не так');
         }
 
         return Redirect::route('wallet.show');
