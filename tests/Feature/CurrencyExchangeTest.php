@@ -19,6 +19,18 @@ use Tests\TestCase;
 
 class CurrencyExchangeTest extends TestCase
 {
+
+    private function mockExchangeRate(): void
+    {
+        $mock = new MockHandler([
+            new Response(200, [], json_encode(['conversion_rates' => ['RUB' => 90.0]])),
+            new Response(200, [], json_encode(['conversion_rates' => ['RUB' => 90.0]])),
+        ]);
+
+        $client = new Client(['handler' => HandlerStack::create($mock)]);
+        $this->app->instance(ExchangeRate::class, new ExchangeRate($client));
+    }
+    
     /**
      * Внешний сервис недоступен или выбрасывает исключение.
      */
@@ -84,6 +96,8 @@ class CurrencyExchangeTest extends TestCase
 
     public function test_that_currency_exchange_successful(): void
     {
+        $this->mockExchangeRate();
+
         $user = User::factory()->create();
         $product = Product::factory()->create(['price' => 11]);
         Wallet::factory()->create(['user_id' => $user->id]);
